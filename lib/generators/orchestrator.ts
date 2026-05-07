@@ -27,33 +27,28 @@ import type { MvpGeneratorId } from "@/lib/constants";
 export async function runCampaign(brief: BusinessBrief): Promise<Campaign> {
   const brand = deriveBrand(brief);
 
-  const [
-    landing,
-    seo,
-    metaAds,
-    instagram,
-    cinematic,
-    socialShorts,
-    promptPacks,
-  ] = MOCK_MODE
-    ? [
-        mockLanding(brief),
-        mockSeo(brief),
-        mockMetaAds(brief),
-        mockInstagram(brief),
-        mockCinematic(brief),
-        mockSocialShorts(brief),
-        mockPromptPacks(brief),
-      ]
-    : await Promise.all([
-        generateLandingPage(brief),
-        generateSeoCopy(brief),
-        generateMetaAds(brief),
-        generateInstagramContent(brief),
-        generateCinematic(brief),
-        generateSocialShorts(brief),
-        generatePromptPacks(brief),
-      ]);
+  let landing, seo, metaAds, instagram, cinematic, socialShorts, promptPacks;
+
+  if (MOCK_MODE) {
+    landing = mockLanding(brief);
+    seo = mockSeo(brief);
+    metaAds = mockMetaAds(brief);
+    instagram = mockInstagram(brief);
+    cinematic = mockCinematic(brief);
+    socialShorts = mockSocialShorts(brief);
+    promptPacks = mockPromptPacks(brief);
+  } else {
+    // Sequentieel uitvoeren — Anthropic Tier 1 rate limit is 8K output tokens/min,
+    // parallel uitvoering reserveert ~33K tokens en triggert direct 429.
+    // Sequentieel: ~30-60s per generator × 7 = totaal 3-5 min.
+    landing = await generateLandingPage(brief);
+    seo = await generateSeoCopy(brief);
+    metaAds = await generateMetaAds(brief);
+    instagram = await generateInstagramContent(brief);
+    cinematic = await generateCinematic(brief);
+    socialShorts = await generateSocialShorts(brief);
+    promptPacks = await generatePromptPacks(brief);
+  }
 
   const videoProduction = buildVideoProduction(cinematic, brief.name, brief.tone);
 
