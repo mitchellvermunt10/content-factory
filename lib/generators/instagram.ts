@@ -47,6 +47,6 @@ EISEN
     schema: InstagramContentSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 4096,
+    maxTokens: 2500,
   });
 }

@@ -39,6 +39,6 @@ EISEN
     schema: SeoCopySchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 3500,
+    maxTokens: 2500,
   });
 }

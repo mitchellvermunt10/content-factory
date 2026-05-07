@@ -39,6 +39,6 @@ Geef het hele schema, ingevuld in vlekkeloos Nederlands.`;
     schema: LandingPageSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 4096,
+    maxTokens: 2500,
   });
 }

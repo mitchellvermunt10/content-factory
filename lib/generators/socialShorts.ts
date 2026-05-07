@@ -44,6 +44,6 @@ EISEN
     schema: SocialShortsSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 5000,
+    maxTokens: 2800,
   });
 }

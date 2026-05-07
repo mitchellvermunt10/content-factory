@@ -46,6 +46,6 @@ EISEN
     schema: MetaAdsSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 3000,
+    maxTokens: 2500,
   });
 }
