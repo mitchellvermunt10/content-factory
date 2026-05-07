@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Sparkles, Loader2 } from "lucide-react";
+import { nanoid } from "nanoid";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +18,22 @@ import {
   type BusinessBrief,
 } from "@/lib/schemas/brief";
 import type { Campaign } from "@/lib/schemas/campaign";
+import { deriveBrand } from "@/lib/brand/presets";
+import { buildVideoProduction } from "@/lib/generators/buildVideoProduction";
+import type { MvpGeneratorId } from "@/lib/constants";
+
+// Welke generators draaien sequentieel + welk artifact-veld ze vullen.
+// Per stuk past elke call binnen Vercel Hobby's 60s timeout — totaal ~3-5 min,
+// browser-side gecoördineerd zodat er geen single long-running server call is.
+const GENERATOR_SEQUENCE: { id: MvpGeneratorId; key: keyof Campaign["artifacts"]; label: string }[] = [
+  { id: "landing", key: "landing", label: "Landing page" },
+  { id: "seo", key: "seo", label: "SEO" },
+  { id: "meta-ads", key: "metaAds", label: "Meta ads" },
+  { id: "instagram", key: "instagram", label: "Instagram" },
+  { id: "cinematic", key: "cinematic", label: "Cinematic" },
+  { id: "social-shorts", key: "socialShorts", label: "Social shorts" },
+  { id: "prompt-packs", key: "promptPacks", label: "Prompt packs" },
+];
 
 const ease = [0.16, 1, 0.3, 1] as const;
 
@@ -47,6 +64,8 @@ export function BriefWizard() {
   const [data, setData] = useState<WizardData>(INITIAL);
   const [stepIdx, setStepIdx] = useState(0);
   const [submitting, setSubmitting] = useState(false);
+  const [progressLabel, setProgressLabel] = useState<string | null>(null);
+  const [progressIdx, setProgressIdx] = useState(0);
   const [, startTransition] = useTransition();
   const addCampaign = useCampaigns((s) => s.addCampaign);
 
@@ -85,29 +104,72 @@ export function BriefWizard() {
       });
       return;
     }
+    const brief = parsed.data;
     setSubmitting(true);
+    setProgressIdx(0);
+    setProgressLabel(GENERATOR_SEQUENCE[0].label);
+
+    // Verzamel artifacts één-voor-één om Vercel's 60s timeout te omzeilen.
+    const artifacts: Partial<Campaign["artifacts"]> = {};
+
     try {
-      const res = await fetch("/api/generate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(parsed.data),
-      });
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error ?? "Generatie mislukt");
+      for (let i = 0; i < GENERATOR_SEQUENCE.length; i++) {
+        const gen = GENERATOR_SEQUENCE[i];
+        setProgressIdx(i);
+        setProgressLabel(gen.label);
+
+        const res = await fetch(`/api/generate/${gen.id}`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(brief),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(
+            (err as { error?: string }).error ??
+              `${gen.label} faalde (HTTP ${res.status})`
+          );
+        }
+        const { value } = (await res.json()) as { value: unknown };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (artifacts as any)[gen.key] = value;
       }
-      const campaign = (await res.json()) as Campaign;
+
+      // Bouw videoProduction client-side uit cinematic (pure functie).
+      const cinematic = artifacts.cinematic!;
+      const videoProduction = buildVideoProduction(cinematic, brief.name, brief.tone);
+
+      const brand = deriveBrand(brief);
+      const now = new Date().toISOString();
+      const campaign: Campaign = {
+        id: nanoid(10),
+        createdAt: now,
+        updatedAt: now,
+        brief,
+        brand,
+        artifacts: {
+          landing: artifacts.landing!,
+          seo: artifacts.seo!,
+          metaAds: artifacts.metaAds!,
+          instagram: artifacts.instagram!,
+          cinematic,
+          socialShorts: artifacts.socialShorts!,
+          promptPacks: artifacts.promptPacks!,
+          videoProduction,
+        },
+      };
+
       addCampaign(campaign);
-      const artifactCount = Object.keys(campaign.artifacts).length;
       toast.success("Campagne klaar", {
-        description: `${campaign.brief.name} — ${artifactCount} deliverables gegenereerd.`,
+        description: `${brief.name} — 8 deliverables gegenereerd.`,
       });
       startTransition(() => router.push(`/studio/campaigns/${campaign.id}`));
     } catch (err) {
-      toast.error("Er ging iets mis", {
+      toast.error(`Mislukt op stap ${progressIdx + 1}/${GENERATOR_SEQUENCE.length}`, {
         description: err instanceof Error ? err.message : "Onbekende fout",
       });
       setSubmitting(false);
+      setProgressLabel(null);
     }
   }
 
@@ -177,7 +239,9 @@ export function BriefWizard() {
             {submitting ? (
               <>
                 <Loader2 className="size-4 animate-spin" />
-                Genereren…
+                {progressLabel
+                  ? `${progressIdx + 1}/${GENERATOR_SEQUENCE.length} · ${progressLabel}`
+                  : "Genereren…"}
               </>
             ) : (
               <>
