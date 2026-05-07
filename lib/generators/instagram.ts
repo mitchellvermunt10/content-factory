@@ -47,7 +47,7 @@ EISEN
     schema: InstagramContentSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 4000,
+    maxTokens: 6000,
     model: "claude-haiku-4-5-20251001",
   });
 }
