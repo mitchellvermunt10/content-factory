@@ -10,6 +10,7 @@ node_modules
 playwright-report
 test-results
 .next-env.d.ts
+tsconfig.tsbuildinfo
 
 # Render output / fixtures — niet pushen (regenereerbaar)
 real-assets/*/clips/*
