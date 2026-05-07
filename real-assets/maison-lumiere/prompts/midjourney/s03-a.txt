@@ -1,0 +1,26 @@
+# Still s03-a — first frame voor Het ritueel
+# Bestand: stills/s03-a.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Cinematic extreme macro close-up: a hand pours crystal-clear water onto a smooth black river stone, droplets cascading along the edges in slow motion, single candle rim-light from the right, completely dark background, Kodak 2383 emulation, warm amber halation, fine grain, 100mm macro lens shot at T2.8, mood reminiscent of Aesop x Wong Kar-wai's In The Mood For Love, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Cinematic extreme macro close-up: a hand pours crystal-clear water onto a smooth black river stone, droplets cascading along the edges in slow motion, single candle rim-light from the right, completely dark background, Kodak 2383 emulation, warm amber halation, fine grain, 100mm macro lens shot at T2.8, mood reminiscent of Aesop x Wong Kar-wai's In The Mood For Love,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Eén kaarslamp van rechts, rim-light op water. Volledig duister achter.
+- Kleurnotitie: Kodak 2383, warm halation, donker met heldere highlights.
+- Onderwerp: Een hand schenkt water op een gladde rivierkei
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in KLING voor clip s03-a.mp4.

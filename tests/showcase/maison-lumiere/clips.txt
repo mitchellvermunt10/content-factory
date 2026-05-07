@@ -1,0 +1,8 @@
+file 'clips/s01-s01-a.mp4'
+file 'clips/s01-s01-b.mp4'
+file 'clips/s02-s02-a.mp4'
+file 'clips/s02-s02-b.mp4'
+file 'clips/s03-s03-a.mp4'
+file 'clips/s03-s03-b.mp4'
+file 'clips/s03-s03-c.mp4'
+file 'clips/s04-s04-a.mp4'

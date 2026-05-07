@@ -1,0 +1,26 @@
+# Still s03-c — first frame voor Het ritueel
+# Bestand: stills/s03-c.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Cinematic 85mm tight close-up profile portrait of a woman in her late 30s with eyes closed, a barely-there half-smile forming, soft window light from the left rim-lighting her cheekbone, dark and unlit on the right, completely defocused background, T1.4 shallow depth of field, premium editorial mood, fine 35mm grain, mood reminiscent of Sofia Coppola's Lost In Translation, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Cinematic 85mm tight close-up profile portrait of a woman in her late 30s with eyes closed, a barely-there half-smile forming, soft window light from the left rim-lighting her cheekbone, dark and unlit on the right, completely defocused background, T1.4 shallow depth of field, premium editorial mood, fine 35mm grain, mood reminiscent of Sofia Coppola's Lost In Translation,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Zacht raamlicht van links. Geen vulling rechts.
+- Kleurnotitie: Warme huid, donkere achtergrond, zacht maar contrastrijk.
+- Onderwerp: Profielportret van klant — moment van overgave
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in VEO voor clip s03-c.mp4.

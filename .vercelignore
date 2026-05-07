@@ -1,0 +1,18 @@
+# Tests draaien niet op Vercel
+tests/
+playwright.config.ts
+playwright-report/
+test-results/
+
+# Render-output is dev-only
+real-assets/*/clips/
+real-assets/*/stills/
+real-assets/*/audio/
+real-assets/*/exports/
+
+# Lokale Render Agent caches
+.next/mock-render-cache/
+
+# Documentatie
+*.md
+!README.md

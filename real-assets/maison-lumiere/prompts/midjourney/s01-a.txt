@@ -1,0 +1,26 @@
+# Still s01-a — first frame voor Het stadsritme
+# Bestand: stills/s01-a.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Cinematic 24mm anamorphic wide shot of a busy Amsterdam-Zuid tram street at midday: blurred passers-by streak past, one stationary woman in tailored coat stands sharp in the centre, harsh shadows on asphalt, hint of cool neon glint, cool desaturated palette, fine 35mm film grain, anamorphic lens flare, shot on Arri Alexa Mini LF, mood reminiscent of Wong Kar-wai's Chungking Express, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Cinematic 24mm anamorphic wide shot of a busy Amsterdam-Zuid tram street at midday: blurred passers-by streak past, one stationary woman in tailored coat stands sharp in the centre, harsh shadows on asphalt, hint of cool neon glint, cool desaturated palette, fine 35mm film grain, anamorphic lens flare, shot on Arri Alexa Mini LF, mood reminiscent of Wong Kar-wai's Chungking Express,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Direct middaglicht, harde schaduwen op asfalt.
+- Kleurnotitie: Ontkleurd, contrast gespreid, neon-glint.
+- Onderwerp: Trambaan in Amsterdam-Zuid, voorbijgangers in beweging
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in RUNWAY voor clip s01-a.mp4.

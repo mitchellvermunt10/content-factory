@@ -1,0 +1,26 @@
+# Still s01-b — first frame voor Het stadsritme
+# Bestand: stills/s01-b.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Extreme macro close-up of a smartphone screen with three rapid push notifications cascading downward, hand tilting the device away, screen glow casting cool blue light on warm-toned skin, dark surroundings, shallow depth of field, 50mm lens, cinematic film grain, premium editorial mood, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Extreme macro close-up of a smartphone screen with three rapid push notifications cascading downward, hand tilting the device away, screen glow casting cool blue light on warm-toned skin, dark surroundings, shallow depth of field, 50mm lens, cinematic film grain, premium editorial mood,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Praktisch licht van scherm op huid. Voor de rest pikdonker.
+- Kleurnotitie: Koel scherm-blauw op warm-getinte huid, sterk contrast.
+- Onderwerp: Drie notificaties verschijnen achter elkaar op een telefoon
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in RUNWAY voor clip s01-b.mp4.

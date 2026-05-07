@@ -1,0 +1,55 @@
+# Shot s01-b — Het stadsritme
+# Provider: RUNWAY Gen-3 Alpha
+# Output bestand: clips/s01-b.mp4
+# Scene: s01 (hook) · Shot duur: 2s
+
+# ============================================================
+# FINAL PROMPT — paste this into RUNWAY
+# ============================================================
+
+9:16 close-up macro of a smartphone screen, three notifications popping in rapid succession, hand tilts the device away as the screen fades to black. Whip pan to next scene. 50mm lens, shallow depth, screen glow on skin, cool blue colour cast against warm tones. 24fps. 2 seconds.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Runway Gen-3 Alpha
+- **Native duration:** tot 5s, knip naar 2s in edit
+- **Resolution:** 1080×1920 (Upscale aan)
+- **Image-to-video:** YES — gebruik `stills/s01-b.png` als first frame
+- **Camera control:** Motion brush voor "whip-pan" beweging
+- **Style preset:** Cinematic
+- **Seed:** vrij eerst; fix daarna voor reruns
+- **Reden voor deze keuze:** Quick close-ups met scherm-content; whip-pan wordt overgenomen via motion brush.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Extreme close-up macro, whip-pan (snelle horizontale beweging).
+
+**Onderwerp:** Drie notificaties verschijnen achter elkaar op een telefoon.
+
+**Wat er gebeurt:** Drie pings, drie banners. De hand kantelt het scherm weg. Black to silence.
+
+**Belichting:** Praktisch licht van scherm op huid. Voor de rest pikdonker.
+**Kleurnotitie:** Koel scherm-blauw op warm-getinte huid, sterk contrast.
+**Lens:** 50mm
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s01-b.png (genereer eerst in Midjourney via prompts/midjourney/s01-b.txt)
+- Color palette van scene s01: Asfaltgrijs · neon-blauw · beton-beige · onthouden contrast.
+- Lighting van scene s01: Hard mid-day licht, harde slagschaduwen, koele weerkaatsingen.
+- Sound design ondersteunt: Stadsachtergrond: tram, voetstappen, een notificatie. Niets wordt benadrukt.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

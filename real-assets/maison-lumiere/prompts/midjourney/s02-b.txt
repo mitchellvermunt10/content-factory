@@ -1,0 +1,26 @@
+# Still s02-b — first frame voor De drempel
+# Bestand: stills/s02-b.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Tight 85mm cinematic close-up profile portrait of a woman in her late 30s taking a deep breath, shoulders softening, eyes briefly closed, soft window light from the right rim-lighting her cheek, completely defocused warm amber background, T1.4 shallow depth of field, fine 35mm grain, premium editorial mood, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Tight 85mm cinematic close-up profile portrait of a woman in her late 30s taking a deep breath, shoulders softening, eyes briefly closed, soft window light from the right rim-lighting her cheek, completely defocused warm amber background, T1.4 shallow depth of field, fine 35mm grain, premium editorial mood,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Zacht raamlicht van rechts. Achterkant in diep schaduw.
+- Kleurnotitie: Warme huidstinten, achtergrond defocused naar abstract amber.
+- Onderwerp: Profielportret — vrouw ademt diep in
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in VEO voor clip s02-b.mp4.

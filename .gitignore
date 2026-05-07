@@ -1,0 +1,49 @@
+node_modules
+.next
+.vercel
+.env
+.env.local
+.env.development.local
+.env.production.local
+*.log
+.DS_Store
+playwright-report
+test-results
+.next-env.d.ts
+
+# Render output / fixtures — niet pushen (regenereerbaar)
+real-assets/*/clips/*
+!real-assets/*/clips/.gitkeep
+real-assets/*/stills/*
+!real-assets/*/stills/.gitkeep
+real-assets/*/audio/*
+!real-assets/*/audio/.gitkeep
+real-assets/*/exports/*
+!real-assets/*/exports/.gitkeep
+
+# Showcase test-output (groot, regenereerbaar via render-cinematic-clips.sh)
+tests/showcase/maison-lumiere/clips/
+tests/showcase/maison-lumiere/audio/
+tests/showcase/maison-lumiere/exports/
+tests/showcase/.fonts/
+tests/showcase/.mock-render-cache/
+tests/showcase/preview-*.jpg
+
+# MP4-proof artefacten
+tests/mp4-proof/atelier-nord/
+tests/mp4-proof/atelier-nord-export.sh
+tests/mp4-proof/probe.json
+tests/mp4-proof/script-run.log
+
+# Intermediate render artefacten (master-*.mp4 = ffmpeg pipeline tussenstappen)
+**/master-raw.mp4
+**/master-vo.mp4
+**/master-mix.mp4
+**/master-graded.mp4
+
+# Generated downloaded scripts (regenereerbaar via Playwright spec)
+tests/showcase/maison-lumiere-export-reel-9x16.sh
+tests/showcase/maison-lumiere-campaign.json
+
+# Audio fixtures buiten audio/ folder
+real-assets/*/clips.txt

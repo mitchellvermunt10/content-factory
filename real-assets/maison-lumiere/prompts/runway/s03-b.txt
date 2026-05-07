@@ -1,0 +1,55 @@
+# Shot s03-b — Het ritueel
+# Provider: RUNWAY Gen-3 Alpha
+# Output bestand: clips/s03-b.mp4
+# Scene: s03 (build) · Shot duur: 4s
+
+# ============================================================
+# FINAL PROMPT — paste this into RUNWAY
+# ============================================================
+
+9:16 cinematic 50mm medium-close shot, slow dolly-in over 4 seconds, hands deliberately place three small precision tools one by one onto a dark walnut work surface, soft tungsten side-light from the left, brass catches a subtle highlight, warm amber ambience. Naturalistic motion, no synthetic smoothness. 24fps.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Runway Gen-3 Alpha
+- **Native duration:** tot 5s, knip naar 4s in edit
+- **Resolution:** 1080×1920 (Upscale aan)
+- **Image-to-video:** YES — gebruik `stills/s03-b.png` als first frame
+- **Camera control:** Motion brush voor "dolly-in" beweging
+- **Style preset:** Cinematic
+- **Seed:** vrij eerst; fix daarna voor reruns
+- **Reden voor deze keuze:** Bedachtzame deliberate hand-motion in warm tungsten.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Medium close-up, dolly-in (camera nadert het onderwerp).
+
+**Onderwerp:** Vakvrouw legt gereedschap af op een houten werkblad.
+
+**Wat er gebeurt:** Drie objecten worden bedachtzaam neergelegd in volgorde. Geen haast.
+
+**Belichting:** Zacht side-light van links, warm tungsten.
+**Kleurnotitie:** Amber, fluwelig, lichte halation op messing.
+**Lens:** 50mm prime
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s03-b.png (genereer eerst in Midjourney via prompts/midjourney/s03-b.txt)
+- Color palette van scene s03: Diep amber · ambachtelijk goud · donkergroen materiaal.
+- Lighting van scene s03: Gestapeld praktisch: één kaars, één raamlicht, één kleine lamp. Geen flatlight.
+- Sound design ondersteunt: ASMR-laag: water dat plenst, materiaal dat raakt, ademen, glas dat tikt. Eerste piano-noten 0:14.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

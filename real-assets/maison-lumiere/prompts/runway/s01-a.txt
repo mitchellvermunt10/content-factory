@@ -1,0 +1,55 @@
+# Shot s01-a — Het stadsritme
+# Provider: RUNWAY Gen-3 Alpha
+# Output bestand: clips/s01-a.mp4
+# Scene: s01 (hook) · Shot duur: 2s
+
+# ============================================================
+# FINAL PROMPT — paste this into RUNWAY
+# ============================================================
+
+9:16 cinematic 24mm anamorphic wide shot, busy Amsterdam tram street at midday, motion blur on background pedestrians, one stationary woman in tailored coat remains sharp in centre frame. Slow horizontal tracking right-to-left. Anamorphic flares, harsh midday light, desaturated palette with cool neon highlights. Subtle organic camera shake. 24fps, naturalistic motion. 2 seconds.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Runway Gen-3 Alpha
+- **Native duration:** tot 5s, knip naar 2s in edit
+- **Resolution:** 1080×1920 (Upscale aan)
+- **Image-to-video:** YES — gebruik `stills/s01-a.png` als first frame
+- **Camera control:** Motion brush voor "tracking" beweging
+- **Style preset:** Cinematic
+- **Seed:** vrij eerst; fix daarna voor reruns
+- **Reden voor deze keuze:** Sterk in crowd-motion blur en organische tracking-camera.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Wijde shot, tracking (camera volgt onderwerp).
+
+**Onderwerp:** Trambaan in Amsterdam-Zuid, voorbijgangers in beweging.
+
+**Wat er gebeurt:** Een parade van geblurde silhouetten schuift door het frame. Eén figuur staat doodstil in het midden, scherp.
+
+**Belichting:** Direct middaglicht, harde schaduwen op asfalt.
+**Kleurnotitie:** Ontkleurd, contrast gespreid, neon-glint.
+**Lens:** 24mm wide, anamorphic 1.33×
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s01-a.png (genereer eerst in Midjourney via prompts/midjourney/s01-a.txt)
+- Color palette van scene s01: Asfaltgrijs · neon-blauw · beton-beige · onthouden contrast.
+- Lighting van scene s01: Hard mid-day licht, harde slagschaduwen, koele weerkaatsingen.
+- Sound design ondersteunt: Stadsachtergrond: tram, voetstappen, een notificatie. Niets wordt benadrukt.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

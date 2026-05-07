@@ -1,0 +1,55 @@
+# Shot s04-a — Het bestendige
+# Provider: RUNWAY Gen-3 Alpha Turbo
+# Output bestand: clips/s04-a.mp4
+# Scene: s04 (payoff) · Shot duur: 6s
+
+# ============================================================
+# FINAL PROMPT — paste this into RUNWAY
+# ============================================================
+
+9:16 cinematic 35mm anamorphic wide exterior, slow dolly-out over 6 seconds, away from a luxury salon glowing warmly at twilight in Amsterdam, a silhouetted woman in a tailored coat steps out and walks calmly into the cool blue dusk, golden interior light spills onto wet cobblestones, anamorphic flares from a street lamp. 24fps, naturalistic motion. Final shot before end card.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Runway Gen-3 Alpha Turbo
+- **Native duration:** 10s native, knip naar 6s
+- **Resolution:** 1080×1920 (Upscale aan)
+- **Image-to-video:** YES — gebruik `stills/s04-a.png` als first frame
+- **Camera control:** Motion brush voor "dolly-out" beweging
+- **Style preset:** Cinematic
+- **Seed:** vrij eerst; fix daarna voor reruns
+- **Reden voor deze keuze:** Langere takes (10s) — nodig voor de 6s twilight dolly-out exterior.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Wijde shot, dolly-out (camera trekt terug).
+
+**Onderwerp:** De salon in schemer — een silhouet stapt naar buiten.
+
+**Wat er gebeurt:** Camera trekt langzaam terug. Het etablissement gloeit warm in een koude blauwe stad. De vrouw stapt met rustige tred weg.
+
+**Belichting:** Mixed: warm interieur, koel twilight buiten, één straatlamp.
+**Kleurnotitie:** Goud-blauw split. Cinematic teal-and-orange.
+**Lens:** 35mm anamorphic
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s04-a.png (genereer eerst in Midjourney via prompts/midjourney/s04-a.txt)
+- Color palette van scene s04: Twilight blauw · interior gold · cinemascope letterbox.
+- Lighting van scene s04: Schemerlicht. Praktische lampen binnen gloeien als een baken.
+- Sound design ondersteunt: Muziek-swell vol opent. Sub-bass diep onderin. Voetstappen op natte stenen.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

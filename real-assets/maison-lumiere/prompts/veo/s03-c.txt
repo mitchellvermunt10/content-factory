@@ -1,0 +1,54 @@
+# Shot s03-c — Het ritueel
+# Provider: VEO Veo 3
+# Output bestand: clips/s03-c.mp4
+# Scene: s03 (build) · Shot duur: 5s
+
+# ============================================================
+# FINAL PROMPT — paste this into VEO
+# ============================================================
+
+9:16 cinematic 85mm close-up profile portrait, subtle handheld feel, woman with eyes closed slowly forms a barely-there half-smile, soft window light from the left, completely defocused background, T1.4 shallow focus. Organic micro-movement only — no AI smoothness. 24fps. 5 seconds.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Veo 3 (via Vertex AI Studio of Gemini app)
+- **Native duration:** tot 8s, knip naar 5s
+- **Aspect:** 9:16
+- **Image-to-video:** YES — gebruik `stills/s03-c.png` als first frame
+- **Generate audio:** **NO** — wij mixen onze eigen VO + muziek. Anders krijg je dubbel-audio.
+- **Quality:** Cinematic
+- **Reden voor deze keuze:** Subtiele facial micro-expressies (halve glimlach, ademteug) zonder uncanny valley.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Close-up, handheld (subtiel).
+
+**Onderwerp:** Profielportret van klant — moment van overgave.
+
+**Wat er gebeurt:** Een halve glimlach verschijnt, ogen blijven gesloten. De wereld is buitengesloten.
+
+**Belichting:** Zacht raamlicht van links. Geen vulling rechts.
+**Kleurnotitie:** Warme huid, donkere achtergrond, zacht maar contrastrijk.
+**Lens:** 85mm prime, T1.4
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s03-c.png (genereer eerst in Midjourney via prompts/midjourney/s03-c.txt)
+- Color palette van scene s03: Diep amber · ambachtelijk goud · donkergroen materiaal.
+- Lighting van scene s03: Gestapeld praktisch: één kaars, één raamlicht, één kleine lamp. Geen flatlight.
+- Sound design ondersteunt: ASMR-laag: water dat plenst, materiaal dat raakt, ademen, glas dat tikt. Eerste piano-noten 0:14.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

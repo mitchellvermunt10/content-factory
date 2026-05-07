@@ -1,0 +1,26 @@
+# Still s03-b — first frame voor Het ritueel
+# Bestand: stills/s03-b.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Cinematic 50mm medium-close shot of a skilled woman's hands deliberately placing three small precision tools onto a dark walnut work surface in a warm boutique salon interior, soft side-light from the left, brass tool catches a subtle highlight, deep amber tungsten ambience, fine grain, mood reminiscent of premium quiet luxury editorial, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Cinematic 50mm medium-close shot of a skilled woman's hands deliberately placing three small precision tools onto a dark walnut work surface in a warm boutique salon interior, soft side-light from the left, brass tool catches a subtle highlight, deep amber tungsten ambience, fine grain, mood reminiscent of premium quiet luxury editorial,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Zacht side-light van links, warm tungsten.
+- Kleurnotitie: Amber, fluwelig, lichte halation op messing.
+- Onderwerp: Vakvrouw legt gereedschap af op een houten werkblad
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in RUNWAY voor clip s03-b.mp4.

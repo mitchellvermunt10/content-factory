@@ -1,0 +1,54 @@
+# Shot s02-b — De drempel
+# Provider: VEO Veo 3
+# Output bestand: clips/s02-b.mp4
+# Scene: s02 (tension) · Shot duur: 2.5s
+
+# ============================================================
+# FINAL PROMPT — paste this into VEO
+# ============================================================
+
+9:16 cinematic 85mm close-up profile portrait, slow dolly-in over 2.5 seconds, woman exhales deeply, shoulders soften, eyes briefly close, soft window light from the right, completely defocused warm amber background, T1.4 shallow focus. Naturalistic micro-movement only. 24fps.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Veo 3 (via Vertex AI Studio of Gemini app)
+- **Native duration:** tot 8s, knip naar 2.5s
+- **Aspect:** 9:16
+- **Image-to-video:** YES — gebruik `stills/s02-b.png` als first frame
+- **Generate audio:** **NO** — wij mixen onze eigen VO + muziek. Anders krijg je dubbel-audio.
+- **Quality:** Cinematic
+- **Reden voor deze keuze:** Photoreal close-up portret met subtiele ademhaling en oogbewegingen.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Close-up, dolly-in (camera nadert het onderwerp).
+
+**Onderwerp:** Profielportret — vrouw ademt diep in.
+
+**Wat er gebeurt:** Schouders zakken zichtbaar, ogen sluiten een halve seconde, mondhoek ontspant.
+
+**Belichting:** Zacht raamlicht van rechts. Achterkant in diep schaduw.
+**Kleurnotitie:** Warme huidstinten, achtergrond defocused naar abstract amber.
+**Lens:** 85mm prime, T1.4
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s02-b.png (genereer eerst in Midjourney via prompts/midjourney/s02-b.txt)
+- Color palette van scene s02: Schaduwgrijs buiten · diep amber binnen · zachte halation.
+- Lighting van scene s02: Schemerlicht buiten, één enkele praktische lamp binnen — warm tungsten.
+- Sound design ondersteunt: Stadsgeluid valt weg. Een zachte deurbel. Een ademteug. Hartslag op subwoofer-niveau.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

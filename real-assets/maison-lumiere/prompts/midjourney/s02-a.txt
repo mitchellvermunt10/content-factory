@@ -1,0 +1,26 @@
+# Still s02-a — first frame voor De drempel
+# Bestand: stills/s02-a.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Cinematic 35mm static medium-wide shot of a discreet boutique salon entrance in Amsterdam-Zuid at dusk, hand reaching for the brass door handle, dramatic warm/cool contrast between the cold dusk outside and the deep amber tungsten interior light spilling onto the threshold, anamorphic flare on the brass, fine grain, premium quiet luxury aesthetic, mood reminiscent of Aesop x Hermès editorial, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Cinematic 35mm static medium-wide shot of a discreet boutique salon entrance in Amsterdam-Zuid at dusk, hand reaching for the brass door handle, dramatic warm/cool contrast between the cold dusk outside and the deep amber tungsten interior light spilling onto the threshold, anamorphic flare on the brass, fine grain, premium quiet luxury aesthetic, mood reminiscent of Aesop x Hermès editorial,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Hard koud daglicht buiten, warm amber binnen — extreem contrast op drempel.
+- Kleurnotitie: Sterke warm/koud-split exact op de overgang.
+- Onderwerp: Voordeur van de salon vanaf straatkant — de wereld stopt op de drempel
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in KLING voor clip s02-a.mp4.

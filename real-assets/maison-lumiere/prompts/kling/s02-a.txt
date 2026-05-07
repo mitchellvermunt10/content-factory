@@ -1,0 +1,54 @@
+# Shot s02-a — De drempel
+# Provider: KLING 1.6 Pro
+# Output bestand: clips/s02-a.mp4
+# Scene: s02 (tension) · Shot duur: 2.5s
+
+# ============================================================
+# FINAL PROMPT — paste this into KLING
+# ============================================================
+
+9:16 static 35mm medium-wide shot of a boutique salon door, a hand enters frame and gently pushes the brass handle, the door swings open with a single soft chime, cold dusk light outside contrasting against warm amber tungsten light spilling from within, anamorphic flare catches the brass. Camera does not move. 24fps, 2.5 seconds.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Kling 1.6 Pro
+- **Native duration:** 5s native, knip naar 2.5s
+- **Aspect:** 9:16
+- **Image-to-video:** YES — gebruik `stills/s02-a.png` als start frame
+- **Camera:** "static" via Motion Brush of laat statisch
+- **Quality:** "High Quality" modus (niet Standard)
+- **Reden voor deze keuze:** Precieze micro-motion (hand opent deur) zonder warping van architectuur.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Medium-wide shot, statisch.
+
+**Onderwerp:** Voordeur van de salon vanaf straatkant — de wereld stopt op de drempel.
+
+**Wat er gebeurt:** Een hand verschijnt in het frame, raakt de deurkruk, duwt zacht open. De bel klinkt één toon.
+
+**Belichting:** Hard koud daglicht buiten, warm amber binnen — extreem contrast op drempel.
+**Kleurnotitie:** Sterke warm/koud-split exact op de overgang.
+**Lens:** 35mm prime
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s02-a.png (genereer eerst in Midjourney via prompts/midjourney/s02-a.txt)
+- Color palette van scene s02: Schaduwgrijs buiten · diep amber binnen · zachte halation.
+- Lighting van scene s02: Schemerlicht buiten, één enkele praktische lamp binnen — warm tungsten.
+- Sound design ondersteunt: Stadsgeluid valt weg. Een zachte deurbel. Een ademteug. Hartslag op subwoofer-niveau.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

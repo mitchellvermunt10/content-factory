@@ -1,0 +1,54 @@
+# Shot s03-a — Het ritueel
+# Provider: KLING 1.6 Pro
+# Output bestand: clips/s03-a.mp4
+# Scene: s03 (build) · Shot duur: 3s
+
+# ============================================================
+# FINAL PROMPT — paste this into KLING
+# ============================================================
+
+9:16 static extreme macro shot, hand pours crystal-clear water onto a smooth black river stone, the water breaks softly and cascades along the edges. 100mm macro lens, single candle rim-light from the right, completely dark background. 96fps slow-motion interpreted at 24fps for cinematic slow effect. Kodak 2383 warm amber halation, fine grain. 3 seconds, naturalistic motion only.
+
+# ============================================================
+# NEGATIVE PROMPT
+# ============================================================
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# ============================================================
+# SETTINGS
+# ============================================================
+
+- **Model:** Kling 1.6 Pro
+- **Native duration:** 5s native met slow-mo, knip naar 3s
+- **Aspect:** 9:16
+- **Image-to-video:** YES — gebruik `stills/s03-a.png` als start frame
+- **Camera:** "static" via Motion Brush of laat statisch
+- **Quality:** "High Quality" modus (niet Standard)
+- **Reden voor deze keuze:** Beste optie voor realistische water-physics en macro slow-mo.
+
+# ============================================================
+# VISUELE BRIEF (Nederlands)
+# ============================================================
+
+Extreme close-up macro, statisch.
+
+**Onderwerp:** Een hand schenkt water op een gladde rivierkei.
+
+**Wat er gebeurt:** Het water raakt de steen, breekt zacht open, druipt langs de rand. 96fps slow-mo.
+
+**Belichting:** Eén kaarslamp van rechts, rim-light op water. Volledig duister achter.
+**Kleurnotitie:** Kodak 2383, warm halation, donker met heldere highlights.
+**Lens:** 100mm macro
+
+Sfeer: bedachtzaam tempo, naturalistische beweging, geen synthetische gloss, fijne 35mm grain. Mood-referentie: Wong Kar-wai × Aesop × Hermès editorial.
+
+# ============================================================
+# STYLE CONSISTENCY
+# ============================================================
+
+- First frame still: stills/s03-a.png (genereer eerst in Midjourney via prompts/midjourney/s03-a.txt)
+- Color palette van scene s03: Diep amber · ambachtelijk goud · donkergroen materiaal.
+- Lighting van scene s03: Gestapeld praktisch: één kaars, één raamlicht, één kleine lamp. Geen flatlight.
+- Sound design ondersteunt: ASMR-laag: water dat plenst, materiaal dat raakt, ademen, glas dat tikt. Eerste piano-noten 0:14.
+- Mood-referentie consistent door alle 8 shots: Aesop × Wong Kar-wai × Hermès campaign × Apple iPhone-launch

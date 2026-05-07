@@ -1,0 +1,26 @@
+# Still s04-a — first frame voor Het bestendige
+# Bestand: stills/s04-a.png
+# Tool: Midjourney v6 OF Adobe Firefly
+# Aspect: 9:16
+
+# === MIDJOURNEY PROMPT ===
+
+Cinematic 35mm anamorphic wide exterior shot of a discreet luxury beauty salon glowing warmly at twilight in Amsterdam-Zuid, a single silhouetted woman in a tailored coat stepping out onto the cobblestone street, deep blue dusk sky overhead, golden interior light spilling onto the wet stones, anamorphic lens flares from a single street lamp, fine grain, mood reminiscent of Apple iPhone launch commercials meets Hermès campaign, --ar 9:16 --style raw --v 6
+
+# === FIREFLY ALTERNATIEF (geen --ar tags, kies 9:16 in UI) ===
+
+Cinematic 35mm anamorphic wide exterior shot of a discreet luxury beauty salon glowing warmly at twilight in Amsterdam-Zuid, a single silhouetted woman in a tailored coat stepping out onto the cobblestone street, deep blue dusk sky overhead, golden interior light spilling onto the wet stones, anamorphic lens flares from a single street lamp, fine grain, mood reminiscent of Apple iPhone launch commercials meets Hermès campaign,
+
+# === NEGATIVE / DO NOT INCLUDE ===
+
+no AI plastic skin, no morphing limbs, no extra fingers, no warped architecture, no oversaturation, no obvious CGI, no children, no logos or text overlays unless specified, no synthetic gloss, no horror elements, no zoom artifacts, no flickering
+
+# === GEBRUIK ===
+
+Genereer 4-6 variaties. Kies de still die het meest matcht met:
+- Belichting: Mixed: warm interieur, koel twilight buiten, één straatlamp.
+- Kleurnotitie: Goud-blauw split. Cinematic teal-and-orange.
+- Onderwerp: De salon in schemer — een silhouet stapt naar buiten
+
+Bewaar als 9:16 PNG (1080×1920 of hoger). Gebruik daarna als first-frame
+in RUNWAY voor clip s04-a.mp4.
