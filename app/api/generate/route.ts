@@ -3,7 +3,7 @@ import { BusinessBriefSchema } from "@/lib/schemas/brief";
 import { runCampaign } from "@/lib/generators/orchestrator";
 
 export const runtime = "nodejs";
-export const maxDuration = 120;
+export const maxDuration = 300;
 
 export async function POST(req: Request) {
   try {

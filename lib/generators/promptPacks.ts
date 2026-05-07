@@ -78,7 +78,6 @@ EISEN
     schema: PromptPacksSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 5500,
-    model: "claude-haiku-4-5-20251001",
+    maxTokens: 7000,
   });
 }
