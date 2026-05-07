@@ -40,5 +40,6 @@ Geef het hele schema, ingevuld in vlekkeloos Nederlands.`;
     user,
     schemaHint: SCHEMA_HINT,
     maxTokens: 2500,
+    model: "claude-haiku-4-5-20251001",
   });
 }

@@ -66,6 +66,7 @@ export function BriefWizard() {
   const [submitting, setSubmitting] = useState(false);
   const [progressLabel, setProgressLabel] = useState<string | null>(null);
   const [progressIdx, setProgressIdx] = useState(0);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
   const addCampaign = useCampaigns((s) => s.addCampaign);
 
@@ -106,6 +107,7 @@ export function BriefWizard() {
     }
     const brief = parsed.data;
     setSubmitting(true);
+    setSubmitError(null);
     setProgressIdx(0);
     setProgressLabel(GENERATOR_SEQUENCE[0].label);
 
@@ -165,9 +167,14 @@ export function BriefWizard() {
       });
       startTransition(() => router.push(`/studio/campaigns/${campaign.id}`));
     } catch (err) {
-      toast.error(`Mislukt op stap ${progressIdx + 1}/${GENERATOR_SEQUENCE.length}`, {
-        description: err instanceof Error ? err.message : "Onbekende fout",
+      const message = err instanceof Error ? err.message : "Onbekende fout";
+      // Persistent toast — verdwijnt niet automatisch zodat user 'm leest.
+      toast.error(`Generatie mislukt`, {
+        description: message,
+        duration: Infinity,
+        closeButton: true,
       });
+      setSubmitError(message);
       setSubmitting(false);
       setProgressLabel(null);
     }
@@ -205,6 +212,27 @@ export function BriefWizard() {
           </motion.div>
         </AnimatePresence>
       </div>
+
+      {submitError ? (
+        <div
+          role="alert"
+          className="mt-6 flex items-start gap-3 rounded-xl border border-danger/40 bg-danger/5 p-4 text-sm text-danger"
+          data-testid="wizard-error"
+        >
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] mt-0.5">
+            Error
+          </span>
+          <div className="flex-1 leading-relaxed">{submitError}</div>
+          <button
+            type="button"
+            onClick={() => setSubmitError(null)}
+            className="text-text-muted hover:text-text"
+            aria-label="Sluit foutmelding"
+          >
+            ×
+          </button>
+        </div>
+      ) : null}
 
       {/* Spacer onder content op mobiel zodat fixed footer geen content afsnijdt */}
       <div className="h-24 md:hidden" aria-hidden />
