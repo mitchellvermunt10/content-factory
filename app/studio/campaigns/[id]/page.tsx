@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-import { ArrowLeft, Download, RefreshCw, Loader2, Trash2 } from "lucide-react";
+import { ArrowLeft, Download, Eye, RefreshCw, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -170,6 +170,16 @@ export default function CampaignPage() {
               </h1>
             </div>
             <div className="flex flex-wrap gap-2">
+              <Button
+                asChild
+                variant="accent"
+                data-testid="open-client-view"
+              >
+                <Link href={`/c/${campaign.id}`} target="_blank">
+                  <Eye className="size-4" />
+                  Klantweergave
+                </Link>
+              </Button>
               <Button
                 variant="secondary"
                 onClick={() => downloadCampaignJSON(campaign)}
