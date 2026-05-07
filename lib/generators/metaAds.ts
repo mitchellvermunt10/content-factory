@@ -46,7 +46,7 @@ EISEN
     schema: MetaAdsSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 2500,
+    maxTokens: 3500,
     model: "claude-haiku-4-5-20251001",
   });
 }

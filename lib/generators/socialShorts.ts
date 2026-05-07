@@ -44,6 +44,7 @@ EISEN
     schema: SocialShortsSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 2800,
+    maxTokens: 4500,
+    model: "claude-haiku-4-5-20251001",
   });
 }
