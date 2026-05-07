@@ -80,7 +80,7 @@ export const SceneSchema = z.object({
       .max(220)
       .describe("Toon, tempo, ademhaling, accent"),
   }),
-  onScreenText: z.string().max(140).optional().or(z.literal("")),
+  onScreenText: z.string().max(140).nullable().optional().or(z.literal("")),
   cameraTreatment: z.string().max(280),
   lighting: z.string().max(220),
   colorPalette: z.string().max(220),

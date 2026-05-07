@@ -6,7 +6,7 @@ const Beat = z.object({
     .regex(/^\d{2}:\d{2}$/, "Tijdcode formaat 'SS:FF' (sec:frames) of 'MM:SS'"),
   shot: z.string().max(220).describe("Wat je ziet in deze beat"),
   vo: z.string().max(280).describe("Wat je hoort / spreekt"),
-  onScreenText: z.string().max(120).optional().or(z.literal("")),
+  onScreenText: z.string().max(120).nullable().optional().or(z.literal("")),
 });
 
 const ShortFormat = z.object({
@@ -25,7 +25,7 @@ const ShortFormat = z.object({
 const Hook = z.object({
   text: z.string().min(4).max(200),
   type: z.enum(["text-overlay", "voice-over", "performative"]),
-  note: z.string().max(180).optional().or(z.literal("")),
+  note: z.string().max(180).nullable().optional().or(z.literal("")),
 });
 
 export const SocialShortsSchema = z.object({

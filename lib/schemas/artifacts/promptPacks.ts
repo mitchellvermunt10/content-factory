@@ -5,7 +5,7 @@ const ImagePrompt = z.object({
   context: z.string().max(140),
   midjourney: z.string().min(20).max(1000),
   firefly: z.string().min(20).max(1000),
-  negative: z.string().max(420).optional().or(z.literal("")),
+  negative: z.string().max(420).nullable().optional().or(z.literal("")),
   aspectRatio: z.enum(["16:9", "9:16", "1:1", "21:9", "4:5", "3:2"]),
   styleNote: z.string().max(220),
 });
