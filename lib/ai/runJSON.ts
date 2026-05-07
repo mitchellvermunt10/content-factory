@@ -1,4 +1,5 @@
 import type { ZodSchema } from "zod";
+import { z } from "zod";
 import { getAnthropic, DEFAULT_MODEL } from "./client";
 
 const SYSTEM_PROMPT = `Je bent een senior creative director en copywriter bij een Nederlands premium digitaal bureau (Next Level Sites). Je schrijft in vlekkeloos, sprankelend Nederlands. Je werk is cinematic, doordacht en commercieel scherp.
@@ -19,6 +20,84 @@ function extractJSON(raw: string): string {
   const end = trimmed.lastIndexOf("}");
   if (start >= 0 && end > start) return trimmed.slice(start, end + 1);
   return trimmed;
+}
+
+function getAtPath(obj: unknown, path: (string | number)[]): unknown {
+  let cur: unknown = obj;
+  for (const key of path) {
+    if (cur === null || typeof cur !== "object") return undefined;
+    cur = (cur as Record<string | number, unknown>)[key];
+  }
+  return cur;
+}
+
+function setAtPath(
+  obj: unknown,
+  path: (string | number)[],
+  value: unknown
+): void {
+  if (path.length === 0) return;
+  const last = path[path.length - 1];
+  let cur: unknown = obj;
+  for (let i = 0; i < path.length - 1; i++) {
+    if (cur === null || typeof cur !== "object") return;
+    cur = (cur as Record<string | number, unknown>)[path[i]];
+  }
+  if (cur && typeof cur === "object") {
+    (cur as Record<string | number, unknown>)[last] = value;
+  }
+}
+
+/**
+ * Probeert het parsed object door het schema te halen. Bij `too_big` errors
+ * (string te lang of array te lang) wordt het offending veld lokaal afgekapt
+ * en opnieuw geprobeerd. Voorkomt dure retry-Anthropic-calls voor
+ * length-overshoots — wat een terugkerend Claude-gedrag is.
+ */
+function parseWithTruncation<T>(
+  schema: ZodSchema<T>,
+  raw: unknown,
+  maxFixIterations = 3
+): T {
+  // Deep clone zodat we niet het oorspronkelijke object muteren.
+  let value: unknown = JSON.parse(JSON.stringify(raw));
+
+  for (let iter = 0; iter < maxFixIterations; iter++) {
+    const result = schema.safeParse(value);
+    if (result.success) return result.data;
+
+    let modified = false;
+    for (const err of result.error.errors) {
+      if (err.code !== z.ZodIssueCode.too_big) continue;
+      const max = (err as z.ZodTooBigIssue).maximum as number;
+      const path = err.path;
+      const cur = getAtPath(value, path);
+
+      if (typeof cur === "string" && cur.length > max) {
+        // Kap af en eindig op zinvolle grens (laatste spatie/leesteken)
+        let truncated = cur.slice(0, max);
+        const lastBreak = Math.max(
+          truncated.lastIndexOf(" "),
+          truncated.lastIndexOf("."),
+          truncated.lastIndexOf(",")
+        );
+        if (lastBreak > max * 0.8) truncated = truncated.slice(0, lastBreak);
+        setAtPath(value, path, truncated.trimEnd());
+        modified = true;
+      } else if (Array.isArray(cur) && cur.length > max) {
+        setAtPath(value, path, cur.slice(0, max));
+        modified = true;
+      }
+    }
+    if (!modified) {
+      // Geen truncate-fixable errors meer — non-too_big issues blijven over.
+      throw new Error(
+        `Schema-validatie faalde: ${JSON.stringify(result.error.errors).slice(0, 500)}`
+      );
+    }
+  }
+
+  throw new Error("Schema-validatie faalde na 3 truncatie-pogingen");
 }
 
 export async function runJSON<T>({
@@ -43,30 +122,30 @@ ${schemaHint}
 
 Antwoord uitsluitend met valide JSON. Geen toelichting. Geen \`\`\` blokken.`;
 
-  let lastError: unknown = null;
+  // Eén Anthropic call. Bij parse failure NIET retryen — auto-truncate via
+  // parseWithTruncation lost length-overshoots lokaal op zonder een tweede
+  // dure Anthropic call die alsnog de Vercel timeout zou triggeren.
+  const response = await anthropic.messages.create({
+    model,
+    max_tokens: maxTokens,
+    system: SYSTEM_PROMPT,
+    messages: [{ role: "user", content: fullPrompt }],
+  });
 
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const response = await anthropic.messages.create({
-        model,
-        max_tokens: maxTokens,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: "user", content: fullPrompt }],
-      });
+  const block = response.content[0];
+  const text = block && block.type === "text" ? block.text : "";
+  const jsonStr = extractJSON(text);
 
-      const block = response.content[0];
-      const text = block && block.type === "text" ? block.text : "";
-      const jsonStr = extractJSON(text);
-      const parsed = JSON.parse(jsonStr);
-      return schema.parse(parsed);
-    } catch (err) {
-      lastError = err;
-    }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(jsonStr);
+  } catch (err) {
+    throw new Error(
+      `JSON parse faalde: ${
+        err instanceof Error ? err.message : String(err)
+      }. Eerste 200 chars: ${jsonStr.slice(0, 200)}`
+    );
   }
 
-  throw new Error(
-    `runJSON faalde na 2 pogingen: ${
-      lastError instanceof Error ? lastError.message : String(lastError)
-    }`
-  );
+  return parseWithTruncation(schema, parsed);
 }
