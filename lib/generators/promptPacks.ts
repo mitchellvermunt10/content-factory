@@ -78,6 +78,6 @@ EISEN
     schema: PromptPacksSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 7000,
+    maxTokens: 9000,
   });
 }

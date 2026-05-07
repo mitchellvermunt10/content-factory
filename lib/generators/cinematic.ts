@@ -84,6 +84,6 @@ EISEN
     schema: CinematicCampaignSchema,
     user,
     schemaHint: SCHEMA_HINT,
-    maxTokens: 7000,
+    maxTokens: 9000,
   });
 }
