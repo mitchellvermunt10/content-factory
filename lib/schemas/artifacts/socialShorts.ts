@@ -4,28 +4,28 @@ const Beat = z.object({
   timecode: z
     .string()
     .regex(/^\d{2}:\d{2}$/, "Tijdcode formaat 'SS:FF' (sec:frames) of 'MM:SS'"),
-  shot: z.string().max(120).describe("Wat je ziet in deze beat"),
-  vo: z.string().max(180).describe("Wat je hoort / spreekt"),
-  onScreenText: z.string().max(60).optional().or(z.literal("")),
+  shot: z.string().max(220).describe("Wat je ziet in deze beat"),
+  vo: z.string().max(280).describe("Wat je hoort / spreekt"),
+  onScreenText: z.string().max(120).optional().or(z.literal("")),
 });
 
 const ShortFormat = z.object({
-  durationSec: z.number().min(7).max(90),
-  hook: z.string().min(8).max(120),
-  beats: z.array(Beat).min(3).max(8),
-  cta: z.string().max(60),
-  soundDirection: z.string().max(180),
-  captionsStyle: z.string().max(140),
+  durationSec: z.number().min(5).max(120),
+  hook: z.string().min(5).max(200),
+  beats: z.array(Beat).min(2).max(12),
+  cta: z.string().max(100),
+  soundDirection: z.string().max(280),
+  captionsStyle: z.string().max(220),
   loopOpportunity: z
     .string()
-    .max(140)
+    .max(220)
     .describe("Hoe het einde naar het begin terugloopt"),
 });
 
 const Hook = z.object({
-  text: z.string().min(6).max(120),
+  text: z.string().min(4).max(200),
   type: z.enum(["text-overlay", "voice-over", "performative"]),
-  note: z.string().max(120).optional().or(z.literal("")),
+  note: z.string().max(180).optional().or(z.literal("")),
 });
 
 export const SocialShortsSchema = z.object({
@@ -35,23 +35,23 @@ export const SocialShortsSchema = z.object({
     youtubeShort: ShortFormat,
   }),
   hookBank: z.object({
-    curiosity: z.array(Hook).min(3).max(5),
-    benefit: z.array(Hook).min(3).max(5),
-    contrarian: z.array(Hook).min(3).max(5),
-    story: z.array(Hook).min(3).max(5),
-    urgency: z.array(Hook).min(3).max(5),
+    curiosity: z.array(Hook).min(2).max(8),
+    benefit: z.array(Hook).min(2).max(8),
+    contrarian: z.array(Hook).min(2).max(8),
+    story: z.array(Hook).min(2).max(8),
+    urgency: z.array(Hook).min(2).max(8),
   }),
-  ctaBank: z.array(z.string().max(40)).min(4).max(8),
+  ctaBank: z.array(z.string().max(80)).min(2).max(12),
   trendingFormats: z
     .array(
       z.object({
-        name: z.string().max(60),
-        why: z.string().max(140),
-        adaptation: z.string().max(180),
+        name: z.string().max(100),
+        why: z.string().max(220),
+        adaptation: z.string().max(280),
       })
     )
-    .min(2)
-    .max(4),
+    .min(1)
+    .max(6),
 });
 
 export type SocialShorts = z.infer<typeof SocialShortsSchema>;

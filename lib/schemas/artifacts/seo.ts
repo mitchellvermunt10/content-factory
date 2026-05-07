@@ -1,39 +1,39 @@
 import { z } from "zod";
 
 export const SeoCopySchema = z.object({
-  metaTitle: z.string().min(20).max(70),
-  metaDescription: z.string().min(80).max(180),
-  ogTitle: z.string().max(80),
-  ogDescription: z.string().max(200),
-  primaryKeyword: z.string().max(80),
-  secondaryKeywords: z.array(z.string().max(60)).min(4).max(10),
-  longTailKeywords: z.array(z.string().max(80)).min(4).max(8),
+  metaTitle: z.string().min(15).max(100),
+  metaDescription: z.string().min(50).max(260),
+  ogTitle: z.string().max(120),
+  ogDescription: z.string().max(280),
+  primaryKeyword: z.string().max(120),
+  secondaryKeywords: z.array(z.string().max(80)).min(2).max(15),
+  longTailKeywords: z.array(z.string().max(120)).min(2).max(12),
   headings: z.object({
-    h1: z.string().min(8).max(80),
-    h2s: z.array(z.string().max(80)).min(4).max(8),
+    h1: z.string().min(5).max(120),
+    h2s: z.array(z.string().max(120)).min(2).max(12),
   }),
   faqSchema: z
     .array(
       z.object({
-        question: z.string().max(140),
-        answer: z.string().max(420),
+        question: z.string().max(200),
+        answer: z.string().max(640),
       })
     )
-    .min(4)
-    .max(8),
+    .min(2)
+    .max(12),
   imageAlts: z
     .array(
       z.object({
-        context: z.string().max(60),
-        alt: z.string().max(120),
+        context: z.string().max(80),
+        alt: z.string().max(180),
       })
     )
-    .min(4)
-    .max(8),
+    .min(2)
+    .max(12),
   localSchema: z.object({
-    businessType: z.string().max(60),
-    description: z.string().max(220),
-    serviceArea: z.array(z.string().max(40)).min(1).max(6),
+    businessType: z.string().max(80),
+    description: z.string().max(320),
+    serviceArea: z.array(z.string().max(60)).min(1).max(10),
   }),
 });
 
