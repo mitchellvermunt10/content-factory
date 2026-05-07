@@ -33,7 +33,7 @@ export function Hero() {
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent" />
           </span>
           <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-text-muted">
-            v0.1 · Studio Vermunt
+            v0.1 · Next Level Sites
           </span>
         </motion.div>
 

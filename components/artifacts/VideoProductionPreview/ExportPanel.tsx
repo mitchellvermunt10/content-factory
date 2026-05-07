@@ -138,7 +138,7 @@ export function ExportPanel({
                   outputUrl:
                     active.status === "ready"
                       ? null
-                      : `https://placeholder.cdn.studio-vermunt.nl/exports/${active.filename}`,
+                      : `https://placeholder.cdn.nextlevelsites.nl/exports/${active.filename}`,
                 })
               }
               data-testid="export-toggle-status"

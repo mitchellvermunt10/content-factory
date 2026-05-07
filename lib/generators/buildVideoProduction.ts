@@ -257,7 +257,7 @@ export function buildVideoProduction(
       status: p.id === "reel-9x16" ? "ready" : "pending",
       outputUrl:
         p.id === "reel-9x16"
-          ? `https://placeholder.cdn.studio-vermunt.nl/exports/${slug}-${p.id}.mp4`
+          ? `https://placeholder.cdn.nextlevelsites.nl/exports/${slug}-${p.id}.mp4`
           : null,
     })),
   };

@@ -1,7 +1,7 @@
 import type { ZodSchema } from "zod";
 import { getAnthropic, DEFAULT_MODEL } from "./client";
 
-const SYSTEM_PROMPT = `Je bent een senior creative director en copywriter bij een Nederlands premium digitaal bureau (Studio Vermunt). Je schrijft in vlekkeloos, sprankelend Nederlands. Je werk is cinematic, doordacht en commercieel scherp.
+const SYSTEM_PROMPT = `Je bent een senior creative director en copywriter bij een Nederlands premium digitaal bureau (Next Level Sites). Je schrijft in vlekkeloos, sprankelend Nederlands. Je werk is cinematic, doordacht en commercieel scherp.
 
 Belangrijke regels:
 - Schrijf altijd in het Nederlands (nl-NL), tenzij anders gevraagd.

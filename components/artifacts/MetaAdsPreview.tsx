@@ -81,7 +81,7 @@ function FeedAdMockup({
         <div className="flex items-center gap-2">
           <div className="size-7 rounded-full bg-gradient-to-br from-accent/80 via-accent/30 to-transparent" />
           <div>
-            <div className="text-xs font-medium text-text">Studio Vermunt</div>
+            <div className="text-xs font-medium text-text">Next Level Sites</div>
             <div className="font-mono text-[10px] text-text-subtle">
               Gesponsord · Variant {index + 1}
             </div>
@@ -105,7 +105,7 @@ function FeedAdMockup({
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
           <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
-            studio-vermunt.nl
+            nextlevelsites.nl
           </div>
           <div className="truncate text-sm font-medium text-text">
             {variant.headline}

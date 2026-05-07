@@ -27,7 +27,7 @@ export function Logo({
           Content Factory
         </span>
         <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-text-subtle">
-          Studio Vermunt
+          Next Level Sites
         </span>
       </span>
     </Link>

@@ -70,7 +70,7 @@ export function Sidebar() {
         </div>
         <div className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs text-text-subtle">
           <Settings className="size-3.5" />
-          v0.1 · Studio Vermunt
+          v0.1 · Next Level Sites
         </div>
       </div>
     </aside>

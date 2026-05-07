@@ -10,7 +10,7 @@ export function Footer() {
             <Logo />
             <p className="max-w-sm text-sm leading-relaxed text-text-muted pretty">
               De AI Content Factory levert volledige campagnes voor lokale
-              ondernemers. Een product van Studio Vermunt.
+              ondernemers. Een product van Next Level Sites.
             </p>
           </div>
           <div className="space-y-4">
@@ -49,21 +49,21 @@ export function Footer() {
               Studio
             </h4>
             <ul className="space-y-2.5 text-sm">
-              <li className="text-text-muted">Studio Vermunt</li>
+              <li className="text-text-muted">Next Level Sites</li>
               <li className="text-text-muted">Nederland</li>
               <li>
                 <a
-                  href="mailto:hello@studio-vermunt.nl"
+                  href="mailto:hello@nextlevelsites.nl"
                   className="text-text-muted hover:text-text transition-colors"
                 >
-                  hello@studio-vermunt.nl
+                  hello@nextlevelsites.nl
                 </a>
               </li>
             </ul>
           </div>
         </div>
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 text-xs text-text-subtle md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} Studio Vermunt. Alle rechten voorbehouden.</p>
+          <p>© {new Date().getFullYear()} Next Level Sites. Alle rechten voorbehouden.</p>
           <p className="font-mono uppercase tracking-[0.18em]">
             v0.1 · made in NL
           </p>

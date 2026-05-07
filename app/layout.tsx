@@ -6,14 +6,14 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "AI Content Factory — Studio Vermunt",
+    default: "AI Content Factory — Next Level Sites",
     template: "%s — AI Content Factory",
   },
   description:
-    "Volledige campagnes voor lokale ondernemers, gegenereerd in minuten. Landing pages, advertenties, social en meer — door Studio Vermunt.",
-  metadataBase: new URL("https://contentfactory.studio-vermunt.nl"),
+    "Volledige campagnes voor lokale ondernemers, gegenereerd in minuten. Landing pages, advertenties, social en meer — door Next Level Sites.",
+  metadataBase: new URL("https://contentfactory.nextlevelsites.nl"),
   openGraph: {
-    title: "AI Content Factory — Studio Vermunt",
+    title: "AI Content Factory — Next Level Sites",
     description:
       "Volledige campagnes voor lokale ondernemers, gegenereerd in minuten.",
     type: "website",
