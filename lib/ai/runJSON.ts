@@ -68,36 +68,80 @@ function parseWithTruncation<T>(
 
     let modified = false;
     for (const err of result.error.errors) {
-      if (err.code !== z.ZodIssueCode.too_big) continue;
-      const max = (err as z.ZodTooBigIssue).maximum as number;
-      const path = err.path;
-      const cur = getAtPath(value, path);
+      // 1. null waar string/number/etc verwacht → coerce naar empty value.
+      //    Sonnet 4.6 schrijft soms `"field": null` voor "geen waarde".
+      if (err.code === z.ZodIssueCode.invalid_type) {
+        const issue = err as z.ZodInvalidTypeIssue;
+        if (issue.received === "null" || issue.received === "undefined") {
+          let coerced: unknown = undefined;
+          if (issue.expected === "string") coerced = "";
+          else if (issue.expected === "number") coerced = 0;
+          else if (issue.expected === "boolean") coerced = false;
+          else if (issue.expected === "array") coerced = [];
+          else if (issue.expected === "object") coerced = {};
+          if (coerced !== undefined) {
+            setAtPath(value, err.path, coerced);
+            modified = true;
+            continue;
+          }
+        }
+      }
 
-      if (typeof cur === "string" && cur.length > max) {
-        // Kap af en eindig op zinvolle grens (laatste spatie/leesteken)
-        let truncated = cur.slice(0, max);
-        const lastBreak = Math.max(
-          truncated.lastIndexOf(" "),
-          truncated.lastIndexOf("."),
-          truncated.lastIndexOf(",")
-        );
-        if (lastBreak > max * 0.8) truncated = truncated.slice(0, lastBreak);
-        setAtPath(value, path, truncated.trimEnd());
-        modified = true;
-      } else if (Array.isArray(cur) && cur.length > max) {
-        setAtPath(value, path, cur.slice(0, max));
-        modified = true;
+      // 2. invalid_union (komt vaak bij `.optional().or(z.literal(""))` met null) — strip de null.
+      if (err.code === z.ZodIssueCode.invalid_union) {
+        const cur = getAtPath(value, err.path);
+        if (cur === null || cur === undefined) {
+          setAtPath(value, err.path, "");
+          modified = true;
+          continue;
+        }
+      }
+
+      // 3. too_big — kap string/array af.
+      if (err.code === z.ZodIssueCode.too_big) {
+        const max = (err as z.ZodTooBigIssue).maximum as number;
+        const cur = getAtPath(value, err.path);
+
+        if (typeof cur === "string" && cur.length > max) {
+          let truncated = cur.slice(0, max);
+          const lastBreak = Math.max(
+            truncated.lastIndexOf(" "),
+            truncated.lastIndexOf("."),
+            truncated.lastIndexOf(",")
+          );
+          if (lastBreak > max * 0.8) truncated = truncated.slice(0, lastBreak);
+          setAtPath(value, err.path, truncated.trimEnd());
+          modified = true;
+          continue;
+        }
+        if (Array.isArray(cur) && cur.length > max) {
+          setAtPath(value, err.path, cur.slice(0, max));
+          modified = true;
+          continue;
+        }
+      }
+
+      // 4. too_small op string → pad met space (zelden, maar voorkomt crash).
+      if (err.code === z.ZodIssueCode.too_small) {
+        const min = (err as z.ZodTooSmallIssue).minimum as number;
+        const cur = getAtPath(value, err.path);
+        if (typeof cur === "string" && cur.length < min) {
+          // Geen zinnige fix — schema is inconsistent. Vul met placeholder.
+          setAtPath(value, err.path, cur + " ".repeat(min - cur.length));
+          modified = true;
+          continue;
+        }
       }
     }
+
     if (!modified) {
-      // Geen truncate-fixable errors meer — non-too_big issues blijven over.
       throw new Error(
         `Schema-validatie faalde: ${JSON.stringify(result.error.errors).slice(0, 500)}`
       );
     }
   }
 
-  throw new Error("Schema-validatie faalde na 3 truncatie-pogingen");
+  throw new Error("Schema-validatie faalde na 3 fix-pogingen");
 }
 
 export async function runJSON<T>({
