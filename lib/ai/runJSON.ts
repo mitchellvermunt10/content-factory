@@ -22,6 +22,54 @@ function extractJSON(raw: string): string {
   return trimmed;
 }
 
+/**
+ * Escape unescaped control characters binnen JSON strings. Sonnet/Haiku schrijven
+ * af en toe een echte \n in een string value — dat is technisch invalide JSON
+ * (control chars < 0x20 moeten geëscaped zijn). State-machine pass die alleen
+ * binnen string-literals corrigeert, dus structurele newlines tussen velden
+ * blijven onaangetast.
+ */
+function escapeControlChars(jsonStr: string): string {
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < jsonStr.length; i++) {
+    const ch = jsonStr[i];
+    const code = ch.charCodeAt(0);
+    if (escaped) {
+      out += ch;
+      escaped = false;
+      continue;
+    }
+    if (inString) {
+      if (ch === "\\") {
+        out += ch;
+        escaped = true;
+        continue;
+      }
+      if (ch === '"') {
+        inString = false;
+        out += ch;
+        continue;
+      }
+      if (code < 0x20) {
+        if (ch === "\n") out += "\\n";
+        else if (ch === "\r") out += "\\r";
+        else if (ch === "\t") out += "\\t";
+        else if (ch === "\b") out += "\\b";
+        else if (ch === "\f") out += "\\f";
+        else out += "\\u" + code.toString(16).padStart(4, "0");
+        continue;
+      }
+      out += ch;
+    } else {
+      if (ch === '"') inString = true;
+      out += ch;
+    }
+  }
+  return out;
+}
+
 function getAtPath(obj: unknown, path: (string | number)[]): unknown {
   let cur: unknown = obj;
   for (const key of path) {
@@ -178,17 +226,24 @@ Antwoord uitsluitend met valide JSON. Geen toelichting. Geen \`\`\` blokken.`;
 
   const block = response.content[0];
   const text = block && block.type === "text" ? block.text : "";
-  const jsonStr = extractJSON(text);
+  const rawJson = extractJSON(text);
+  const jsonStr = escapeControlChars(rawJson);
 
   let parsed: unknown;
   try {
     parsed = JSON.parse(jsonStr);
   } catch (err) {
-    throw new Error(
-      `JSON parse faalde: ${
-        err instanceof Error ? err.message : String(err)
-      }. Eerste 200 chars: ${jsonStr.slice(0, 200)}`
-    );
+    // Tweede poging: probeer parse zonder control-char-escape, voor het geval
+    // de escape-pass iets brak (bijv. al-geëscapede content corrumpeerde).
+    try {
+      parsed = JSON.parse(rawJson);
+    } catch {
+      throw new Error(
+        `JSON parse faalde: ${
+          err instanceof Error ? err.message : String(err)
+        }. Eerste 200 chars: ${jsonStr.slice(0, 200)}`
+      );
+    }
   }
 
   return parseWithTruncation(schema, parsed);
