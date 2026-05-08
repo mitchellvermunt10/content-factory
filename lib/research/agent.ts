@@ -126,6 +126,137 @@ export interface ResearchAgentResult {
 }
 
 /**
+ * Sonnet voegt soms beschrijvingen toe waar enum-waarden verwacht zijn
+ * ("Premium men-only barbershop" ipv "barber"). Plus optionele velden komen
+ * terug als null. Deze functie coerceert beide naar wat Zod accepteert.
+ */
+const VERTICAL_KEYWORDS: Array<{
+  keywords: RegExp;
+  enum: string;
+}> = [
+  { keywords: /barbershop|barber|herenkapper/i, enum: "barber" },
+  { keywords: /tandarts|dentist|tand/i, enum: "dentist" },
+  { keywords: /restaurant|bistro|brasserie|eetcafé/i, enum: "restaurant" },
+  { keywords: /gym|sportschool|fitness|crossfit/i, enum: "gym" },
+  { keywords: /tattoo|tatoe/i, enum: "tattoo" },
+  { keywords: /hotel|b&b|pension|bed.{1,3}breakfast/i, enum: "hotel" },
+  { keywords: /coffee|café|koffie|caf[ée]/i, enum: "coffeeshop" },
+  { keywords: /auto|garage|monteur|werkplaats/i, enum: "autobedrijf" },
+  { keywords: /salon|kapsalon|hair|kapper|beauty/i, enum: "salon" },
+];
+
+const VALID_VERTICALS = new Set([
+  "salon",
+  "restaurant",
+  "dentist",
+  "gym",
+  "tattoo",
+  "barber",
+  "hotel",
+  "coffeeshop",
+  "autobedrijf",
+]);
+
+const VALID_TONES = new Set([
+  "luxueus",
+  "speels",
+  "klinisch",
+  "stoer",
+  "warm",
+  "minimal",
+]);
+
+function coerceVertical(value: unknown, fallback: string): string {
+  if (typeof value !== "string") return fallback;
+  if (VALID_VERTICALS.has(value)) return value;
+  // Sonnet typt vaak een omschrijving — match keywords
+  for (const { keywords, enum: e } of VERTICAL_KEYWORDS) {
+    if (keywords.test(value)) return e;
+  }
+  return fallback;
+}
+
+function coerceTone(value: unknown): string {
+  if (typeof value !== "string") return "warm";
+  if (VALID_TONES.has(value)) return value;
+  // Map veelvoorkomende vertalingen
+  const map: Record<string, string> = {
+    luxurious: "luxueus",
+    luxury: "luxueus",
+    playful: "speels",
+    clinical: "klinisch",
+    bold: "stoer",
+    rugged: "stoer",
+    warm: "warm",
+    cozy: "warm",
+    minimalist: "minimal",
+    minimal: "minimal",
+  };
+  return map[value.toLowerCase()] ?? "warm";
+}
+
+function coerceOptionalString(value: unknown): string {
+  if (value === null || value === undefined) return "";
+  if (typeof value !== "string") return "";
+  return value;
+}
+
+function coerceHexColors(value: unknown): string[] {
+  if (!Array.isArray(value)) return ["#1a1a1a", "#f5f5f5", "#888888"];
+  const cleaned = value
+    .map((c) => (typeof c === "string" ? c.trim() : ""))
+    .filter((c) => /^#[0-9a-fA-F]{6}$/.test(c));
+  if (cleaned.length === 0) return ["#1a1a1a", "#f5f5f5", "#888888"];
+  return cleaned.slice(0, 3);
+}
+
+function normalizeAgentOutput(
+  raw: Record<string, unknown>,
+  inputVertical: string
+): Record<string, unknown> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const prospects = Array.isArray((raw as any).prospects)
+    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (raw as any).prospects.map((p: any) => {
+        const brief = p?.suggestedBrief ?? {};
+        return {
+          ...p,
+          ownerName: coerceOptionalString(p?.ownerName) || null,
+          ownerEmail: coerceOptionalString(p?.ownerEmail) || null,
+          websiteUrl: coerceOptionalString(p?.websiteUrl) || null,
+          instagramHandle: coerceOptionalString(p?.instagramHandle) || null,
+          phoneNumber: coerceOptionalString(p?.phoneNumber) || null,
+          suggestedBrief: {
+            ...brief,
+            businessType: coerceVertical(brief.businessType, inputVertical),
+            tone: coerceTone(brief.tone),
+            website: coerceOptionalString(brief.website),
+            phone: coerceOptionalString(brief.phone),
+            offer: coerceOptionalString(brief.offer),
+            brandColors: coerceHexColors(brief.brandColors),
+            // Zorg dat usps array is en filter lege strings
+            usps: Array.isArray(brief.usps)
+              ? brief.usps
+                  .filter((u: unknown) => typeof u === "string" && u.trim().length >= 3)
+                  .slice(0, 6)
+              : [],
+            // Audience moet min 20 chars zijn — pad met algemene tekst als korter
+            audience:
+              typeof brief.audience === "string" && brief.audience.length >= 20
+                ? brief.audience
+                : `Doelgroep: lokale klanten in ${brief.city ?? "de regio"} die kwaliteit en persoonlijke service waarderen.`,
+          },
+        };
+      })
+    : [];
+
+  return {
+    ...raw,
+    prospects,
+  };
+}
+
+/**
  * Sonnet 4.6 agent met web_search tool. Loopt 5-10 zoekopdrachten + tool-calls
  * door totdat 'ie de submit_prospects tool aanroept met top-10. Geen externe
  * API-keys nodig — Anthropic web_search is built-in.
@@ -166,12 +297,15 @@ ${fitCriteria}
    - Pre-gevulde BusinessBrief: businessType, name, city, usps (3-5 USPs uit hun website), audience (3-5 zinnen), tone (luxueus/speels/klinisch/stoer/warm/minimal — kies passend), offer (pak een lokale aanbieding voor hen), brandColors (3 hex-codes uit hun branding op website)
    - Cold-outreach email-draft (NL, persoonlijk, max 150 woorden)
 
-EISEN AAN BRIEF:
-- name = exacte bedrijfsnaam
+EISEN AAN BRIEF (STRIKT):
+- businessType = EXACT één van: "salon" | "restaurant" | "dentist" | "gym" | "tattoo" | "barber" | "hotel" | "coffeeshop" | "autobedrijf". GEEN omschrijving zoals "Premium barbershop" — alleen het kort enum-woord.
+- name = exacte bedrijfsnaam (zonder "Premium" prefix oid)
+- city = stadsnaam alleen
+- tone = EXACT één van: "luxueus" | "speels" | "klinisch" | "stoer" | "warm" | "minimal". Geen Engelse equivalenten, geen omschrijvingen.
 - usps = 3-5 specifiek aan dit bedrijf, NIET generiek
-- audience = wie zijn hun klanten — schrijf 3-5 zinnen
-- offer = realistische lokaal-passende aanbieding
-- brandColors = 3 hex-codes (#XXXXXX format) — schat uit hun website-branding
+- audience = wie zijn hun klanten — schrijf 3-5 zinnen, MIN 20 karakters
+- offer = realistische lokaal-passende aanbieding (mag leeg zijn als geen logisch aanbod)
+- brandColors = ARRAY van 3 hex-codes ALLEEN in format #XXXXXX (bijv. ["#1B1A18", "#E8E4DD", "#B89968"])
 
 EISEN AAN EMAIL:
 - Subject: persoonlijk, niet "Vraag voor [bedrijf]"
@@ -237,7 +371,22 @@ Begin met onderzoek. Roep submit_prospects aan zodra je top-10 (of top-5+ als mi
               suggestedBrief: {
                 type: "object",
                 properties: {
-                  businessType: { type: "string" },
+                  businessType: {
+                    type: "string",
+                    enum: [
+                      "salon",
+                      "restaurant",
+                      "dentist",
+                      "gym",
+                      "tattoo",
+                      "barber",
+                      "hotel",
+                      "coffeeshop",
+                      "autobedrijf",
+                    ],
+                    description:
+                      "EXACT één enum-waarde, GEEN beschrijving",
+                  },
                   name: { type: "string" },
                   city: { type: "string" },
                   website: { type: "string" },
@@ -425,9 +574,15 @@ Begin met onderzoek. Roep submit_prospects aan zodra je top-10 (of top-5+ als mi
     );
   }
 
+  // Normaliseer Sonnet's output voor Zod-validatie
+  const normalized = normalizeAgentOutput(
+    finalSubmitInput as Record<string, unknown>,
+    input.vertical
+  );
+
   // Valideer + parse
   const parsed = ResearchResultSchema.safeParse({
-    ...(finalSubmitInput as Record<string, unknown>),
+    ...normalized,
     searchedQueries,
   });
   if (!parsed.success) {
