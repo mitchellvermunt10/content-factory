@@ -296,6 +296,9 @@ export default function CampaignPage() {
                 <InstagramPreview
                   data={campaign.artifacts.instagram}
                   campaignId={campaign.id}
+                  businessName={campaign.brief.name}
+                  city={campaign.brief.city}
+                  accentColor={campaign.brand.accent}
                 />
               </TabsContent>
 

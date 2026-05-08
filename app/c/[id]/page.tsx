@@ -22,8 +22,9 @@ import { Button } from "@/components/ui/button";
 import { useCampaigns } from "@/lib/store/campaigns";
 import { LandingPagePreview } from "@/components/artifacts/LandingPagePreview";
 import { ApprovalBar } from "@/components/client/ApprovalBar";
-import { PublicFeedGrid } from "@/components/client/PublicFeedGrid";
 import { usePublicCampaignImages } from "@/components/client/usePublicCampaignImages";
+import { IGProfileMockup } from "@/components/instagram/IGProfileMockup";
+import type { Campaign } from "@/lib/schemas/campaign";
 import { GradientMesh } from "@/components/motion/GradientMesh";
 import { Logo } from "@/components/chrome/Logo";
 import { Timecode } from "@/components/cinematic/Timecode";
@@ -328,16 +329,7 @@ export default function ClientCampaignPage() {
         title="Instagram"
         subtitle={`${ig.posts.length} posts · weekplan · ${ig.reelIdeas.length} reel-ideeën`}
       >
-        <Card title="Bio">
-          <p className="mt-3 text-sm font-medium text-text">{ig.bio.headline}</p>
-          <p className="mt-1 text-sm text-text-muted">{ig.bio.body}</p>
-          <Badge variant="accent" className="mt-3">
-            {ig.bio.cta}
-          </Badge>
-        </Card>
-        <Card title="Feed grid">
-          <PublicFeedGrid campaignId={campaign.id} posts={ig.posts} />
-        </Card>
+        <PublicIGMockup campaign={campaign} />
         <Card title="Weekplan">
           <ul className="mt-3 divide-y divide-border overflow-hidden rounded-lg border border-border">
             {ig.weeklyPlan.map((w, i) => (
@@ -748,6 +740,21 @@ function Stat({ label, value }: { label: string; value: string }) {
       </p>
       <p className="mt-2 text-sm text-text">{value}</p>
     </div>
+  );
+}
+
+function PublicIGMockup({ campaign }: { campaign: Campaign }) {
+  const { find } = usePublicCampaignImages(campaign.id);
+  const handle = `@${campaign.brief.name.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
+  return (
+    <IGProfileMockup
+      username={handle}
+      displayName={campaign.brief.name}
+      city={campaign.brief.city}
+      data={campaign.artifacts.instagram}
+      accentColor={campaign.brand.accent}
+      findImage={find}
+    />
   );
 }
 

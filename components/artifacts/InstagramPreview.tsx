@@ -2,33 +2,65 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Film, Image as ImageIcon, Layers, Circle } from "lucide-react";
 import type { InstagramContent } from "@/lib/schemas/artifacts/instagram";
 import { PostImageSlot } from "./PostImageSlot";
 import { useCampaignImages } from "./useCampaignImages";
-
-const ICON: Record<string, React.ElementType> = {
-  foto: ImageIcon,
-  carousel: Layers,
-  reel: Film,
-  story: Circle,
-};
+import { IGProfileMockup } from "@/components/instagram/IGProfileMockup";
 
 type Props = {
   data: InstagramContent;
   campaignId?: string;
+  /** Voor profile-mockup — bedrijfsnaam + stad */
+  businessName?: string;
+  city?: string;
+  accentColor?: string;
 };
 
-export function InstagramPreview({ data, campaignId }: Props) {
+export function InstagramPreview({
+  data,
+  campaignId,
+  businessName = "Brand",
+  city = "Amsterdam",
+  accentColor,
+}: Props) {
   // Image-feature is alleen actief als we een campaignId hebben (studio view).
   // Op de publieke /c/[id] geven we een aparte read-only preview later.
   const showImageGen = Boolean(campaignId);
 
+  // IG-handle gebaseerd op businessName
+  const handle = `@${businessName.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      {/* === ECHTE INSTAGRAM-MOCKUP === */}
+      {campaignId ? (
+        <ProfileMockupWithImages
+          campaignId={campaignId}
+          username={handle}
+          displayName={businessName}
+          city={city}
+          data={data}
+          accentColor={accentColor}
+        />
+      ) : (
+        <IGProfileMockup
+          username={handle}
+          displayName={businessName}
+          city={city}
+          data={data}
+          accentColor={accentColor}
+        />
+      )}
+
+      {/* === Studio-only: image-gen grid voor productie-werk === */}
+      {showImageGen && campaignId ? (
+        <FeedGridWithImages campaignId={campaignId} data={data} />
+      ) : null}
+
+      {/* === Tekst-detail-cards onder de mockup === */}
       <Card>
         <CardHeader>
-          <CardTitle>Bio</CardTitle>
+          <CardTitle>Bio (tekstversie)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-xl border border-border bg-bg/40 p-5">
@@ -59,12 +91,6 @@ export function InstagramPreview({ data, campaignId }: Props) {
           ))}
         </CardContent>
       </Card>
-
-      {showImageGen && campaignId ? (
-        <FeedGridWithImages campaignId={campaignId} data={data} />
-      ) : (
-        <FeedGridStatic data={data} />
-      )}
 
       <Card>
         <CardHeader>
@@ -160,35 +186,33 @@ export function InstagramPreview({ data, campaignId }: Props) {
   );
 }
 
-function FeedGridStatic({ data }: { data: InstagramContent }) {
+function ProfileMockupWithImages({
+  campaignId,
+  username,
+  displayName,
+  city,
+  data,
+  accentColor,
+}: {
+  campaignId: string;
+  username: string;
+  displayName: string;
+  city: string;
+  data: InstagramContent;
+  accentColor?: string;
+}) {
+  const { findLatest } = useCampaignImages(campaignId);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Feed grid</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-3 gap-1.5">
-          {data.posts.map((p, i) => {
-            const Icon = ICON[p.type] ?? ImageIcon;
-            return (
-              <div
-                key={i}
-                className="group relative aspect-square overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface to-elevated"
-              >
-                <div className="absolute right-2 top-2 rounded-full bg-bg/60 p-1.5 backdrop-blur-sm">
-                  <Icon className="size-3 text-text-muted" />
-                </div>
-                <div className="flex h-full items-end p-3">
-                  <p className="line-clamp-3 text-[10px] leading-tight text-text-muted">
-                    {p.hook}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </CardContent>
-    </Card>
+    <IGProfileMockup
+      username={username}
+      displayName={displayName}
+      city={city}
+      data={data}
+      accentColor={accentColor}
+      findImage={(artifactKey, itemIndex) =>
+        artifactKey === "instagram" ? findLatest("instagram", itemIndex) : null
+      }
+    />
   );
 }
 
