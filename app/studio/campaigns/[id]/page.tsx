@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { buildVideoProduction } from "@/lib/generators/buildVideoProduction";
 import { ArrowLeft, Download, Eye, RefreshCw, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -60,6 +61,21 @@ export default function CampaignPage() {
     if (serverChecked) return;
     fetchFromServer(params.id).finally(() => setServerChecked(true));
   }, [hydrated, campaign, params.id, fetchFromServer, serverChecked]);
+
+  // Backwards-compat: oudere campagnes hebben mogelijk geen videoProduction
+  // gepersisteerd in Supabase (final PATCH lukte niet altijd). Bouw 'm dan
+  // on-the-fly uit cinematic — dezelfde pure functie als de wizard gebruikt.
+  const videoProductionFallback = useMemo(() => {
+    if (!campaign) return null;
+    if (campaign.artifacts.videoProduction) {
+      return campaign.artifacts.videoProduction;
+    }
+    return buildVideoProduction(
+      campaign.artifacts.cinematic,
+      campaign.brief.name,
+      campaign.brief.tone
+    );
+  }, [campaign]);
 
   if (!hydrated || (!campaign && !serverChecked) || fetching) {
     return (
@@ -333,7 +349,7 @@ export default function CampaignPage() {
                   </div>
                 </div>
                 <VideoProductionPreview
-                  data={campaign.artifacts.videoProduction}
+                  data={videoProductionFallback!}
                   cinematic={campaign.artifacts.cinematic}
                   campaignName={campaign.brief.name}
                   onChange={patchVideoProduction}
