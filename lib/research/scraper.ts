@@ -4,6 +4,10 @@ import {
   type ScrapedContent,
 } from "@/lib/schemas/scrapedContent";
 import type { BusinessTypeValue } from "@/lib/constants";
+import {
+  scrapeInstagramProfile,
+  isApifyEnabled,
+} from "./instagramScraper";
 
 const VERTICAL_LABEL: Record<string, string> = {
   salon: "kapsalon",
@@ -323,6 +327,33 @@ Wees feitelijk — geen interpretatie waar het feiten betreft. Wees concreet —
         .filter(Boolean)
     : [];
 
+  // Optioneel: Instagram-posts ophalen als Apify is geconfigureerd EN
+  // Sonnet een handle heeft gevonden. Voegt 8-12 extra foto's toe per profile.
+  const detectedHandle =
+    typeof raw.instagramHandle === "string" ? raw.instagramHandle : "";
+  let igPhotos: Array<{ url: string; alt: string; context: string }> = [];
+  if (detectedHandle && isApifyEnabled()) {
+    try {
+      const igPosts = await scrapeInstagramProfile({
+        handle: detectedHandle,
+        maxPosts: 12,
+      });
+      igPhotos = igPosts
+        .filter((p) => p.imageUrl)
+        .map((p) => ({
+          url: p.imageUrl,
+          alt: p.caption.slice(0, 200),
+          // Map IG-type naar onze context-enum
+          context: p.type === "reel" ? "gallery" : "food",
+        }));
+    } catch {
+      // Apify-fout = geen showstopper, gewoon doorgaan met website-foto's
+    }
+  }
+
+  // Combineer website-foto's + IG-foto's (IG eerst — meestal beter materiaal)
+  const allPhotos = [...igPhotos, ...photos];
+
   const content: ScrapedContent = {
     websiteUrl: input.websiteUrl,
     scrapedAt: new Date().toISOString(),
@@ -347,7 +378,7 @@ Wees feitelijk — geen interpretatie waar het feiten betreft. Wees concreet —
           .slice(0, 40)
       : [],
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    photos: photos as any[],
+    photos: allPhotos as any[],
     address: typeof raw.address === "string" ? raw.address : "",
     openingHours:
       typeof raw.openingHours === "string" ? raw.openingHours : "",
