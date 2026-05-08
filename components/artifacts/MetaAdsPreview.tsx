@@ -9,9 +9,11 @@ import { useCampaignImages } from "./useCampaignImages";
 type Props = {
   data: MetaAds;
   campaignId?: string;
+  /** Echte foto's uit prospect-website — gebruikt als fallback wanneer geen AI-image */
+  scrapedPhotos?: Array<{ url: string; alt?: string | null }>;
 };
 
-export function MetaAdsPreview({ data, campaignId }: Props) {
+export function MetaAdsPreview({ data, campaignId, scrapedPhotos }: Props) {
   return (
     <div className="space-y-6">
       <Card>
@@ -57,6 +59,7 @@ export function MetaAdsPreview({ data, campaignId }: Props) {
               variant={v}
               index={i}
               campaignId={campaignId}
+              fallbackPhoto={scrapedPhotos?.[i % (scrapedPhotos.length || 1)]?.url}
             />
           ))}
         </div>
@@ -91,10 +94,12 @@ function FeedAdMockup({
   variant,
   index,
   campaignId,
+  fallbackPhoto,
 }: {
   variant: MetaAds["variants"][number];
   index: number;
   campaignId?: string;
+  fallbackPhoto?: string;
 }) {
   const { findLatest, upsertLocal } = useCampaignImages(campaignId ?? "");
   const image = campaignId ? findLatest("metaAds", index) : null;
@@ -127,6 +132,7 @@ function FeedAdMockup({
             existing={image}
             onGenerated={upsertLocal}
             aspect="square"
+            fallbackPhotoUrl={fallbackPhoto}
           />
         ) : (
           <div className="aspect-[1.91/1] bg-surface/40">

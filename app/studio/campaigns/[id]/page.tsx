@@ -291,6 +291,12 @@ export default function CampaignPage() {
                 <MetaAdsPreview
                   data={campaign.artifacts.metaAds}
                   campaignId={campaign.id}
+                  scrapedPhotos={
+                    campaign.artifacts.scrapedContent?.photos?.map((p) => ({
+                      url: p.url,
+                      alt: p.alt,
+                    })) ?? undefined
+                  }
                 />
               </TabsContent>
 

@@ -79,6 +79,7 @@ export function LandingPagePreview({
           accent={brand.accent}
           ctaTarget={ctaTarget}
           CtaIcon={CtaIcon}
+          heroPhotoUrl={pickHeroPhoto(scrapedContent)}
         />
 
         {/* === MARQUEE === */}
@@ -162,6 +163,35 @@ export function LandingPagePreview({
             </section>
           );
         })()}
+
+        {/* === SFEERBEELDEN (echte foto's uit scraped) === */}
+        {scrapedContent && scrapedContent.photos.length >= 3 ? (
+          <section
+            className="px-8 md:px-16"
+            style={{
+              paddingTop: theme.sectionSpacingValue,
+              paddingBottom: theme.sectionSpacingValue,
+            }}
+          >
+            <Reveal>
+              <div className="mb-8 flex items-end justify-between gap-4">
+                <h2
+                  className="balance text-3xl tracking-tight md:text-4xl"
+                  style={headingStyle}
+                >
+                  Sfeerbeelden
+                </h2>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                  uit hun eigen content
+                </span>
+              </div>
+              <PhotoGrid
+                photos={scrapedContent.photos.slice(0, 9)}
+                radius={theme.cornerRadiusValue}
+              />
+            </Reveal>
+          </section>
+        ) : null}
 
         {/* === EXPERIENCE === */}
         <section
@@ -436,6 +466,17 @@ function ThemeBackground({
   return null;
 }
 
+function pickHeroPhoto(scraped?: ScrapedContent): string | null {
+  if (!scraped?.photos?.length) return null;
+  // Voorkeur: hero context, dan food, dan interior, dan eerste
+  const order = ["hero", "food", "treatment", "interior", "gallery", "product"];
+  for (const ctx of order) {
+    const found = scraped.photos.find((p) => p.context === ctx);
+    if (found) return found.url;
+  }
+  return scraped.photos[0]?.url ?? null;
+}
+
 function Hero({
   data,
   theme,
@@ -443,6 +484,7 @@ function Hero({
   accent,
   ctaTarget,
   CtaIcon,
+  heroPhotoUrl,
 }: {
   data: LandingPage;
   theme: ReturnType<typeof getTheme>;
@@ -450,6 +492,7 @@ function Hero({
   accent: string;
   ctaTarget: string;
   CtaIcon: React.ElementType;
+  heroPhotoUrl?: string | null;
 }) {
   const sizeClass =
     theme.heroHeadlineSize === "oversized"
@@ -495,9 +538,21 @@ function Hero({
             className="aspect-[4/5] w-full overflow-hidden"
             style={{
               borderRadius: theme.cornerRadiusValue,
-              background: `linear-gradient(135deg, ${accent}40, ${accent}10), repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.02) 8px, rgba(255,255,255,0.02) 16px)`,
+              background: heroPhotoUrl
+                ? "transparent"
+                : `linear-gradient(135deg, ${accent}40, ${accent}10), repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255,255,255,0.02) 8px, rgba(255,255,255,0.02) 16px)`,
             }}
-          />
+          >
+            {heroPhotoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={heroPhotoUrl}
+                alt={data.hero.headline}
+                className="h-full w-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            ) : null}
+          </div>
         </Reveal>
       </section>
     );
@@ -786,6 +841,72 @@ function VerticalSectionView({
         ))}
       </div>
     </Reveal>
+  );
+}
+
+function PhotoGrid({
+  photos,
+  radius,
+}: {
+  photos: Array<{ url: string; alt?: string | null; context?: string | null }>;
+  radius: string;
+}) {
+  // Asymmetrische grid: 1 grote tile + 4 kleine + rest 3-koloms
+  if (photos.length === 0) return null;
+
+  return (
+    <div className="grid gap-2 md:grid-cols-4">
+      {/* Grote tile linksboven (2x2) */}
+      <div
+        className="md:col-span-2 md:row-span-2 aspect-square overflow-hidden md:aspect-auto"
+        style={{ borderRadius: radius }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={photos[0].url}
+          alt={photos[0].alt ?? ""}
+          className="h-full w-full object-cover"
+          referrerPolicy="no-referrer"
+          loading="lazy"
+        />
+      </div>
+      {/* Vier kleine tiles rechts */}
+      {photos.slice(1, 5).map((p, i) => (
+        <div
+          key={i}
+          className="aspect-square overflow-hidden"
+          style={{ borderRadius: radius }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={p.url}
+            alt={p.alt ?? ""}
+            className="h-full w-full object-cover"
+            referrerPolicy="no-referrer"
+            loading="lazy"
+          />
+        </div>
+      ))}
+      {/* Rest in 4-koloms strip onder */}
+      {photos.length > 5
+        ? photos.slice(5, 9).map((p, i) => (
+            <div
+              key={`r-${i}`}
+              className="aspect-square overflow-hidden"
+              style={{ borderRadius: radius }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={p.url}
+                alt={p.alt ?? ""}
+                className="h-full w-full object-cover"
+                referrerPolicy="no-referrer"
+                loading="lazy"
+              />
+            </div>
+          ))
+        : null}
+    </div>
   );
 }
 

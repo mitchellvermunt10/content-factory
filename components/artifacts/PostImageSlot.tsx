@@ -25,6 +25,9 @@ type Props = {
   existing: CampaignImage | null;
   onGenerated: (image: CampaignImage) => void;
   aspect?: "square" | "portrait" | "landscape";
+  /** Fallback foto-URL (bijv. uit scraped content) die getoond wordt als
+   *  geen AI-image is gegenereerd. Render-only, geen invloed op storage. */
+  fallbackPhotoUrl?: string;
 };
 
 const ASPECT_CLASS: Record<NonNullable<Props["aspect"]>, string> = {
@@ -41,6 +44,7 @@ export function PostImageSlot({
   existing,
   onGenerated,
   aspect = "square",
+  fallbackPhotoUrl,
 }: Props) {
   const [busy, setBusy] = useState<Engine | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -173,6 +177,20 @@ export function PostImageSlot({
           alt={`Item ${itemIndex + 1}`}
           className="h-full w-full object-cover"
         />
+      ) : fallbackPhotoUrl ? (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={fallbackPhotoUrl}
+            alt={`Item ${itemIndex + 1}`}
+            className="h-full w-full object-cover"
+            referrerPolicy="no-referrer"
+            loading="lazy"
+          />
+          <div className="absolute left-2 top-2 z-10 rounded-full bg-black/60 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.15em] text-white backdrop-blur-sm">
+            Echt — uit hun content
+          </div>
+        </>
       ) : (
         <div className="flex h-full w-full flex-col items-center justify-center gap-3 p-6 text-center">
           <ImageIcon className="size-6 text-text-subtle" />
