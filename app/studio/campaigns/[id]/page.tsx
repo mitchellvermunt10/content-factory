@@ -264,7 +264,10 @@ export default function CampaignPage() {
                   onRegenerate={() => regenerate("meta-ads")}
                   busy={regenerating === "meta-ads"}
                 />
-                <MetaAdsPreview data={campaign.artifacts.metaAds} />
+                <MetaAdsPreview
+                  data={campaign.artifacts.metaAds}
+                  campaignId={campaign.id}
+                />
               </TabsContent>
 
               <TabsContent value="instagram">
@@ -286,6 +289,7 @@ export default function CampaignPage() {
                 <CinematicPreview
                   data={campaign.artifacts.cinematic}
                   campaignName={campaign.brief.name}
+                  campaignId={campaign.id}
                   onChangePrompt={patchCinematicShotPrompt}
                 />
               </TabsContent>

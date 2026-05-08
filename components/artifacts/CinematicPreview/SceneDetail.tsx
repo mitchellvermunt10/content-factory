@@ -14,6 +14,8 @@ export function SceneDetail({
   start,
   ratio,
   onChangePrompt,
+  campaignId,
+  globalShotStart,
 }: {
   scene: Scene;
   start: number;
@@ -23,6 +25,8 @@ export function SceneDetail({
     kind: "imagePrompt" | "videoPrompt",
     value: string
   ) => void;
+  campaignId?: string;
+  globalShotStart?: number;
 }) {
   let cumul = start;
   return (
@@ -88,15 +92,19 @@ export function SceneDetail({
         </div>
 
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-2">
-          {scene.shots.map((shot) => {
+          {scene.shots.map((shot, idx) => {
             const cardStart = cumul;
             cumul += shot.durationSec;
+            const globalShotIndex =
+              globalShotStart !== undefined ? globalShotStart + idx : undefined;
             return (
               <ShotCard
                 key={shot.id}
                 shot={shot}
                 startSec={cardStart}
                 ratio={ratio}
+                campaignId={campaignId}
+                globalShotIndex={globalShotIndex}
                 onChangePrompt={
                   onChangePrompt
                     ? (kind, value) => onChangePrompt(shot.id, kind, value)

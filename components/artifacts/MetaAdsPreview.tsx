@@ -3,8 +3,15 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { MetaAds } from "@/lib/schemas/artifacts/metaAds";
+import { PostImageSlot } from "./PostImageSlot";
+import { useCampaignImages } from "./useCampaignImages";
 
-export function MetaAdsPreview({ data }: { data: MetaAds }) {
+type Props = {
+  data: MetaAds;
+  campaignId?: string;
+};
+
+export function MetaAdsPreview({ data, campaignId }: Props) {
   return (
     <div className="space-y-6">
       <Card>
@@ -33,12 +40,24 @@ export function MetaAdsPreview({ data }: { data: MetaAds }) {
       </Card>
 
       <div className="space-y-4">
-        <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-subtle">
-          Feed varianten
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-subtle">
+            Feed varianten
+          </h3>
+          {campaignId ? (
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+              Klik Engine voor MJ / Flux / OpenAI
+            </span>
+          ) : null}
+        </div>
         <div className="grid gap-4 lg:grid-cols-2">
           {data.variants.map((v, i) => (
-            <FeedAdMockup key={i} variant={v} index={i} />
+            <FeedAdMockup
+              key={i}
+              variant={v}
+              index={i}
+              campaignId={campaignId}
+            />
           ))}
         </div>
       </div>
@@ -49,7 +68,7 @@ export function MetaAdsPreview({ data }: { data: MetaAds }) {
         </h3>
         <div className="grid gap-4 sm:grid-cols-3">
           {data.storyAds.map((s, i) => (
-            <StoryAdMockup key={i} ad={s} index={i} />
+            <StoryAdMockup key={i} ad={s} index={i} campaignId={campaignId} />
           ))}
         </div>
       </div>
@@ -71,10 +90,14 @@ function Stat({ label, value }: { label: string; value: string }) {
 function FeedAdMockup({
   variant,
   index,
+  campaignId,
 }: {
   variant: MetaAds["variants"][number];
   index: number;
+  campaignId?: string;
 }) {
+  const { findLatest, upsertLocal } = useCampaignImages(campaignId ?? "");
+  const image = campaignId ? findLatest("metaAds", index) : null;
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-elevated">
       <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -95,12 +118,25 @@ function FeedAdMockup({
           <span className="text-text-muted">{variant.primaryText}</span>
         </p>
       </div>
-      <div className="aspect-[1.91/1] border-y border-border bg-surface/40">
-        <div className="grid h-full place-items-center px-6 text-center text-text-subtle">
-          <span className="font-mono text-xs uppercase tracking-[0.18em]">
-            {variant.visualDirection}
-          </span>
-        </div>
+      <div className="border-y border-border">
+        {campaignId ? (
+          <PostImageSlot
+            campaignId={campaignId}
+            artifactKey="metaAds"
+            itemIndex={index}
+            existing={image}
+            onGenerated={upsertLocal}
+            aspect="square"
+          />
+        ) : (
+          <div className="aspect-[1.91/1] bg-surface/40">
+            <div className="grid h-full place-items-center px-6 text-center text-text-subtle">
+              <span className="font-mono text-xs uppercase tracking-[0.18em]">
+                {variant.visualDirection}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
       <div className="flex items-center justify-between gap-3 px-4 py-3">
         <div className="min-w-0">
@@ -125,33 +161,71 @@ function FeedAdMockup({
 function StoryAdMockup({
   ad,
   index,
+  campaignId,
 }: {
   ad: MetaAds["storyAds"][number];
   index: number;
+  campaignId?: string;
 }) {
+  const { findLatest, upsertLocal } = useCampaignImages(campaignId ?? "");
+  const image = campaignId ? findLatest("metaAdsStory", index) : null;
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-surface/80 to-elevated">
-      <div className="aspect-[9/16]">
-        <div className="flex h-full flex-col p-4">
-          <div className="flex items-center gap-2">
-            <div className="size-6 rounded-full bg-gradient-to-br from-accent/80 via-accent/30 to-transparent" />
-            <div className="font-mono text-[10px] text-text-subtle">
-              Story · {index + 1}
+      {campaignId ? (
+        <div className="relative">
+          <PostImageSlot
+            campaignId={campaignId}
+            artifactKey="metaAdsStory"
+            itemIndex={index}
+            hint={`${ad.hook}. ${ad.body}`}
+            existing={image}
+            onGenerated={upsertLocal}
+            aspect="portrait"
+          />
+          {/* Overlay tekst over de image */}
+          <div className="pointer-events-none absolute inset-0 flex flex-col p-4">
+            <div className="flex items-center gap-2">
+              <div className="size-6 rounded-full bg-gradient-to-br from-accent/80 via-accent/30 to-transparent" />
+              <div className="font-mono text-[10px] text-white/80">
+                Story · {index + 1}
+              </div>
+            </div>
+            <div className="flex flex-1 flex-col items-center justify-center text-center">
+              <p className="text-base font-medium leading-tight tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                {ad.hook}
+              </p>
+              <p className="mt-3 text-xs leading-relaxed text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
+                {ad.body}
+              </p>
+              <Badge variant="accent" className="pointer-events-auto mt-5">
+                {ad.sticker}
+              </Badge>
             </div>
           </div>
-          <div className="flex flex-1 flex-col items-center justify-center text-center">
-            <p className="text-base font-medium leading-tight tracking-tight text-text">
-              {ad.hook}
-            </p>
-            <p className="mt-3 text-xs leading-relaxed text-text-muted">
-              {ad.body}
-            </p>
-            <Badge variant="accent" className="mt-5">
-              {ad.sticker}
-            </Badge>
+        </div>
+      ) : (
+        <div className="aspect-[9/16]">
+          <div className="flex h-full flex-col p-4">
+            <div className="flex items-center gap-2">
+              <div className="size-6 rounded-full bg-gradient-to-br from-accent/80 via-accent/30 to-transparent" />
+              <div className="font-mono text-[10px] text-text-subtle">
+                Story · {index + 1}
+              </div>
+            </div>
+            <div className="flex flex-1 flex-col items-center justify-center text-center">
+              <p className="text-base font-medium leading-tight tracking-tight text-text">
+                {ad.hook}
+              </p>
+              <p className="mt-3 text-xs leading-relaxed text-text-muted">
+                {ad.body}
+              </p>
+              <Badge variant="accent" className="mt-5">
+                {ad.sticker}
+              </Badge>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -207,9 +207,11 @@ function FeedGridWithImages({
       </CardHeader>
       <CardContent>
         <p className="mb-4 text-xs text-text-subtle">
-          Klik <span className="font-mono uppercase tracking-[0.18em]">Genereer</span> per
-          post om een echte image uit de visualDirection-prompt te bouwen.
-          OpenAI gpt-image-1 — ongeveer €0,04 per stuk.
+          Klik <span className="font-mono uppercase tracking-[0.18em]">Engine</span> om
+          tussen <strong>OpenAI</strong> (€0,04, snel), <strong>Flux Pro</strong> (€0,06,
+          beter photoreal) of <strong>Midjourney prompt</strong> (kopiëren naar je MJ
+          Discord) te kiezen. Server bouwt zelf een rich prompt op basis van je
+          merk + cinematic concept + vakcontext — geen generieke AI-look.
         </p>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           {data.posts.map((p, i) => (
@@ -218,7 +220,6 @@ function FeedGridWithImages({
                 campaignId={campaignId}
                 artifactKey="instagram"
                 itemIndex={i}
-                prompt={buildImagePrompt(p.visualDirection, p.hook)}
                 existing={findLatest("instagram", i)}
                 onGenerated={upsertLocal}
                 aspect={p.type === "reel" ? "portrait" : "square"}
@@ -232,15 +233,4 @@ function FeedGridWithImages({
       </CardContent>
     </Card>
   );
-}
-
-function buildImagePrompt(visualDirection: string, hook: string): string {
-  // Optimaliseer Sonnet's NL visualDirection naar een sterke gpt-image-1 prompt.
-  // gpt-image-1 doet beter werk met expliciete styling-cues.
-  return [
-    visualDirection,
-    "Professional editorial photography, natural daylight, 35mm prime lens, shallow depth of field, color-graded.",
-    `Mood: ${hook.slice(0, 80)}.`,
-    "No text overlays, no logos, no watermarks. Photorealistic.",
-  ].join(" ");
 }

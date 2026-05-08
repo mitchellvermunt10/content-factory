@@ -19,6 +19,7 @@ export function CinematicPreview({
   data,
   campaignName,
   onChangePrompt,
+  campaignId,
 }: {
   data: CinematicCampaign;
   campaignName: string;
@@ -28,6 +29,7 @@ export function CinematicPreview({
     kind: "imagePrompt" | "videoPrompt",
     value: string
   ) => void;
+  campaignId?: string;
 }) {
   const [activeScene, setActiveScene] = useState(data.scenes[0]?.id);
 
@@ -37,6 +39,19 @@ export function CinematicPreview({
     for (const s of data.scenes) {
       map[s.id] = cumul;
       cumul += s.durationSec;
+    }
+    return map;
+  }, [data.scenes]);
+
+  // Global shot index per scene — voor image-gen koppeling. Iedere shot in
+  // de campagne krijgt een unieke flat index zodat we 'm consistent kunnen
+  // matchen met de campaign_images tabel (artifactKey="cinematic").
+  const globalShotStartMap = useMemo(() => {
+    let cumul = 0;
+    const map: Record<string, number> = {};
+    for (const s of data.scenes) {
+      map[s.id] = cumul;
+      cumul += s.shots.length;
     }
     return map;
   }, [data.scenes]);
@@ -124,6 +139,8 @@ export function CinematicPreview({
         scene={current}
         start={start}
         ratio={data.concept.primaryAspectRatio}
+        campaignId={campaignId}
+        globalShotStart={globalShotStartMap[current.id]}
         onChangePrompt={
           onChangePrompt
             ? (shotId, kind, value) =>
