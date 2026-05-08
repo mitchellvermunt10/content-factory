@@ -250,9 +250,17 @@ function normalizeAgentOutput(
       })
     : [];
 
+  // Truncate summary als 'ie te lang is — Sonnet schrijft soms 1000+ chars
+  const rawSummary = typeof raw.summary === "string" ? raw.summary : "";
+  const summary =
+    rawSummary.length > 800
+      ? rawSummary.slice(0, 795).trimEnd() + "..."
+      : rawSummary;
+
   return {
     ...raw,
     prospects,
+    summary,
   };
 }
 
