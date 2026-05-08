@@ -17,6 +17,8 @@ type Props = {
   findImage?: (artifactKey: string, itemIndex: number) => CampaignImage | null;
   /** Render slot — wordt geinjecteerd voor studio-mode (image-gen knoppen) */
   renderPostOverlay?: (postIndex: number) => React.ReactNode;
+  /** Echte foto's gescrapet uit prospect-website — overschrijft AI-images per index */
+  scrapedPhotos?: Array<{ url: string; alt?: string | null }>;
 };
 
 const TYPE_ICON: Record<string, React.ElementType> = {
@@ -34,6 +36,7 @@ export function IGProfileMockup({
   accentColor = "#B89968",
   findImage,
   renderPostOverlay,
+  scrapedPhotos,
 }: Props) {
   const [activeTab, setActiveTab] = useState<"posts" | "reels" | "tagged">(
     "posts"
@@ -210,18 +213,25 @@ export function IGProfileMockup({
               {data.posts.map((post, i) => {
                 const Icon = TYPE_ICON[post.type] ?? ImageIcon;
                 const img = findImage?.("instagram", i);
+                // Prio: gegenereerd > gescraped > placeholder
+                const scraped = scrapedPhotos?.[i];
+                const photoUrl = img?.publicUrl ?? scraped?.url;
                 return (
                   <button
                     key={i}
                     onClick={() => setSelectedPost(i)}
                     className="relative aspect-square overflow-hidden bg-zinc-100"
                   >
-                    {img ? (
+                    {photoUrl ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={img.publicUrl}
+                        src={photoUrl}
                         alt={post.hook}
                         className="h-full w-full object-cover"
+                        onError={(e) => {
+                          (e.currentTarget as HTMLImageElement).style.display =
+                            "none";
+                        }}
                       />
                     ) : (
                       <div className="flex h-full w-full items-end bg-gradient-to-br from-zinc-100 to-zinc-200 p-2">

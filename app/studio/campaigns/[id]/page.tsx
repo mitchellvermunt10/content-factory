@@ -266,6 +266,7 @@ export default function CampaignPage() {
                 <LandingPagePreview
                   data={campaign.artifacts.landing}
                   brand={campaign.brand}
+                  scrapedContent={campaign.artifacts.scrapedContent}
                 />
               </TabsContent>
 
@@ -299,6 +300,12 @@ export default function CampaignPage() {
                   businessName={campaign.brief.name}
                   city={campaign.brief.city}
                   accentColor={campaign.brand.accent}
+                  scrapedPhotos={
+                    campaign.artifacts.scrapedContent?.photos?.map((p) => ({
+                      url: p.url,
+                      alt: p.alt,
+                    })) ?? undefined
+                  }
                 />
               </TabsContent>
 

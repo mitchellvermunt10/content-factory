@@ -560,13 +560,20 @@ function BriefCard({ prospect }: { prospect: ProspectEntry }) {
       }
     : prospect.suggestedBrief;
 
-  // Pack scraped photos + items in prefill zodat studio er ook bij kan
+  // Pack scraped photos + items + alle context in prefill zodat studio er ook bij kan
   const prefillPayload = {
     ...enrichedBrief,
-    // Custom velden die BriefWizard kan oppakken via onbekende-veld-handling
+    // Custom velden die BriefWizard reconstruereert tot ScrapedContent
+    _scrapedWebsite: scraped?.websiteUrl ?? null,
+    _scrapedSummary: scraped?.businessSummary ?? null,
+    _scrapedUsps: scraped?.uspsFromSite ?? null,
     _scrapedItems: scraped?.items ?? null,
     _scrapedPhotos: scraped?.photos ?? null,
     _scrapedBookingUrl: scraped?.bookingUrl ?? null,
+    _scrapedProvider: scraped?.bookingProvider ?? null,
+    _scrapedAddress: scraped?.address ?? null,
+    _scrapedHours: scraped?.openingHours ?? null,
+    _scrapedPhone: scraped?.phone ?? null,
   };
 
   const studioUrl = `/studio/nieuw?prefill=${encodeURIComponent(

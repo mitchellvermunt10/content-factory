@@ -65,18 +65,73 @@ export function BriefWizard() {
   const searchParams = useSearchParams();
   const [data, setData] = useState<WizardData>(INITIAL);
   const [stepIdx, setStepIdx] = useState(0);
+  // Scraped content uit prospect-research — wordt meegegeven bij campaign-creatie
+  // zodat preview-componenten echte content kunnen tonen ipv AI-gegenereerd
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [scrapedFromPrefill, setScrapedFromPrefill] = useState<any>(null);
 
   // Prefill via ?prefill=<base64-json> (gebruikt door /studio/prospects → "Open in studio")
   useEffect(() => {
     const prefill = searchParams.get("prefill");
     if (!prefill) return;
     try {
-      const decoded = JSON.parse(atob(prefill)) as Partial<BusinessBrief>;
-      setData((prev) => ({ ...prev, ...decoded }));
-      setStepIdx(STEPS.length - 1); // direct naar review
-      toast.success("Brief vooringevuld", {
-        description: "Controleer en klik 'Genereer campagne'.",
-      });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const decoded = JSON.parse(atob(prefill)) as any;
+      // Strip _scraped* uit de brief-velden, hou ze apart voor campaign-creatie
+      const {
+        _scrapedItems,
+        _scrapedPhotos,
+        _scrapedBookingUrl,
+        _scrapedSummary,
+        _scrapedUsps,
+        _scrapedAddress,
+        _scrapedHours,
+        _scrapedPhone,
+        _scrapedProvider,
+        _scrapedWebsite,
+        ...briefFields
+      } = decoded;
+
+      const hasScraped =
+        Array.isArray(_scrapedItems) ||
+        Array.isArray(_scrapedPhotos) ||
+        _scrapedBookingUrl ||
+        _scrapedSummary;
+
+      setData((prev) => ({ ...prev, ...(briefFields as Partial<BusinessBrief>) }));
+      setStepIdx(STEPS.length - 1);
+
+      if (hasScraped) {
+        // Reconstrueer minimal ScrapedContent shape voor campaign-creatie
+        setScrapedFromPrefill({
+          websiteUrl: _scrapedWebsite ?? briefFields.website ?? "",
+          scrapedAt: new Date().toISOString(),
+          businessSummary: _scrapedSummary ?? "",
+          uspsFromSite: Array.isArray(_scrapedUsps) ? _scrapedUsps : [],
+          items: Array.isArray(_scrapedItems) ? _scrapedItems : [],
+          photos: Array.isArray(_scrapedPhotos) ? _scrapedPhotos : [],
+          address: _scrapedAddress ?? "",
+          openingHours: _scrapedHours ?? "",
+          phone: _scrapedPhone ?? "",
+          email: "",
+          bookingUrl: _scrapedBookingUrl ?? "",
+          bookingProvider: _scrapedProvider ?? null,
+          instagramHandle: "",
+          facebookUrl: "",
+          toneOfSite: "",
+        });
+        toast.success("Brief + echte content vooringevuld", {
+          description: `${
+            Array.isArray(_scrapedItems) ? _scrapedItems.length : 0
+          } items + ${
+            Array.isArray(_scrapedPhotos) ? _scrapedPhotos.length : 0
+          } foto's klaar voor gebruik.`,
+        });
+      } else {
+        toast.success("Brief vooringevuld", {
+          description: "Controleer en klik 'Genereer campagne'.",
+        });
+      }
     } catch {
       // ongeldige prefill — gewoon negeren
     }
@@ -226,10 +281,11 @@ export function BriefWizard() {
           socialShorts: artifacts.socialShorts!,
           promptPacks: artifacts.promptPacks!,
           videoProduction,
+          ...(scrapedFromPrefill ? { scrapedContent: scrapedFromPrefill } : {}),
         },
       };
 
-      // Final persist: videoProduction + status=complete.
+      // Final persist: videoProduction + scraped content + status=complete.
       if (persisted) {
         fetch(`/api/campaigns/${campaignId}`, {
           method: "PATCH",
@@ -240,6 +296,17 @@ export function BriefWizard() {
             status: "complete",
           }),
         }).catch(() => {});
+
+        if (scrapedFromPrefill) {
+          fetch(`/api/campaigns/${campaignId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              artifactKey: "scrapedContent",
+              artifactValue: scrapedFromPrefill,
+            }),
+          }).catch(() => {});
+        }
       }
 
       addCampaign(campaign);

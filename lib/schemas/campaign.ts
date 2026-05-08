@@ -9,6 +9,7 @@ import { CinematicCampaignSchema } from "./artifacts/cinematic";
 import { SocialShortsSchema } from "./artifacts/socialShorts";
 import { PromptPacksSchema } from "./artifacts/promptPacks";
 import { VideoProductionSchema } from "./artifacts/videoProduction";
+import { ScrapedContentSchema } from "./scrapedContent";
 
 export const ArtifactsSchema = z.object({
   landing: LandingPageSchema,
@@ -19,6 +20,9 @@ export const ArtifactsSchema = z.object({
   socialShorts: SocialShortsSchema,
   promptPacks: PromptPacksSchema,
   videoProduction: VideoProductionSchema,
+  // Optional: echte content gescrapet uit prospect-website. Als deze er is,
+  // gebruiken preview-componenten dit ipv (of bovenop) AI-gegenereerd.
+  scrapedContent: ScrapedContentSchema.optional(),
 });
 
 export type Artifacts = z.infer<typeof ArtifactsSchema>;

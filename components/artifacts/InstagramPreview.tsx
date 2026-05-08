@@ -17,6 +17,8 @@ type Props = {
   businessName?: string;
   city?: string;
   accentColor?: string;
+  /** Echte foto's gescrapet uit prospect-website */
+  scrapedPhotos?: Array<{ url: string; alt?: string | null }>;
 };
 
 export function InstagramPreview({
@@ -25,6 +27,7 @@ export function InstagramPreview({
   businessName = "Brand",
   city = "Amsterdam",
   accentColor,
+  scrapedPhotos,
 }: Props) {
   // Image-feature is alleen actief als we een campaignId hebben (studio view).
   // Op de publieke /c/[id] geven we een aparte read-only preview later.
@@ -43,6 +46,7 @@ export function InstagramPreview({
         city={city}
         data={data}
         accentColor={accentColor}
+        scrapedPhotos={scrapedPhotos}
       />
 
       {/* === Studio-only: image-gen grid voor productie-werk === */}
@@ -186,6 +190,7 @@ function IGMockupSwitcher({
   city,
   data,
   accentColor,
+  scrapedPhotos,
 }: {
   campaignId?: string;
   username: string;
@@ -193,6 +198,7 @@ function IGMockupSwitcher({
   city: string;
   data: InstagramContent;
   accentColor?: string;
+  scrapedPhotos?: Array<{ url: string; alt?: string | null }>;
 }) {
   const [view, setView] = useState<"profile" | "story" | "reel">("profile");
   const { findLatest } = useCampaignImages(campaignId ?? "");
@@ -227,6 +233,7 @@ function IGMockupSwitcher({
           data={data}
           accentColor={accentColor}
           findImage={campaignId ? findImage : undefined}
+          scrapedPhotos={scrapedPhotos}
         />
       ) : null}
       {view === "story" ? (

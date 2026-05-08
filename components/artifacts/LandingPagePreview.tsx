@@ -5,6 +5,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Badge } from "@/components/ui/badge";
 import type { LandingPage } from "@/lib/schemas/artifacts/landing";
 import type { Brand } from "@/lib/schemas/brand";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 import { getTheme, type DesignStyle } from "@/lib/design/themes";
 
 const PROVIDER_LABELS: Record<string, string> = {
@@ -32,9 +33,11 @@ const CTA_TARGET_ICON: Record<string, React.ElementType> = {
 export function LandingPagePreview({
   data,
   brand,
+  scrapedContent,
 }: {
   data: LandingPage;
   brand: Brand;
+  scrapedContent?: ScrapedContent;
 }) {
   const themeId =
     (data.designStyle as DesignStyle | undefined) ?? "warm-documentary";
@@ -99,23 +102,66 @@ export function LandingPagePreview({
         </section>
 
         {/* === VERTICAL SECTION (treatments / menu / services) === */}
-        {data.verticalSection ? (
-          <section
-            className="px-8 md:px-16"
-            style={{
-              paddingTop: theme.sectionSpacingValue,
-              paddingBottom: theme.sectionSpacingValue,
-            }}
-          >
-            <VerticalSectionView
-              section={data.verticalSection}
-              theme={theme}
-              accent={brand.accent}
-              headingStyle={headingStyle}
-              ctaTarget={ctaTarget}
-            />
-          </section>
-        ) : null}
+        {/* Als er scraped content is, gebruik die echte items ipv AI-gegenereerd */}
+        {(() => {
+          const baseSection = data.verticalSection;
+          const realItems = scrapedContent?.items ?? [];
+
+          // Als we ECHTE items hebben, bouw nieuwe section met die items
+          const useRealContent = realItems.length >= 3;
+          const section = useRealContent
+            ? {
+                title: baseSection?.title ?? "Wat we bieden",
+                intro: scrapedContent?.businessSummary ?? baseSection?.intro,
+                items: realItems.slice(0, 12).map((it) => ({
+                  name: it.name,
+                  description: it.description ?? "",
+                  priceFrom: it.price ?? "",
+                  duration: "",
+                  badge: "",
+                })),
+                bookingProvider:
+                  (scrapedContent?.bookingProvider as
+                    | "treatwell"
+                    | "salonized"
+                    | "phorest"
+                    | "thefork"
+                    | "opentable"
+                    | "resengo"
+                    | "garage-eigen-form"
+                    | "eigen"
+                    | "geen") ??
+                  baseSection?.bookingProvider ??
+                  "geen",
+                bookingProviderHint: baseSection?.bookingProviderHint,
+              }
+            : baseSection;
+
+          if (!section) return null;
+          return (
+            <section
+              className="px-8 md:px-16"
+              style={{
+                paddingTop: theme.sectionSpacingValue,
+                paddingBottom: theme.sectionSpacingValue,
+              }}
+            >
+              {useRealContent ? (
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
+                  <span className="size-1.5 rounded-full bg-success" />
+                  Echte content uit hun website
+                </div>
+              ) : null}
+              <VerticalSectionView
+                section={section}
+                theme={theme}
+                accent={brand.accent}
+                headingStyle={headingStyle}
+                ctaTarget={ctaTarget}
+              />
+            </section>
+          );
+        })()}
 
         {/* === EXPERIENCE === */}
         <section

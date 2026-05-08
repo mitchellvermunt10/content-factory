@@ -22,6 +22,7 @@ const PatchBody = z.object({
       "socialShorts",
       "promptPacks",
       "videoProduction",
+      "scrapedContent",
     ])
     .optional(),
   artifactValue: z.unknown().optional(),

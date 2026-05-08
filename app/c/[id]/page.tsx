@@ -205,7 +205,11 @@ export default function ClientCampaignPage() {
 
       {/* === Landing === */}
       <Section id="landing" title="Landing page" subtitle="Volledige conceptpagina">
-        <LandingPagePreview data={campaign.artifacts.landing} brand={campaign.brand} />
+        <LandingPagePreview
+          data={campaign.artifacts.landing}
+          brand={campaign.brand}
+          scrapedContent={campaign.artifacts.scrapedContent}
+        />
       </Section>
 
       {/* === SEO === */}
@@ -749,6 +753,10 @@ function PublicIGMockup({ campaign }: { campaign: Campaign }) {
   const { find } = usePublicCampaignImages(campaign.id);
   const [view, setView] = useState<"profile" | "story" | "reel">("profile");
   const handle = `@${campaign.brief.name.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
+  const scrapedPhotos = campaign.artifacts.scrapedContent?.photos?.map((p) => ({
+    url: p.url,
+    alt: p.alt,
+  }));
 
   return (
     <div className="space-y-4">
@@ -777,6 +785,7 @@ function PublicIGMockup({ campaign }: { campaign: Campaign }) {
           data={campaign.artifacts.instagram}
           accentColor={campaign.brand.accent}
           findImage={find}
+          scrapedPhotos={scrapedPhotos}
         />
       ) : null}
       {view === "story" ? (
