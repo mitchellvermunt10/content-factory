@@ -64,7 +64,7 @@ const SCHEMA_HINT = `{
 export async function generateCinematic(
   brief: BusinessBrief
 ): Promise<CinematicCampaign> {
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { includeVisualDirection: true })}
 
 OPDRACHT
 Schrijf een volledig cinematic merk-commercial voor dit bedrijf in het Nederlands. Denk Apple-launch × Sofia Coppola × premium boutique commercial.

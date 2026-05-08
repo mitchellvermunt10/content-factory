@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useCampaigns } from "@/lib/store/campaigns";
 import { LandingPagePreview } from "@/components/artifacts/LandingPagePreview";
+import { ApprovalBar } from "@/components/client/ApprovalBar";
 import { GradientMesh } from "@/components/motion/GradientMesh";
 import { Logo } from "@/components/chrome/Logo";
 import { Timecode } from "@/components/cinematic/Timecode";
@@ -45,7 +46,10 @@ export default function ClientCampaignPage() {
   const params = useParams<{ id: string }>();
   const campaign = useCampaigns((s) => s.getById(params.id));
   const hydrated = useCampaigns((s) => s.hydrated);
+  const fetching = useCampaigns((s) => Boolean(s.fetchingIds[params.id]));
+  const fetchFromServer = useCampaigns((s) => s.fetchFromServer);
   const [activeSection, setActiveSection] = useState<string>("concept");
+  const [serverChecked, setServerChecked] = useState(false);
 
   useEffect(() => {
     const handler = () => {
@@ -63,7 +67,14 @@ export default function ClientCampaignPage() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  if (!hydrated) {
+  useEffect(() => {
+    if (!hydrated) return;
+    if (campaign) return;
+    if (serverChecked) return;
+    fetchFromServer(params.id).finally(() => setServerChecked(true));
+  }, [hydrated, campaign, params.id, fetchFromServer, serverChecked]);
+
+  if (!hydrated || (!campaign && !serverChecked) || fetching) {
     return (
       <div className="grid min-h-screen place-items-center text-text-muted">
         Laden…
@@ -173,6 +184,12 @@ export default function ClientCampaignPage() {
             <Stat label="Brand pillar" value={c.concept.brandPillar} />
             <Stat label="Mood" value={c.concept.mood} />
             <Stat label="Master cut" value={`${c.concept.totalDurationSec}s · ${c.concept.primaryAspectRatio}`} />
+          </div>
+          <div className="mt-10">
+            <ApprovalBar
+              campaignId={campaign.id}
+              campaignName={campaign.brief.name}
+            />
           </div>
         </motion.div>
       </section>

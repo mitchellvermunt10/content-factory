@@ -60,7 +60,7 @@ const SCHEMA_HINT = `{
 export async function generatePromptPacks(
   brief: BusinessBrief
 ): Promise<PromptPacks> {
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { includeVisualDirection: true })}
 
 OPDRACHT
 Schrijf complete AI prompt-pakketten voor dit bedrijf — beeld én bewegend beeld.

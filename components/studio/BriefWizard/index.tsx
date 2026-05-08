@@ -21,6 +21,7 @@ import type { Campaign } from "@/lib/schemas/campaign";
 import { deriveBrand } from "@/lib/brand/presets";
 import { buildVideoProduction } from "@/lib/generators/buildVideoProduction";
 import type { MvpGeneratorId } from "@/lib/constants";
+import { DEMO_BRIEFS } from "@/lib/demo/briefs";
 
 // Welke generators draaien sequentieel + welk artifact-veld ze vullen.
 // Per stuk past elke call binnen Vercel Hobby's 60s timeout — totaal ~3-5 min,
@@ -73,6 +74,16 @@ export function BriefWizard() {
   const update = (patch: Partial<WizardData>) =>
     setData((prev) => ({ ...prev, ...patch }));
 
+  function loadDemo(briefId: string) {
+    const demo = DEMO_BRIEFS.find((d) => d.id === briefId);
+    if (!demo) return;
+    setData({ ...demo.brief });
+    setStepIdx(STEPS.length - 1); // direct naar review
+    toast.success(`${demo.label} geladen`, {
+      description: "Klik 'Genereer campagne' om de demo te starten.",
+    });
+  }
+
   const canAdvance = (() => {
     switch (stepIdx) {
       case 0:
@@ -115,6 +126,35 @@ export function BriefWizard() {
     const artifacts: Partial<Campaign["artifacts"]> = {};
 
     try {
+      // Stap 0: maak campagne-rij in Supabase aan (geeft ID + brand terug).
+      // Als Supabase niet geconfigureerd is, fallt deze terug naar pure client-side.
+      const localId = nanoid(10);
+      let campaignId = localId;
+      let persisted = false;
+      // Owner-email uit localStorage (gezet via /studio sync-input).
+      // Sturen we mee zodat campagnes vindbaar zijn vanaf andere apparaten.
+      let ownerEmail: string | null = null;
+      try {
+        const cached = localStorage.getItem("content-factory:owner-email");
+        if (cached && cached.includes("@")) ownerEmail = cached;
+      } catch {
+        // niet beschikbaar — geen probleem
+      }
+      try {
+        const createRes = await fetch("/api/campaigns", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ brief, id: localId, ownerEmail }),
+        });
+        if (createRes.ok) {
+          const j = (await createRes.json()) as { id: string; persisted: boolean };
+          campaignId = j.id;
+          persisted = j.persisted;
+        }
+      } catch {
+        // Supabase down/unconfigured — gewoon doorgaan met localStorage.
+      }
+
       for (let i = 0; i < GENERATOR_SEQUENCE.length; i++) {
         const gen = GENERATOR_SEQUENCE[i];
         setProgressIdx(i);
@@ -135,6 +175,16 @@ export function BriefWizard() {
         const { value } = (await res.json()) as { value: unknown };
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (artifacts as any)[gen.key] = value;
+
+        // Persist deze artifact direct — als generatie halverwege crasht,
+        // is wat we wel hebben opgeslagen.
+        if (persisted) {
+          fetch(`/api/campaigns/${campaignId}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ artifactKey: gen.key, artifactValue: value }),
+          }).catch(() => {});
+        }
       }
 
       // Bouw videoProduction client-side uit cinematic (pure functie).
@@ -144,7 +194,7 @@ export function BriefWizard() {
       const brand = deriveBrand(brief);
       const now = new Date().toISOString();
       const campaign: Campaign = {
-        id: nanoid(10),
+        id: campaignId,
         createdAt: now,
         updatedAt: now,
         brief,
@@ -160,6 +210,19 @@ export function BriefWizard() {
           videoProduction,
         },
       };
+
+      // Final persist: videoProduction + status=complete.
+      if (persisted) {
+        fetch(`/api/campaigns/${campaignId}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            artifactKey: "videoProduction",
+            artifactValue: videoProduction,
+            status: "complete",
+          }),
+        }).catch(() => {});
+      }
 
       addCampaign(campaign);
       toast.success("Campagne klaar", {
@@ -195,6 +258,43 @@ export function BriefWizard() {
       <p className="mt-3 max-w-md text-text-muted">{STEPS[stepIdx].desc}</p>
 
       <Progress current={stepIdx} total={STEPS.length} />
+
+      {stepIdx === 0 ? (
+        <div className="mt-10 rounded-2xl border border-dashed border-border bg-surface/40 p-5">
+          <div className="flex items-center justify-between gap-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+              Of probeer een demo
+            </span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+              {DEMO_BRIEFS.length} cases
+            </span>
+          </div>
+          <div className="mt-3 grid gap-2 md:grid-cols-3">
+            {DEMO_BRIEFS.map((demo) => (
+              <button
+                key={demo.id}
+                type="button"
+                onClick={() => loadDemo(demo.id)}
+                disabled={submitting}
+                className="group rounded-xl border border-border bg-elevated/60 p-4 text-left transition-all hover:border-border-strong hover:bg-elevated"
+                data-testid={`demo-${demo.id}`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium tracking-tight text-text">
+                    {demo.label}
+                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                    {demo.vertical}
+                  </span>
+                </div>
+                <p className="mt-2 text-xs leading-relaxed text-text-muted">
+                  {demo.blurb}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-10">
         <AnimatePresence mode="wait">

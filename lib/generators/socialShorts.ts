@@ -26,7 +26,7 @@ const SCHEMA_HINT = `{
 export async function generateSocialShorts(
   brief: BusinessBrief
 ): Promise<SocialShorts> {
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { includeVisualDirection: true })}
 
 OPDRACHT
 Schrijf het volledige short-form video pakket voor dit bedrijf in het Nederlands.

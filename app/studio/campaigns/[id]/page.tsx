@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeft, Download, Eye, RefreshCw, Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -10,7 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCampaigns } from "@/lib/store/campaigns";
 import { downloadCampaignJSON } from "@/lib/export/json";
+import { ShareCampaignDialog } from "@/components/studio/ShareCampaignDialog";
 import { LandingPagePreview } from "@/components/artifacts/LandingPagePreview";
+import { ReceptionistPreview } from "@/components/artifacts/ReceptionistPreview";
 import { SeoPreview } from "@/components/artifacts/SeoPreview";
 import { MetaAdsPreview } from "@/components/artifacts/MetaAdsPreview";
 import { InstagramPreview } from "@/components/artifacts/InstagramPreview";
@@ -40,11 +42,25 @@ export default function CampaignPage() {
   const params = useParams<{ id: string }>();
   const campaign = useCampaigns((s) => s.getById(params.id));
   const hydrated = useCampaigns((s) => s.hydrated);
+  const fetching = useCampaigns((s) => Boolean(s.fetchingIds[params.id]));
+  const fetchFromServer = useCampaigns((s) => s.fetchFromServer);
   const updateArtifact = useCampaigns((s) => s.updateArtifact);
   const removeCampaign = useCampaigns((s) => s.removeCampaign);
+  const receptionist = useCampaigns((s) =>
+    s.receptionists[params.id]
+  );
+  const setReceptionist = useCampaigns((s) => s.setReceptionist);
   const [regenerating, setRegenerating] = useState<MvpGeneratorId | null>(null);
+  const [serverChecked, setServerChecked] = useState(false);
 
-  if (!hydrated) {
+  useEffect(() => {
+    if (!hydrated) return;
+    if (campaign) return;
+    if (serverChecked) return;
+    fetchFromServer(params.id).finally(() => setServerChecked(true));
+  }, [hydrated, campaign, params.id, fetchFromServer, serverChecked]);
+
+  if (!hydrated || (!campaign && !serverChecked) || fetching) {
     return (
       <div className="px-6 py-10 md:px-10 md:py-14">
         <div className="mx-auto max-w-6xl">
@@ -170,18 +186,22 @@ export default function CampaignPage() {
               </h1>
             </div>
             <div className="flex flex-wrap gap-2">
+              <ShareCampaignDialog
+                campaignId={campaign.id}
+                campaignName={campaign.brief.name}
+              />
               <Button
                 asChild
-                variant="accent"
+                variant="secondary"
                 data-testid="open-client-view"
               >
                 <Link href={`/c/${campaign.id}`} target="_blank">
                   <Eye className="size-4" />
-                  Klantweergave
+                  Voorvertonen
                 </Link>
               </Button>
               <Button
-                variant="secondary"
+                variant="ghost"
                 onClick={() => downloadCampaignJSON(campaign)}
                 data-testid="export-json"
               >
@@ -211,6 +231,7 @@ export default function CampaignPage() {
                   <TabsTrigger value="social-shorts">Social shorts</TabsTrigger>
                   <TabsTrigger value="prompt-packs">Prompt packs</TabsTrigger>
                   <TabsTrigger value="video-production">Video productie</TabsTrigger>
+                  <TabsTrigger value="receptionist">Receptionist</TabsTrigger>
                 </TabsList>
               </div>
 
@@ -289,6 +310,14 @@ export default function CampaignPage() {
                   cinematic={campaign.artifacts.cinematic}
                   campaignName={campaign.brief.name}
                   onChange={patchVideoProduction}
+                />
+              </TabsContent>
+
+              <TabsContent value="receptionist" data-testid="tab-receptionist">
+                <ReceptionistPreview
+                  brief={campaign.brief}
+                  config={receptionist ?? null}
+                  onGenerated={(cfg) => setReceptionist(campaign.id, cfg)}
                 />
               </TabsContent>
             </Tabs>
