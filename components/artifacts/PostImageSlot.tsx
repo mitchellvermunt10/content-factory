@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Sparkles,
   Loader2,
@@ -8,6 +8,7 @@ import {
   Image as ImageIcon,
   Copy,
   Check,
+  Upload,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -42,8 +43,69 @@ export function PostImageSlot({
   aspect = "square",
 }: Props) {
   const [busy, setBusy] = useState<Engine | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [copiedMJ, setCopiedMJ] = useState(false);
   const [showEngines, setShowEngines] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  async function uploadFile(file: File) {
+    if (!file.type.startsWith("image/")) {
+      toast.error("Geen image-bestand", {
+        description: "Selecteer een PNG, JPG of WebP.",
+      });
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Bestand te groot", {
+        description: "Maximaal 10 MB. Comprimeer 'm of pak een kleinere export.",
+      });
+      return;
+    }
+    setUploading(true);
+    try {
+      // FileReader → base64. Strip 'data:image/png;base64,' prefix.
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const result = reader.result as string;
+          const stripped = result.split(",")[1] ?? "";
+          resolve(stripped);
+        };
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+
+      const res = await fetch("/api/images/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          campaignId,
+          artifactKey,
+          itemIndex,
+          base64,
+          source: "midjourney",
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(
+          (err as { error?: string }).error ?? `HTTP ${res.status}`
+        );
+      }
+      const j = (await res.json()) as { image: CampaignImage };
+      onGenerated(j.image);
+      toast.success("Image geüpload", {
+        description: "Verschijnt nu in feed-grid + klantweergave.",
+      });
+    } catch (err) {
+      toast.error("Upload mislukt", {
+        description: err instanceof Error ? err.message : "Onbekende fout",
+      });
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
+  }
 
   async function generate(engine: Engine) {
     setBusy(engine);
@@ -122,31 +184,52 @@ export function PostImageSlot({
 
       <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 bg-gradient-to-t from-black/90 to-transparent p-3">
         {showEngines ? (
-          <div className="grid grid-cols-3 gap-1">
-            <EngineButton
-              label="OpenAI"
-              sub="€0,04"
-              busy={busy === "openai"}
-              onClick={() => generate("openai")}
-              disabled={busy !== null}
-            />
-            <EngineButton
-              label="Flux Pro"
-              sub="€0,06"
-              busy={busy === "flux"}
-              onClick={() => generate("flux")}
-              accent
-              disabled={busy !== null}
-            />
-            <EngineButton
-              label="MJ prompt"
-              sub={copiedMJ ? "✓" : "kopie"}
-              busy={busy === "midjourney-prompt"}
-              onClick={() => generate("midjourney-prompt")}
-              disabled={busy !== null}
-              icon={copiedMJ ? <Check className="size-3" /> : <Copy className="size-3" />}
-            />
-          </div>
+          <>
+            <div className="grid grid-cols-3 gap-1">
+              <EngineButton
+                label="OpenAI"
+                sub="€0,04"
+                busy={busy === "openai"}
+                onClick={() => generate("openai")}
+                disabled={busy !== null || uploading}
+              />
+              <EngineButton
+                label="Flux Pro"
+                sub="€0,06"
+                busy={busy === "flux"}
+                onClick={() => generate("flux")}
+                accent
+                disabled={busy !== null || uploading}
+              />
+              <EngineButton
+                label="MJ prompt"
+                sub={copiedMJ ? "✓" : "kopie"}
+                busy={busy === "midjourney-prompt"}
+                onClick={() => generate("midjourney-prompt")}
+                disabled={busy !== null || uploading}
+                icon={
+                  copiedMJ ? (
+                    <Check className="size-3" />
+                  ) : (
+                    <Copy className="size-3" />
+                  )
+                }
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading || busy !== null}
+              className="flex items-center justify-center gap-1.5 rounded-md border border-white/30 bg-white/10 py-1.5 text-[10px] font-medium uppercase tracking-[0.15em] text-white transition-colors hover:bg-white/20 disabled:pointer-events-none disabled:opacity-50"
+            >
+              {uploading ? (
+                <Loader2 className="size-3 animate-spin" />
+              ) : (
+                <Upload className="size-3" />
+              )}
+              {uploading ? "Uploaden…" : "Upload van Midjourney"}
+            </button>
+          </>
         ) : null}
         <div className="flex items-center justify-between gap-2">
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/70">
@@ -165,8 +248,12 @@ export function PostImageSlot({
               size="sm"
               variant={existing ? "ghost" : "accent"}
               onClick={() => generate("openai")}
-              disabled={busy !== null}
-              className={existing ? "bg-white/10 text-white hover:bg-white/20" : ""}
+              disabled={busy !== null || uploading}
+              className={
+                existing
+                  ? "bg-white/10 text-white hover:bg-white/20"
+                  : ""
+              }
             >
               {busy === "openai" ? (
                 <Loader2 className="size-3.5 animate-spin" />
@@ -180,6 +267,18 @@ export function PostImageSlot({
           </div>
         </div>
       </div>
+
+      {/* Hidden file input — getriggerd door de Upload-knop */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) uploadFile(file);
+        }}
+      />
     </div>
   );
 }
