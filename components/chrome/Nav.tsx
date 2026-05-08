@@ -8,8 +8,8 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
+  { label: "Cases", href: "/cases" },
   { label: "Werkwijze", href: "/#werkwijze" },
-  { label: "Deliverables", href: "/#deliverables" },
   { label: "Pricing", href: "/#pricing" },
   { label: "Partners", href: "/partners" },
 ];
