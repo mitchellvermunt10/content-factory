@@ -17,7 +17,7 @@ const SCHEMA_HINT = `{
       "primaryText": string 40-280,
       "headline": string<=40,
       "description": string<=120,
-      "cta": "Boek nu" | "Reserveer" | "Plan afspraak" | "Ontdek meer" | "Meer info" | "Bel nu" | "Bestel nu" | "Aanmelden",
+      "cta": string 2-40 (korte 1-3 woord CTA, bijv. "Boek nu", "Reserveer", "Plan afspraak"),
       "visualDirection": string<=180
     }
   ] (3-4),

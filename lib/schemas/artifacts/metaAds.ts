@@ -5,16 +5,13 @@ const AdVariant = z.object({
   primaryText: z.string().min(20).max(400),
   headline: z.string().max(60),
   description: z.string().max(180),
-  cta: z.enum([
-    "Boek nu",
-    "Reserveer",
-    "Plan afspraak",
-    "Ontdek meer",
-    "Meer info",
-    "Bel nu",
-    "Bestel nu",
-    "Aanmelden",
-  ]),
+  cta: z
+    .string()
+    .min(2)
+    .max(40)
+    .describe(
+      "Korte CTA — 1-3 woorden. Voorbeelden: 'Boek nu', 'Reserveer', 'Plan afspraak', 'Ontdek meer'."
+    ),
   visualDirection: z.string().max(280).describe("Korte beschrijving van het beeld"),
 });
 
