@@ -8,6 +8,51 @@ import {
   scrapeInstagramProfile,
   isApifyEnabled,
 } from "./instagramScraper";
+import { getSupabase, isSupabaseEnabled } from "@/lib/supabase/server";
+
+/**
+ * Download een externe image-URL en upload 'm naar onze Supabase Storage
+ * 'scraped-images' bucket. Geeft permanente public URL terug. Lost CORS,
+ * referrer-blocking en URL-expiry op (Instagram CDN URLs verlopen ~24u).
+ *
+ * Failure = return originele URL, geen showstopper.
+ */
+async function persistExternalImage(
+  externalUrl: string,
+  prospectId: string
+): Promise<string> {
+  if (!isSupabaseEnabled()) return externalUrl;
+  try {
+    const res = await fetch(externalUrl, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+      },
+    });
+    if (!res.ok) return externalUrl;
+    const buffer = Buffer.from(await res.arrayBuffer());
+    if (buffer.length < 1024) return externalUrl; // te klein, waarschijnlijk fout
+    const supa = getSupabase();
+    const filename = `prospects/${prospectId}/${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 8)}.jpg`;
+    // Bucket campaign-images bestaat al (migratie 0003)
+    const { error } = await supa.storage
+      .from("campaign-images")
+      .upload(filename, buffer, {
+        contentType: "image/jpeg",
+        cacheControl: "31536000",
+        upsert: false,
+      });
+    if (error) return externalUrl;
+    const { data } = supa.storage
+      .from("campaign-images")
+      .getPublicUrl(filename);
+    return data.publicUrl ?? externalUrl;
+  } catch {
+    return externalUrl;
+  }
+}
 
 const VERTICAL_LABEL: Record<string, string> = {
   salon: "kapsalon",
@@ -329,6 +374,8 @@ Wees feitelijk — geen interpretatie waar het feiten betreft. Wees concreet —
 
   // Optioneel: Instagram-posts ophalen als Apify is geconfigureerd EN
   // Sonnet een handle heeft gevonden. Voegt 8-12 extra foto's toe per profile.
+  // BELANGRIJK: IG-CDN-URLs verlopen na ~24u + blokkeren hotlinking via referrer.
+  // We downloaden ze direct naar onze Supabase Storage voor persistente URLs.
   const detectedHandle =
     typeof raw.instagramHandle === "string" ? raw.instagramHandle : "";
   let igPhotos: Array<{ url: string; alt: string; context: string }> = [];
@@ -338,14 +385,18 @@ Wees feitelijk — geen interpretatie waar het feiten betreft. Wees concreet —
         handle: detectedHandle,
         maxPosts: 12,
       });
-      igPhotos = igPosts
-        .filter((p) => p.imageUrl)
-        .map((p) => ({
-          url: p.imageUrl,
-          alt: p.caption.slice(0, 200),
-          // Map IG-type naar onze context-enum
-          context: p.type === "reel" ? "gallery" : "food",
-        }));
+      const prospectKey = detectedHandle.replace(/[^a-z0-9]/gi, "");
+      // Persisteer parallel — sneller dan sequentieel
+      const persisted = await Promise.all(
+        igPosts
+          .filter((p) => p.imageUrl)
+          .map(async (p) => ({
+            url: await persistExternalImage(p.imageUrl, prospectKey),
+            alt: p.caption.slice(0, 200),
+            context: (p.type === "reel" ? "gallery" : "food") as string,
+          }))
+      );
+      igPhotos = persisted;
     } catch {
       // Apify-fout = geen showstopper, gewoon doorgaan met website-foto's
     }
