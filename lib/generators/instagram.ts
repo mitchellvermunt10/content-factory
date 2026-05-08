@@ -5,6 +5,7 @@ import {
   type InstagramContent,
 } from "@/lib/schemas/artifacts/instagram";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 const SCHEMA_HINT = `{
   "bio": { "headline": string<=50, "body": string<=140, "cta": string<=40 },
@@ -28,9 +29,10 @@ const SCHEMA_HINT = `{
 }`;
 
 export async function generateInstagramContent(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<InstagramContent> {
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf de Instagram content kit voor dit bedrijf, in het Nederlands.

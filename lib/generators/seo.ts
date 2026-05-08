@@ -2,6 +2,7 @@ import { runJSON } from "@/lib/ai/runJSON";
 import { describeBrief } from "@/lib/ai/briefContext";
 import { SeoCopySchema, type SeoCopy } from "@/lib/schemas/artifacts/seo";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 const SCHEMA_HINT = `{
   "metaTitle": string 20-70,
@@ -18,9 +19,10 @@ const SCHEMA_HINT = `{
 }`;
 
 export async function generateSeoCopy(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<SeoCopy> {
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf de volledige SEO-set voor dit lokale bedrijf in het Nederlands.

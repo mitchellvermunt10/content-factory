@@ -23,6 +23,7 @@ import {
 import type { BusinessBrief } from "@/lib/schemas/brief";
 import type { Campaign } from "@/lib/schemas/campaign";
 import type { MvpGeneratorId } from "@/lib/constants";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 export async function runCampaign(brief: BusinessBrief): Promise<Campaign> {
   const brand = deriveBrand(brief);
@@ -74,7 +75,8 @@ export async function runCampaign(brief: BusinessBrief): Promise<Campaign> {
 
 export async function regenerateArtifact(
   brief: BusinessBrief,
-  artifact: MvpGeneratorId
+  artifact: MvpGeneratorId,
+  scraped?: ScrapedContent | null
 ) {
   if (MOCK_MODE) {
     switch (artifact) {
@@ -97,18 +99,21 @@ export async function regenerateArtifact(
 
   switch (artifact) {
     case "landing":
-      return { artifact, value: await generateLandingPage(brief) };
+      return { artifact, value: await generateLandingPage(brief, scraped) };
     case "seo":
-      return { artifact, value: await generateSeoCopy(brief) };
+      return { artifact, value: await generateSeoCopy(brief, scraped) };
     case "meta-ads":
-      return { artifact, value: await generateMetaAds(brief) };
+      return { artifact, value: await generateMetaAds(brief, scraped) };
     case "instagram":
-      return { artifact, value: await generateInstagramContent(brief) };
+      return {
+        artifact,
+        value: await generateInstagramContent(brief, scraped),
+      };
     case "cinematic":
-      return { artifact, value: await generateCinematic(brief) };
+      return { artifact, value: await generateCinematic(brief, scraped) };
     case "social-shorts":
-      return { artifact, value: await generateSocialShorts(brief) };
+      return { artifact, value: await generateSocialShorts(brief, scraped) };
     case "prompt-packs":
-      return { artifact, value: await generatePromptPacks(brief) };
+      return { artifact, value: await generatePromptPacks(brief, scraped) };
   }
 }

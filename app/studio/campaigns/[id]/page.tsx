@@ -117,7 +117,12 @@ export default function CampaignPage() {
       const res = await fetch(`/api/generate/${artifact}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(campaign.brief),
+        body: JSON.stringify({
+          ...campaign.brief,
+          ...(campaign.artifacts.scrapedContent
+            ? { _scrapedContent: campaign.artifacts.scrapedContent }
+            : {}),
+        }),
       });
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));

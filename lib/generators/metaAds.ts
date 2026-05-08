@@ -2,6 +2,7 @@ import { runJSON } from "@/lib/ai/runJSON";
 import { describeBrief } from "@/lib/ai/briefContext";
 import { MetaAdsSchema, type MetaAds } from "@/lib/schemas/artifacts/metaAds";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 const SCHEMA_HINT = `{
   "campaignObjective": "awareness" | "traffic" | "engagement" | "leads" | "sales" | "bookings",
@@ -27,9 +28,10 @@ const SCHEMA_HINT = `{
 }`;
 
   export async function generateMetaAds(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<MetaAds> {
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf een Meta Ads pakket (Facebook + Instagram) voor dit bedrijf, in het Nederlands.

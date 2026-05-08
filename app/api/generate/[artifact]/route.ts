@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { BusinessBriefSchema } from "@/lib/schemas/brief";
 import { regenerateArtifact } from "@/lib/generators/orchestrator";
 import { MVP_GENERATORS, type MvpGeneratorId } from "@/lib/constants";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -18,9 +19,17 @@ export async function POST(
         { status: 400 }
       );
     }
-    const body = await req.json();
-    const brief = BusinessBriefSchema.parse(body);
-    const result = await regenerateArtifact(brief, artifact as MvpGeneratorId);
+    const body = (await req.json()) as Record<string, unknown>;
+    // Optionele scraped content meekomen — maakt copy specifieker
+    const { _scrapedContent, ...briefBody } = body as {
+      _scrapedContent?: ScrapedContent;
+    } & Record<string, unknown>;
+    const brief = BusinessBriefSchema.parse(briefBody);
+    const result = await regenerateArtifact(
+      brief,
+      artifact as MvpGeneratorId,
+      _scrapedContent ?? null
+    );
     return NextResponse.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Onbekende fout";

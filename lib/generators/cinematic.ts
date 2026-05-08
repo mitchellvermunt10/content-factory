@@ -5,6 +5,7 @@ import {
   type CinematicCampaign,
 } from "@/lib/schemas/artifacts/cinematic";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 const SCHEMA_HINT = `{
   "concept": {
@@ -62,9 +63,10 @@ const SCHEMA_HINT = `{
 }`;
 
 export async function generateCinematic(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<CinematicCampaign> {
-  const user = `${describeBrief(brief, { includeVisualDirection: true })}
+  const user = `${describeBrief(brief, { includeVisualDirection: true, scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf een volledig cinematic merk-commercial voor dit bedrijf in het Nederlands. Denk Apple-launch × Sofia Coppola × premium boutique commercial.

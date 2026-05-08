@@ -5,6 +5,7 @@ import {
   type SocialShorts,
 } from "@/lib/schemas/artifacts/socialShorts";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 const SCHEMA_HINT = `{
   "formats": {
@@ -24,9 +25,10 @@ const SCHEMA_HINT = `{
 }`;
 
 export async function generateSocialShorts(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<SocialShorts> {
-  const user = `${describeBrief(brief, { includeVisualDirection: true })}
+  const user = `${describeBrief(brief, { includeVisualDirection: true, scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf het volledige short-form video pakket voor dit bedrijf in het Nederlands.

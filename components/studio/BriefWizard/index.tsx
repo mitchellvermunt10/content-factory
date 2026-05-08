@@ -237,7 +237,12 @@ export function BriefWizard() {
         const res = await fetch(`/api/generate/${gen.id}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(brief),
+          body: JSON.stringify({
+            ...brief,
+            ...(scrapedFromPrefill
+              ? { _scrapedContent: scrapedFromPrefill }
+              : {}),
+          }),
         });
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));

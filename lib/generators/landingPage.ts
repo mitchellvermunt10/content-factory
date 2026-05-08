@@ -2,6 +2,7 @@ import { runJSON } from "@/lib/ai/runJSON";
 import { describeBrief } from "@/lib/ai/briefContext";
 import { LandingPageSchema, type LandingPage } from "@/lib/schemas/artifacts/landing";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 import { suggestDesignStyle } from "@/lib/design/themes";
 
 const SCHEMA_HINT = `{
@@ -85,12 +86,13 @@ const VERTICAL_GUIDANCE: Record<
 };
 
 export async function generateLandingPage(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<LandingPage> {
   const guidance = VERTICAL_GUIDANCE[brief.businessType] ?? VERTICAL_GUIDANCE.salon;
   const suggestedStyle = suggestDesignStyle(brief.tone, brief.businessType);
 
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf de volledige tekst + structuur voor een premium landingspagina voor dit lokale bedrijf.

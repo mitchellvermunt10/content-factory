@@ -5,6 +5,7 @@ import {
   type ReceptionistConfig,
 } from "@/lib/schemas/artifacts/receptionist";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 const SCHEMA_HINT = `{
   "meta": {
@@ -38,9 +39,10 @@ const SCHEMA_HINT = `{
 }`;
 
 export async function generateReceptionist(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<ReceptionistConfig> {
-  const user = `${describeBrief(brief)}
+  const user = `${describeBrief(brief, { scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf de complete configuratie voor een Nederlandstalige AI-telefonist voor dit bedrijf. De configuratie moet direct bruikbaar zijn in Vapi.ai of Retell AI.

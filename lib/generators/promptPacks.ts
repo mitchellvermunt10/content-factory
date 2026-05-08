@@ -5,6 +5,7 @@ import {
   type PromptPacks,
 } from "@/lib/schemas/artifacts/promptPacks";
 import type { BusinessBrief } from "@/lib/schemas/brief";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 const SCHEMA_HINT = `{
   "globalStyle": {
@@ -58,9 +59,10 @@ const SCHEMA_HINT = `{
 }`;
 
 export async function generatePromptPacks(
-  brief: BusinessBrief
+  brief: BusinessBrief,
+  scraped?: ScrapedContent | null
 ): Promise<PromptPacks> {
-  const user = `${describeBrief(brief, { includeVisualDirection: true })}
+  const user = `${describeBrief(brief, { includeVisualDirection: true, scrapedContent: scraped })}
 
 OPDRACHT
 Schrijf complete AI prompt-pakketten voor dit bedrijf — beeld én bewegend beeld.
