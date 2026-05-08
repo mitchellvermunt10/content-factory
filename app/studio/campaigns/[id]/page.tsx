@@ -272,7 +272,10 @@ export default function CampaignPage() {
                   onRegenerate={() => regenerate("instagram")}
                   busy={regenerating === "instagram"}
                 />
-                <InstagramPreview data={campaign.artifacts.instagram} />
+                <InstagramPreview
+                  data={campaign.artifacts.instagram}
+                  campaignId={campaign.id}
+                />
               </TabsContent>
 
               <TabsContent value="cinematic" data-testid="tab-cinematic">

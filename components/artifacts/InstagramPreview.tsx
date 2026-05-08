@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Film, Image as ImageIcon, Layers, Circle } from "lucide-react";
 import type { InstagramContent } from "@/lib/schemas/artifacts/instagram";
+import { PostImageSlot } from "./PostImageSlot";
+import { useCampaignImages } from "./useCampaignImages";
 
 const ICON: Record<string, React.ElementType> = {
   foto: ImageIcon,
@@ -12,7 +14,16 @@ const ICON: Record<string, React.ElementType> = {
   story: Circle,
 };
 
-export function InstagramPreview({ data }: { data: InstagramContent }) {
+type Props = {
+  data: InstagramContent;
+  campaignId?: string;
+};
+
+export function InstagramPreview({ data, campaignId }: Props) {
+  // Image-feature is alleen actief als we een campaignId hebben (studio view).
+  // Op de publieke /c/[id] geven we een aparte read-only preview later.
+  const showImageGen = Boolean(campaignId);
+
   return (
     <div className="space-y-6">
       <Card>
@@ -49,33 +60,11 @@ export function InstagramPreview({ data }: { data: InstagramContent }) {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Feed grid</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-1.5">
-            {data.posts.map((p, i) => {
-              const Icon = ICON[p.type] ?? ImageIcon;
-              return (
-                <div
-                  key={i}
-                  className="group relative aspect-square overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface to-elevated"
-                >
-                  <div className="absolute right-2 top-2 rounded-full bg-bg/60 p-1.5 backdrop-blur-sm">
-                    <Icon className="size-3 text-text-muted" />
-                  </div>
-                  <div className="flex h-full items-end p-3">
-                    <p className="line-clamp-3 text-[10px] leading-tight text-text-muted">
-                      {p.hook}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
+      {showImageGen && campaignId ? (
+        <FeedGridWithImages campaignId={campaignId} data={data} />
+      ) : (
+        <FeedGridStatic data={data} />
+      )}
 
       <Card>
         <CardHeader>
@@ -169,4 +158,89 @@ export function InstagramPreview({ data }: { data: InstagramContent }) {
       </Card>
     </div>
   );
+}
+
+function FeedGridStatic({ data }: { data: InstagramContent }) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Feed grid</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-3 gap-1.5">
+          {data.posts.map((p, i) => {
+            const Icon = ICON[p.type] ?? ImageIcon;
+            return (
+              <div
+                key={i}
+                className="group relative aspect-square overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface to-elevated"
+              >
+                <div className="absolute right-2 top-2 rounded-full bg-bg/60 p-1.5 backdrop-blur-sm">
+                  <Icon className="size-3 text-text-muted" />
+                </div>
+                <div className="flex h-full items-end p-3">
+                  <p className="line-clamp-3 text-[10px] leading-tight text-text-muted">
+                    {p.hook}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function FeedGridWithImages({
+  campaignId,
+  data,
+}: {
+  campaignId: string;
+  data: InstagramContent;
+}) {
+  const { findLatest, upsertLocal } = useCampaignImages(campaignId);
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Feed grid</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="mb-4 text-xs text-text-subtle">
+          Klik <span className="font-mono uppercase tracking-[0.18em]">Genereer</span> per
+          post om een echte image uit de visualDirection-prompt te bouwen.
+          OpenAI gpt-image-1 — ongeveer €0,04 per stuk.
+        </p>
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+          {data.posts.map((p, i) => (
+            <div key={i} className="space-y-2">
+              <PostImageSlot
+                campaignId={campaignId}
+                artifactKey="instagram"
+                itemIndex={i}
+                prompt={buildImagePrompt(p.visualDirection, p.hook)}
+                existing={findLatest("instagram", i)}
+                onGenerated={upsertLocal}
+                aspect={p.type === "reel" ? "portrait" : "square"}
+              />
+              <p className="line-clamp-2 text-[11px] leading-tight text-text-muted">
+                {p.hook}
+              </p>
+            </div>
+          ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function buildImagePrompt(visualDirection: string, hook: string): string {
+  // Optimaliseer Sonnet's NL visualDirection naar een sterke gpt-image-1 prompt.
+  // gpt-image-1 doet beter werk met expliciete styling-cues.
+  return [
+    visualDirection,
+    "Professional editorial photography, natural daylight, 35mm prime lens, shallow depth of field, color-graded.",
+    `Mood: ${hook.slice(0, 80)}.`,
+    "No text overlays, no logos, no watermarks. Photorealistic.",
+  ].join(" ");
 }

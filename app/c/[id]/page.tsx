@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { useCampaigns } from "@/lib/store/campaigns";
 import { LandingPagePreview } from "@/components/artifacts/LandingPagePreview";
 import { ApprovalBar } from "@/components/client/ApprovalBar";
+import { PublicFeedGrid } from "@/components/client/PublicFeedGrid";
 import { GradientMesh } from "@/components/motion/GradientMesh";
 import { Logo } from "@/components/chrome/Logo";
 import { Timecode } from "@/components/cinematic/Timecode";
@@ -308,23 +309,7 @@ export default function ClientCampaignPage() {
           </Badge>
         </Card>
         <Card title="Feed grid">
-          <div className="mt-3 grid grid-cols-3 gap-1.5">
-            {ig.posts.map((p, i) => (
-              <div
-                key={i}
-                className="relative aspect-square overflow-hidden rounded-md border border-border bg-gradient-to-br from-surface to-elevated"
-              >
-                <span className="absolute right-2 top-2 rounded-full bg-bg/60 px-1.5 py-0.5 font-mono text-[9px] uppercase text-text-muted backdrop-blur-sm">
-                  {p.type}
-                </span>
-                <div className="flex h-full items-end p-3">
-                  <p className="line-clamp-3 text-[10px] leading-tight text-text-muted">
-                    {p.hook}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          <PublicFeedGrid campaignId={campaign.id} posts={ig.posts} />
         </Card>
         <Card title="Weekplan">
           <ul className="mt-3 divide-y divide-border overflow-hidden rounded-lg border border-border">
