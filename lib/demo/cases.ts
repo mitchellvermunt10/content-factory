@@ -12,21 +12,24 @@ export type CaseEntry = {
 
 export const CASES: CaseEntry[] = [
   {
-    id: "", // ← vul in zodra Maison Lumière is gegenereerd
+    // Gegenereerd 2026-05-08 — wachten op restaurant + autobedrijf voor we live gaan
+    id: "Ns5NDcXZmV",
     vertical: "salon",
     label: "Maison Lumière",
     blurb: "Premium kapsalon in Amsterdam, luxueuze en rustige vibe.",
     highlight: "Van losse posts naar consistente brand-content in 7 minuten.",
   },
   {
-    id: "", // ← Bistro Vlinder
+    // Gegenereerd 2026-05-08
+    id: "DkneKNoX93",
     vertical: "restaurant",
     label: "Bistro Vlinder",
     blurb: "Buurtbistro in Utrecht — warm, seizoensgebonden, eerlijk.",
     highlight: "Wisselend menu — elke week verse content zonder schrijfwerk.",
   },
   {
-    id: "", // ← GarageVerlinden
+    // Gegenereerd 2026-05-08
+    id: "ptaL1cr5vz",
     vertical: "autobedrijf",
     label: "GarageVerlinden",
     blurb: "Familie-garage in Eindhoven — stoer, vakkundig, no-nonsense.",
