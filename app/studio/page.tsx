@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Plus, Sparkles, Mail, RefreshCw, Loader2 } from "lucide-react";
+import { Plus, Sparkles, Mail, RefreshCw, Loader2, Search } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CampaignListItem } from "@/components/studio/CampaignListItem";
@@ -99,6 +99,12 @@ export default function StudioDashboard() {
                 <Link href="/studio/outreach">
                   <Mail className="size-4" />
                   Outreach kit
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="secondary">
+                <Link href="/studio/prospects">
+                  <Search className="size-4" />
+                  Prospect research
                 </Link>
               </Button>
               <Button asChild size="lg" variant="primary">

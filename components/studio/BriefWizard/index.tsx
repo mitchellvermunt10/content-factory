@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, Sparkles, Loader2 } from "lucide-react";
 import { nanoid } from "nanoid";
@@ -62,8 +62,26 @@ const INITIAL: WizardData = {
 
 export function BriefWizard() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [data, setData] = useState<WizardData>(INITIAL);
   const [stepIdx, setStepIdx] = useState(0);
+
+  // Prefill via ?prefill=<base64-json> (gebruikt door /studio/prospects → "Open in studio")
+  useEffect(() => {
+    const prefill = searchParams.get("prefill");
+    if (!prefill) return;
+    try {
+      const decoded = JSON.parse(atob(prefill)) as Partial<BusinessBrief>;
+      setData((prev) => ({ ...prev, ...decoded }));
+      setStepIdx(STEPS.length - 1); // direct naar review
+      toast.success("Brief vooringevuld", {
+        description: "Controleer en klik 'Genereer campagne'.",
+      });
+    } catch {
+      // ongeldige prefill — gewoon negeren
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [submitting, setSubmitting] = useState(false);
   const [progressLabel, setProgressLabel] = useState<string | null>(null);
   const [progressIdx, setProgressIdx] = useState(0);
