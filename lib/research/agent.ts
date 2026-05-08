@@ -337,10 +337,12 @@ Begin met onderzoek. Roep submit_prospects aan zodra je top-10 (of top-5+ als mi
   let finalSubmitInput: unknown = null;
 
   // Tool-loop — Sonnet wisselt tussen web_search calls en eindigt met submit_prospects
+  let lastStopReason: string | undefined;
+
   for (let turn = 0; turn < 12; turn++) {
     const response = await client.messages.create({
       model: "claude-sonnet-4-6",
-      max_tokens: 8000,
+      max_tokens: 16000, // Verhoogd: 10 prospects × volledige brief + email = veel JSON
       system: systemPrompt,
       tools: [
         webSearchTool,
@@ -353,6 +355,7 @@ Begin met onderzoek. Roep submit_prospects aan zodra je top-10 (of top-5+ als mi
 
     totalInputTokens += response.usage.input_tokens;
     totalOutputTokens += response.usage.output_tokens;
+    lastStopReason = response.stop_reason ?? undefined;
 
     // Check of submit_prospects aangeroepen is — dan zijn we klaar
     const submitBlock = response.content.find(
@@ -362,8 +365,29 @@ Begin met onderzoek. Roep submit_prospects aan zodra je top-10 (of top-5+ als mi
         b.name === "submit_prospects"
     );
     if (submitBlock && "input" in submitBlock) {
-      finalSubmitInput = submitBlock.input;
-      break;
+      // Sanity check: input moet prospects bevatten. Als leeg → max_tokens
+      // truncatie. Probeer 1 keer expliciet te retryen met kleinere top-10.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const input = submitBlock.input as any;
+      if (
+        input &&
+        typeof input === "object" &&
+        Array.isArray(input.prospects) &&
+        input.prospects.length > 0
+      ) {
+        finalSubmitInput = input;
+        break;
+      }
+      // Empty/incomplete tool input — meestal max_tokens-truncatie
+      if (lastStopReason === "max_tokens") {
+        messages.push({ role: "assistant", content: response.content });
+        messages.push({
+          role: "user",
+          content:
+            "De vorige tool-call werd afgekapt. Roep submit_prospects opnieuw aan, maar maak nu max 5 prospects ipv 10. Houd de email-body korter (max 100 woorden). Geen redundante velden.",
+        });
+        continue;
+      }
     }
 
     // Geen submit — Anthropic heeft web_search server-side al gedaan en
@@ -390,14 +414,14 @@ Begin met onderzoek. Roep submit_prospects aan zodra je top-10 (of top-5+ als mi
       messages.push({
         role: "user",
         content:
-          "Je bent klaar met onderzoek. Roep nu de submit_prospects tool aan met je top-10 prospects.",
+          "Je bent klaar met onderzoek. Roep nu de submit_prospects tool aan met je top-10 prospects (of minder als je niet genoeg sterke kandidaten vindt — minimum 3).",
       });
     }
   }
 
   if (!finalSubmitInput) {
     throw new Error(
-      "Onderzoek-agent eindigde zonder submit_prospects tool aan te roepen na 12 turns"
+      `Onderzoek-agent eindigde zonder submit_prospects tool aan te roepen (laatste stop_reason: ${lastStopReason ?? "unknown"}). Mogelijk te weinig kandidaten gevonden — probeer een grotere stad of bredere criteria.`
     );
   }
 
@@ -407,8 +431,12 @@ Begin met onderzoek. Roep submit_prospects aan zodra je top-10 (of top-5+ als mi
     searchedQueries,
   });
   if (!parsed.success) {
+    const errors = parsed.error.errors.slice(0, 5);
+    const summary = errors
+      .map((e) => `${e.path.join(".")}: ${e.message}`)
+      .join("; ");
     throw new Error(
-      `Resultaat valideren mislukt: ${JSON.stringify(parsed.error.errors).slice(0, 500)}`
+      `Resultaat valideren mislukt (stop_reason: ${lastStopReason ?? "unknown"}): ${summary}. Probeer opnieuw met een grotere stad of andere criteria.`
     );
   }
 
