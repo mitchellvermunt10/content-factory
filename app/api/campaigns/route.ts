@@ -8,6 +8,7 @@ import {
   createCampaignRow,
   listCampaignsForOwner,
   upsertBrandBrain,
+  patchArtifact,
 } from "@/lib/supabase/repo";
 import { isSupabaseEnabled } from "@/lib/supabase/server";
 
@@ -18,6 +19,10 @@ const CreateBody = z.object({
   ownerEmail: z.string().email().nullable().optional(),
   // Optioneel: client kan een eigen ID meegeven (voor reproducibility tijdens dev)
   id: z.string().min(6).max(20).optional(),
+  // Optioneel: gescrapete website-content meegeven bij creatie zodat 'ie
+  // direct op de row staat voor alle generators (geen race-condition).
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  scrapedContent: z.any().optional(),
 });
 
 export async function POST(req: NextRequest) {
@@ -34,6 +39,17 @@ export async function POST(req: NextRequest) {
         brand,
         ownerEmail: parsed.ownerEmail ?? null,
       });
+      // Persist scraped content meteen bij creatie — kritiek belangrijk
+      // omdat alle 7 generators dit lezen tijdens de generatie-loop.
+      // Eerder via fire-and-forget PATCH na navigatie miste de race.
+      if (parsed.scrapedContent) {
+        await patchArtifact(
+          id,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          "scrapedContent" as any,
+          parsed.scrapedContent
+        );
+      }
       // Brand Brain: bij elke nieuwe campagne voor owner+business → updaten/aanmaken.
       // Hierdoor kan de wizard later "vorige brief gebruiken" aanbieden.
       if (parsed.ownerEmail) {

@@ -218,7 +218,17 @@ export function BriefWizard() {
         const createRes = await fetch("/api/campaigns", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ brief, id: localId, ownerEmail }),
+          body: JSON.stringify({
+            brief,
+            id: localId,
+            ownerEmail,
+            // Stuur scraped meteen mee — dan staat 'ie op de row VOOR de
+            // generators er aan beginnen (scraped wordt server-side via
+            // describeBrief context-block doorgegeven aan Sonnet).
+            ...(scrapedFromPrefill
+              ? { scrapedContent: scrapedFromPrefill }
+              : {}),
+          }),
         });
         if (createRes.ok) {
           const j = (await createRes.json()) as { id: string; persisted: boolean };
