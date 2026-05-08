@@ -315,11 +315,56 @@ EISEN AAN BRIEF (STRIKT):
 - offer = realistische lokaal-passende aanbieding (mag leeg zijn als geen logisch aanbod)
 - brandColors = ARRAY van 3 hex-codes ALLEEN in format #XXXXXX (bijv. ["#1B1A18", "#E8E4DD", "#B89968"])
 
-EISEN AAN EMAIL:
-- Subject: persoonlijk, niet "Vraag voor [bedrijf]"
-- Body: begin met SPECIFIEK iets uit hun feed/site (niet algemeen)
-- Bied de spec-campagne aan, niet de tool — "ik heb voor jullie iets gemaakt"
-- Sluit af zonder pitchy taal
+EISEN AAN EMAIL — DIT IS HET BELANGRIJKSTE STUK, LEES ZORGVULDIG:
+
+Mitchell stuurt deze email zelf. Hij wil NIET dat het AI-gegenereerd klinkt.
+Hij wil dat het klinkt alsof iemand met passie voor zijn vak een specifiek bericht stuurt.
+
+WAT NEXT LEVEL SITES DOET (hou dit kort en helder in elke email):
+- Bouwt complete brand-campagnes voor lokale ondernemers
+- 1-2 dagen ipv weken (door slim AI-gebruik)
+- Levert: landingspagina, advertenties, Instagram-content, mini-commercial-script, voice-over
+- €750 eenmalig of €497/mnd voor doorlopend (Always-On: elke maand verse content)
+- Gevestigd in Vught — werkt NL-breed
+
+EMAIL-STRUCTUUR (max 130 woorden body):
+Zin 1: SPECIFIEKE observatie uit hun website, menu, of Instagram. Iets concreets — een gerecht,
+       een styling, een uitspraak van eigenaar. NIET "leuke website" of "ik kwam jullie tegen".
+Zin 2: Waarom je mailt. Niet "ik help bedrijven" maar "ik bouw campagnes voor lokale [vertical]
+       en bij jullie ontbreekt nog [specifiek iets concreet]"
+Zin 3: Wat je doet, kort. "Complete brand-campagne in 1-2 dagen — landingspagina, ads, social,
+       mini-commercial — €750 eenmalig of €497/mnd voor doorlopend"
+Zin 4: Concrete next step. "Heb je 5 min volgende week? Ik heb voor [naam] alvast iets gemaakt,
+       stuur ik je dan." OF "Mag ik 1 specifiek voorbeeld laten zien?"
+Slot: "Mitchell" of "Mitchell - Next Level Sites"
+
+VERBODEN ZINNEN/WOORDEN — nooit gebruiken:
+- "Hopelijk gaat het goed met je/u"
+- "Wij geloven dat..."
+- "Wij zijn gepassioneerd over..."
+- "Wij passen perfect bij..."
+- "Onze unieke aanpak..."
+- "Graag zou ik..."
+- "Aarzel niet om..."
+- "Met vriendelijke groet"
+- "Sales", "leads", "conversie", "ROI" als woorden in de email
+- "Boost", "schaal", "next level" (te marketing-y)
+- Lange begroeting zoals "Beste mevrouw/heer"
+- Vragen om een 30-min meeting (te formeel)
+
+VERPLICHTE STIJL-ELEMENTEN:
+- Voornaam in aanhef: "Hi [Voornaam]" of "Hey [Voornaam]"
+- Korte zinnen, geen volzinnen vol bijzinnen
+- Contractions toegestaan ("'t", "ie")
+- Mag een mening hebben ("vond ik scherp", "kreeg ik direct trek")
+- Tone moet matchen bij prospect — luxueus = ingetogen, stoer = direct, warm = persoonlijk
+
+SUBJECT-LIJN:
+Niet "Vraag voor X" of "Samenwerking". Wel iets dat triggert maar niet spammy:
+- "[hun specifieke iets] + idee"
+- "Iets gemaakt voor [bedrijfsnaam]"
+- "[Voornaam], nieuwsgierige vraag"
+Maximaal 8 woorden.
 
 WERKWIJZE:
 1. Zoek minimaal 3-5 keer met variërende termen ("kapsalons {stad}", "premium beautysalon {stad}", "{stad} balayage specialist")
