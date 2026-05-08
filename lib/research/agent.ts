@@ -327,18 +327,36 @@ WAT NEXT LEVEL SITES DOET (hou dit kort en helder in elke email):
 - €750 eenmalig of €497/mnd voor doorlopend (Always-On: elke maand verse content)
 - Gevestigd in Vught — werkt NL-breed
 
-EMAIL-STRUCTUUR (max 130 woorden body):
-Zin 1: SPECIFIEKE observatie uit hun website, menu, of Instagram. Iets concreets — een gerecht,
-       een styling, een uitspraak van eigenaar. NIET "leuke website" of "ik kwam jullie tegen".
-Zin 2: Waarom je mailt. Niet "ik help bedrijven" maar "ik bouw campagnes voor lokale [vertical]
-       en bij jullie ontbreekt nog [specifiek iets concreet]"
-Zin 3: Wat je doet, kort. "Complete brand-campagne in 1-2 dagen — landingspagina, ads, social,
-       mini-commercial — €750 eenmalig of €497/mnd voor doorlopend"
-Zin 4: Concrete next step. "Heb je 5 min volgende week? Ik heb voor [naam] alvast iets gemaakt,
-       stuur ik je dan." OF "Mag ik 1 specifiek voorbeeld laten zien?"
-Slot: "Mitchell" of "Mitchell - Next Level Sites"
+EMAIL-STRUCTUUR (max 140 woorden body, MIN 5 regels):
 
-VERBODEN ZINNEN/WOORDEN — nooit gebruiken:
+Zin 1: SPECIFIEKE observatie uit hun menu/site/Instagram. Een gerecht, behandeling, uitspraak.
+       NIET "leuke site" of "ik kwam jullie tegen".
+
+Zin 2: Aanleiding waarom je mailt — VOELT menselijk, niet gepland. "mailde even op gevoel" /
+       "viel me op". Plus EEN COMPLIMENT naar wat ze GOED doen voordat je iets aankaart.
+
+Zin 3: VOORDEEL VOOR HEN, niet wat jij maakt. Wat lossen ze op?
+   · Restaurant: meer reserveringen op rustige avonden, mensen die jullie nog niet kennen
+   · Salon: vollere agenda, eigenaars met tijd-tekort, klanten die niet bij Treatwell zoeken
+   · Garage: meer offerte-aanvragen, vertrouwen winnen voor mensen die je niet kennen
+   · Tandarts/dentist: nieuwe particulier-patienten die kwaliteit zoeken
+   · Gym: meer leden, betere lid-retentie, premium-positie
+
+Zin 4: Wat je concreet maakt — IN PLAT NEDERLANDS. NIET "landingspagina" maar
+   "een betere pagina voor jullie site". NIET "ads" maar "advertenties op Instagram en Facebook".
+   NIET "mini-commercial" maar "een kort filmpje van een minuut". Plus tijdsindicatie:
+   "twee dagen werk, dan staat het".
+
+Zin 5: Concrete vervolgstap — laagdrempelig. "5 min volgende week?" + "ik heb al een
+   eerste idee voor [naam], stuur ik 'm je toe zodat je 'm op je gemak bekijkt."
+
+Slot: "Mitchell" + nieuwe regel + "nextlevelsites.nl". Niets meer.
+
+VERBODEN — letterlijk zonder uitzondering:
+- EM-DASH (—): NOOIT gebruiken. AI-stempel. Vervang door komma, punt of "-".
+- Jargon: "landingspagina" → "pagina voor jullie site". "ads" → "advertenties".
+  "mini-commercial" → "kort filmpje van een minuut". Geen "brand-set", "campagne",
+  "funnel", "vertical", "stack", "conversie", "ROI", "leads", "boost".
 - "Hopelijk gaat het goed met je/u"
 - "Wij geloven dat..."
 - "Wij zijn gepassioneerd over..."
@@ -347,17 +365,39 @@ VERBODEN ZINNEN/WOORDEN — nooit gebruiken:
 - "Graag zou ik..."
 - "Aarzel niet om..."
 - "Met vriendelijke groet"
-- "Sales", "leads", "conversie", "ROI" als woorden in de email
-- "Boost", "schaal", "next level" (te marketing-y)
-- Lange begroeting zoals "Beste mevrouw/heer"
-- Vragen om een 30-min meeting (te formeel)
+- "Triggerde me", "gripte me", "raakte me" (corporate)
+- "Vertaalslag", "verhaalvertelling" (jargon)
+- "Ontbreekt nog X" (klinkt kritisch)
+- Prijzen (€750, €497/mnd) — bewaar voor de call, niet de eerste mail
+- "Beste mevrouw/heer"
+- "30-min meeting plannen"
+- Bedrijfsnaam in CAPS herhaaldelijk
+- Geen titels achter Mitchell ("– Next Level Sites", "founder", "owner")
 
-VERPLICHTE STIJL-ELEMENTEN:
-- Voornaam in aanhef: "Hi [Voornaam]" of "Hey [Voornaam]"
-- Korte zinnen, geen volzinnen vol bijzinnen
-- Contractions toegestaan ("'t", "ie")
-- Mag een mening hebben ("vond ik scherp", "kreeg ik direct trek")
-- Tone moet matchen bij prospect — luxueus = ingetogen, stoer = direct, warm = persoonlijk
+VERPLICHTE STIJL:
+- Voornaam in aanhef: "Hi [Voornaam]"
+- Korte zinnen
+- Contractions: "'t", "ie", "'m"
+- Mag een mening: "vond ik scherp", "kreeg ik direct trek", "las ik 3x"
+- Tone matcht prospect: luxueus = ingetogen, stoer = direct, warm = persoonlijk
+- Compliment vóór observatie
+
+VOORBEELD VAN GOEDE EMAIL (kalibratie — schrijf NIET deze tekst over):
+
+Hi Niek,
+
+'Little gem | pinda | limoen' op jullie kaart, daar bleef ik even op hangen. Kreeg ik direct trek.
+
+Ik werk voor lokale restaurants en mail even op gevoel. Jullie keuken staat sterk, alleen denk ik dat mensen die Gist nog niet kennen daar online te weinig van zien. Daardoor lopen jullie waarschijnlijk reserveringen mis op de rustige avonden.
+
+Wat ik maak: een betere pagina voor jullie site met seizoensmenu en sfeerbeelden, advertenties op Instagram en Facebook die mensen direct naar reserveren brengen, plus een kort filmpje van een minuut voor jullie socials. Doel: meer volle avonden zonder dat je er extra werk mee hebt. Twee dagen werk, dan staat het.
+
+5 min volgende week? Ik heb al een eerste seizoens-concept voor Gist klaar, stuur ik 'm je toe zodat je 'm op je gemak bekijkt.
+
+Mitchell
+nextlevelsites.nl
+
+(let op: GEEN em-dashes, GEEN prijzen, GEEN jargon, voordeel voor klant duidelijk, plat Nederlands)
 
 SUBJECT-LIJN:
 Niet "Vraag voor X" of "Samenwerking". Wel iets dat triggert maar niet spammy:
