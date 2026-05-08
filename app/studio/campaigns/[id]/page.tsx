@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCampaigns } from "@/lib/store/campaigns";
 import { downloadCampaignJSON } from "@/lib/export/json";
 import { ShareCampaignDialog } from "@/components/studio/ShareCampaignDialog";
+import { ApprovalsPanel } from "@/components/studio/ApprovalsPanel";
 import { LandingPagePreview } from "@/components/artifacts/LandingPagePreview";
 import { ReceptionistPreview } from "@/components/artifacts/ReceptionistPreview";
 import { SeoPreview } from "@/components/artifacts/SeoPreview";
@@ -220,6 +221,10 @@ export default function CampaignPage() {
           </div>
 
           <div className="mt-12">
+            <ApprovalsPanel campaignId={campaign.id} />
+          </div>
+
+          <div className="mt-8">
             <Tabs defaultValue="landing">
               <div className="overflow-x-auto pb-2 no-scrollbar">
                 <TabsList className="flex-nowrap">
