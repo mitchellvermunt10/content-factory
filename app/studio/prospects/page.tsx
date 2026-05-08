@@ -14,6 +14,10 @@ import {
   Mail,
   Sparkles,
   ArrowUpRight,
+  Image as ImageIcon,
+  Globe,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -26,6 +30,7 @@ import type {
   ResearchResult,
   ProspectEntry,
 } from "@/lib/schemas/prospect";
+import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
 
 type ApiResponse = {
   id: string;
@@ -538,9 +543,79 @@ function BriefListView({ prospects }: { prospects: ProspectEntry[] }) {
 }
 
 function BriefCard({ prospect }: { prospect: ProspectEntry }) {
+  const [scraped, setScraped] = useState<ScrapedContent | null>(null);
+  const [scrapeLoading, setScrapeLoading] = useState(false);
+  const [showScraped, setShowScraped] = useState(false);
+
+  // Bouw enriched brief: scraped data overschrijft Sonnet's gokjes
+  const enrichedBrief = scraped
+    ? {
+        ...prospect.suggestedBrief,
+        usps:
+          scraped.uspsFromSite.length >= 3
+            ? scraped.uspsFromSite.slice(0, 5)
+            : prospect.suggestedBrief.usps,
+        website: scraped.websiteUrl || prospect.suggestedBrief.website,
+        phone: scraped.phone || prospect.suggestedBrief.phone,
+      }
+    : prospect.suggestedBrief;
+
+  // Pack scraped photos + items in prefill zodat studio er ook bij kan
+  const prefillPayload = {
+    ...enrichedBrief,
+    // Custom velden die BriefWizard kan oppakken via onbekende-veld-handling
+    _scrapedItems: scraped?.items ?? null,
+    _scrapedPhotos: scraped?.photos ?? null,
+    _scrapedBookingUrl: scraped?.bookingUrl ?? null,
+  };
+
   const studioUrl = `/studio/nieuw?prefill=${encodeURIComponent(
-    btoa(JSON.stringify(prospect.suggestedBrief))
+    btoa(JSON.stringify(prefillPayload))
   )}`;
+
+  async function scrapeWebsite() {
+    if (!prospect.websiteUrl) {
+      toast.error("Geen website-URL bekend voor deze prospect");
+      return;
+    }
+    setScrapeLoading(true);
+    try {
+      const res = await fetch("/api/research/scrape-website", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          websiteUrl: prospect.websiteUrl,
+          vertical: prospect.suggestedBrief.businessType,
+          businessName: prospect.suggestedBrief.name,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(
+          (err as { error?: string }).error ?? `HTTP ${res.status}`
+        );
+      }
+      const j = (await res.json()) as {
+        content: ScrapedContent;
+        costCents: number;
+        durationMs: number;
+      };
+      setScraped(j.content);
+      setShowScraped(true);
+      toast.success(
+        `${j.content.items.length} items + ${j.content.photos.length} foto's gevonden`,
+        {
+          description: `€${(j.costCents / 100).toFixed(2)} · ${Math.round(j.durationMs / 1000)}s`,
+        }
+      );
+    } catch (err) {
+      toast.error("Scrape mislukt", {
+        description: err instanceof Error ? err.message : "Onbekende fout",
+      });
+    } finally {
+      setScrapeLoading(false);
+    }
+  }
 
   return (
     <div className="rounded-2xl border border-border bg-surface/40 p-6">
@@ -552,15 +627,45 @@ function BriefCard({ prospect }: { prospect: ProspectEntry }) {
           <h3 className="mt-1 text-xl font-medium tracking-tight">
             {prospect.suggestedBrief.name}
           </h3>
+          {scraped ? (
+            <span className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-success/10 px-2.5 py-0.5 text-[11px] font-medium text-success">
+              <Check className="size-3" />
+              Verrijkt met echte content
+            </span>
+          ) : null}
         </div>
-        <Button asChild variant="accent">
-          <Link href={studioUrl}>
-            <Sparkles className="size-4" />
-            Open in studio
-            <ArrowUpRight className="size-4" />
-          </Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          {prospect.websiteUrl ? (
+            <Button
+              variant="secondary"
+              onClick={scrapeWebsite}
+              disabled={scrapeLoading}
+            >
+              {scrapeLoading ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Globe className="size-4" />
+              )}
+              {scraped ? "Opnieuw scrapen" : "Verrijk met echte content"}
+            </Button>
+          ) : null}
+          <Button asChild variant="accent">
+            <Link href={studioUrl}>
+              <Sparkles className="size-4" />
+              Open in studio
+              <ArrowUpRight className="size-4" />
+            </Link>
+          </Button>
+        </div>
       </div>
+
+      {scraped ? (
+        <ScrapedPreview
+          scraped={scraped}
+          show={showScraped}
+          onToggle={() => setShowScraped((v) => !v)}
+        />
+      ) : null}
 
       <div className="mt-5 grid gap-3 text-sm md:grid-cols-2">
         <BriefField label="Naam" value={prospect.suggestedBrief.name} />
@@ -646,6 +751,194 @@ function BriefField({
       ) : (
         value
       )}
+    </div>
+  );
+}
+
+// ======================== Scraped preview ========================
+
+function ScrapedPreview({
+  scraped,
+  show,
+  onToggle,
+}: {
+  scraped: ScrapedContent;
+  show: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="mt-5 rounded-xl border border-success/30 bg-success/5 p-4">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex w-full items-center justify-between text-left"
+      >
+        <div className="flex items-center gap-3">
+          <Globe className="size-4 text-success" />
+          <span className="text-sm font-medium">
+            Echte content uit{" "}
+            <span className="font-mono text-xs">{scraped.websiteUrl}</span>
+          </span>
+        </div>
+        {show ? (
+          <ChevronUp className="size-4 text-text-subtle" />
+        ) : (
+          <ChevronDown className="size-4 text-text-subtle" />
+        )}
+      </button>
+
+      {show ? (
+        <div className="mt-4 space-y-4">
+          <div>
+            <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+              Wat ze doen (uit hun site)
+            </span>
+            <p className="mt-1 text-sm leading-relaxed text-text-muted">
+              {scraped.businessSummary}
+            </p>
+          </div>
+
+          {scraped.uspsFromSite.length > 0 ? (
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                Hun eigen USPs ({scraped.uspsFromSite.length})
+              </span>
+              <ul className="mt-1 space-y-1 text-sm text-text-muted">
+                {scraped.uspsFromSite.map((u, i) => (
+                  <li key={i}>· {u}</li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
+
+          {scraped.items.length > 0 ? (
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                Echt aanbod ({scraped.items.length} items)
+              </span>
+              <div className="mt-2 max-h-72 space-y-1 overflow-y-auto rounded-lg border border-border bg-bg/40 p-3">
+                {scraped.items.slice(0, 30).map((item, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start justify-between gap-3 border-b border-border/40 py-2 last:border-b-0"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">{item.name}</p>
+                      {item.description ? (
+                        <p className="mt-0.5 line-clamp-1 text-xs text-text-muted">
+                          {item.description}
+                        </p>
+                      ) : null}
+                      {item.category ? (
+                        <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-text-subtle">
+                          {item.category}
+                        </p>
+                      ) : null}
+                    </div>
+                    {item.price ? (
+                      <span className="shrink-0 font-mono text-xs text-accent">
+                        {item.price}
+                      </span>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {scraped.photos.length > 0 ? (
+            <div>
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                Foto's gevonden ({scraped.photos.length})
+              </span>
+              <div className="mt-2 grid grid-cols-3 gap-1.5 sm:grid-cols-4 md:grid-cols-5">
+                {scraped.photos.slice(0, 15).map((photo, i) => (
+                  <div
+                    key={i}
+                    className="group relative aspect-square overflow-hidden rounded-md border border-border bg-elevated"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={photo.url}
+                      alt={photo.alt ?? ""}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display =
+                          "none";
+                      }}
+                    />
+                    <span className="absolute bottom-1 left-1 rounded bg-bg/70 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-text-muted backdrop-blur-sm">
+                      {photo.context}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          <div className="grid gap-3 text-xs sm:grid-cols-2">
+            {scraped.bookingUrl ? (
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                  Booking-URL
+                </span>
+                <a
+                  href={scraped.bookingUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-1 block truncate text-accent hover:underline"
+                >
+                  {scraped.bookingUrl}
+                </a>
+              </div>
+            ) : null}
+            {scraped.bookingProvider ? (
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                  Provider
+                </span>
+                <p className="mt-1 capitalize text-text-muted">
+                  {scraped.bookingProvider}
+                </p>
+              </div>
+            ) : null}
+            {scraped.address ? (
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                  Adres
+                </span>
+                <p className="mt-1 text-text-muted">{scraped.address}</p>
+              </div>
+            ) : null}
+            {scraped.phone ? (
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                  Telefoon
+                </span>
+                <p className="mt-1 text-text-muted">{scraped.phone}</p>
+              </div>
+            ) : null}
+            {scraped.openingHours ? (
+              <div className="sm:col-span-2">
+                <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                  Openingstijden
+                </span>
+                <p className="mt-1 text-text-muted">{scraped.openingHours}</p>
+              </div>
+            ) : null}
+          </div>
+
+          <div className="flex items-start gap-2 rounded-lg border border-border bg-bg/40 p-3 text-xs text-text-muted">
+            <ImageIcon className="mt-0.5 size-4 shrink-0 text-accent" />
+            <p>
+              Klik <strong>&quot;Open in studio&quot;</strong> — de spec gebruikt
+              nu hun echte USPs, items en foto's als basis. Veel sterker dan
+              AI-verzonnen content.
+            </p>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
