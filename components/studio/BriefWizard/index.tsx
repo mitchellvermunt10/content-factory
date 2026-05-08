@@ -22,6 +22,7 @@ import { deriveBrand } from "@/lib/brand/presets";
 import { buildVideoProduction } from "@/lib/generators/buildVideoProduction";
 import type { MvpGeneratorId } from "@/lib/constants";
 import { DEMO_BRIEFS } from "@/lib/demo/briefs";
+import { safeBase64Decode } from "@/lib/utils/base64";
 
 // Welke generators draaien sequentieel + welk artifact-veld ze vullen.
 // Per stuk past elke call binnen Vercel Hobby's 60s timeout — totaal ~3-5 min,
@@ -76,7 +77,7 @@ export function BriefWizard() {
     if (!prefill) return;
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const decoded = JSON.parse(atob(prefill)) as any;
+      const decoded = JSON.parse(safeBase64Decode(prefill)) as any;
       // Strip _scraped* uit de brief-velden, hou ze apart voor campaign-creatie
       const {
         _scrapedItems,

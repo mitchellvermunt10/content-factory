@@ -31,6 +31,7 @@ import type {
   ProspectEntry,
 } from "@/lib/schemas/prospect";
 import type { ScrapedContent } from "@/lib/schemas/scrapedContent";
+import { safeBase64Encode } from "@/lib/utils/base64";
 
 type ApiResponse = {
   id: string;
@@ -708,7 +709,7 @@ function BriefCard({ prospect }: { prospect: ProspectEntry }) {
   };
 
   const studioUrl = `/studio/nieuw?prefill=${encodeURIComponent(
-    btoa(JSON.stringify(prefillPayload))
+    safeBase64Encode(JSON.stringify(prefillPayload))
   )}`;
 
   async function scrapeWebsite() {
