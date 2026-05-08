@@ -83,7 +83,12 @@ export async function buildImagePrompts(
     .filter((s) => s && s.trim().length > 0)
     .join(", ");
 
-  const midjourneyPrompt = `${midjourneyParts} --ar ${aspectMidjourney} --style raw --v 6.1 --stylize 100`;
+  // Negative directives die MJ regelmatig verkeerd doet — verplichte uitsluitingen.
+  // Comb/brush voor salon (regelmatig verward met scissors), text/logo overal,
+  // cgi/3d voor "AI render"-look. Eén lijst voor alle artifacts.
+  const mjNegatives = mjNegativesFor(artifactKey, campaign.brief.businessType);
+
+  const midjourneyPrompt = `${midjourneyParts} --ar ${aspectMidjourney} --style raw --v 6.1 --stylize 100 --no ${mjNegatives}`;
 
   // === GPT-IMAGE-1 / FLUX PROMPT (subject-first, hard sectie-grenzen) ===
   // gpt-image-1 + Flux nemen de hele tekst in zich op — we kunnen :: weights
@@ -153,6 +158,49 @@ function extractSourceVisual(
     return `Visual hero image for ${campaign.brief.name} — evokes "${headline}". ${mood}`;
   }
   return null;
+}
+
+/**
+ * MJ --no list. Bevat altijd basis-uitsluitingen (text/logo/cgi) plus
+ * branche-specifieke veelgemaakte fouten (kam-i.p.v.-schaar bij salon, etc.).
+ */
+function mjNegativesFor(
+  artifactKey: ArtifactKey,
+  businessType: string
+): string {
+  const universal = [
+    "text",
+    "watermark",
+    "logo",
+    "signature",
+    "frame",
+    "border",
+    "blurry",
+    "low quality",
+    "cgi",
+    "3d render",
+    "illustration",
+    "cartoon",
+    "plastic skin",
+    "extra fingers",
+    "deformed hands",
+  ];
+
+  // Branche-specifieke "MJ-vergissingen" die we structureel zien
+  const verticalSpecific: Record<string, string[]> = {
+    salon: ["comb", "brush", "paintbrush", "hair clipper", "razor"],
+    restaurant: ["wine glass icon", "menu icon"],
+    autobedrijf: ["toy car", "miniature", "plastic car"],
+    dentist: ["medical illustration", "diagram"],
+    barber: ["paintbrush", "kitchen knife"],
+    tattoo: ["pen sketch", "drawing"],
+    gym: ["video game character", "anime"],
+    hotel: ["postcard", "tourist map"],
+    coffeeshop: ["instant coffee", "powder"],
+  };
+
+  const specific = verticalSpecific[businessType] ?? [];
+  return [...universal, ...specific].join(", ");
 }
 
 function aspectForArtifact(artifactKey: ArtifactKey): string {

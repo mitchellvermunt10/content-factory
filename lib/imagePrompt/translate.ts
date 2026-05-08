@@ -20,12 +20,22 @@ export async function translateToEnglish(dutch: string): Promise<string> {
     const res = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
       max_tokens: 250,
-      system:
-        "Je vertaalt Nederlandse fotografische beschrijvingen naar bondig, krachtig Engels voor image-AI prompts. Behoud zintuiglijke specificiteit en concrete subject-acties. Geen toelichting, alleen de vertaling.",
+      system: `Je vertaalt Nederlandse fotografische beschrijvingen naar bondig Engels voor image-AI prompts (Midjourney, gpt-image-1, Flux).
+
+Regels:
+1. Gebruik CONCRETE objectnamen die image-AI's herkennen:
+   - "fijne schaar" → "open hairdressing shears mid-snip, visible blades cutting hair"
+   - "kam" → "wide-tooth styling comb"
+   - "föhn" → "professional hand-held hair dryer"
+   - "knipmoment" → "hair being cut, open scissors blades visible"
+2. Beschrijf de ACTIE expliciet — niet alleen het object. "Hands holding scissors mid-cut" beats "fine scissors".
+3. Voor restaurant: "espressomachine" → "stainless espresso machine pulling shot", "menukaart" → "leather-bound menu card on table".
+4. Voor garage: "monteur" → "mechanic in dark blue overalls", "lift" → "two-post car lift in workshop".
+5. Eén krachtige zin, max 30 woorden. Geen toelichting, alleen de vertaalde prompt.`,
       messages: [
         {
           role: "user",
-          content: `Vertaal naar Engels (één zin, krachtig, behoud subject-actie):\n\n${dutch}`,
+          content: `Vertaal naar Engels met concrete tool/objectnamen:\n\n${dutch}`,
         },
       ],
     });
