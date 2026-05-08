@@ -1,11 +1,14 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { InstagramContent } from "@/lib/schemas/artifacts/instagram";
 import { PostImageSlot } from "./PostImageSlot";
 import { useCampaignImages } from "./useCampaignImages";
 import { IGProfileMockup } from "@/components/instagram/IGProfileMockup";
+import { IGStoryMockup } from "@/components/instagram/IGStoryMockup";
+import { IGReelMockup } from "@/components/instagram/IGReelMockup";
 
 type Props = {
   data: InstagramContent;
@@ -33,24 +36,14 @@ export function InstagramPreview({
   return (
     <div className="space-y-8">
       {/* === ECHTE INSTAGRAM-MOCKUP === */}
-      {campaignId ? (
-        <ProfileMockupWithImages
-          campaignId={campaignId}
-          username={handle}
-          displayName={businessName}
-          city={city}
-          data={data}
-          accentColor={accentColor}
-        />
-      ) : (
-        <IGProfileMockup
-          username={handle}
-          displayName={businessName}
-          city={city}
-          data={data}
-          accentColor={accentColor}
-        />
-      )}
+      <IGMockupSwitcher
+        campaignId={campaignId}
+        username={handle}
+        displayName={businessName}
+        city={city}
+        data={data}
+        accentColor={accentColor}
+      />
 
       {/* === Studio-only: image-gen grid voor productie-werk === */}
       {showImageGen && campaignId ? (
@@ -186,7 +179,7 @@ export function InstagramPreview({
   );
 }
 
-function ProfileMockupWithImages({
+function IGMockupSwitcher({
   campaignId,
   username,
   displayName,
@@ -194,25 +187,91 @@ function ProfileMockupWithImages({
   data,
   accentColor,
 }: {
-  campaignId: string;
+  campaignId?: string;
   username: string;
   displayName: string;
   city: string;
   data: InstagramContent;
   accentColor?: string;
 }) {
-  const { findLatest } = useCampaignImages(campaignId);
+  const [view, setView] = useState<"profile" | "story" | "reel">("profile");
+  const { findLatest } = useCampaignImages(campaignId ?? "");
+  const findImage = (artifactKey: string, itemIndex: number) =>
+    artifactKey === "instagram" ? findLatest("instagram", itemIndex) : null;
+
   return (
-    <IGProfileMockup
-      username={username}
-      displayName={displayName}
-      city={city}
-      data={data}
-      accentColor={accentColor}
-      findImage={(artifactKey, itemIndex) =>
-        artifactKey === "instagram" ? findLatest("instagram", itemIndex) : null
-      }
-    />
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        <ViewButton
+          active={view === "profile"}
+          onClick={() => setView("profile")}
+          label="Profielpagina"
+        />
+        <ViewButton
+          active={view === "story"}
+          onClick={() => setView("story")}
+          label="Story"
+        />
+        <ViewButton
+          active={view === "reel"}
+          onClick={() => setView("reel")}
+          label="Reel"
+        />
+      </div>
+
+      {view === "profile" ? (
+        <IGProfileMockup
+          username={username}
+          displayName={displayName}
+          city={city}
+          data={data}
+          accentColor={accentColor}
+          findImage={campaignId ? findImage : undefined}
+        />
+      ) : null}
+      {view === "story" ? (
+        <IGStoryMockup
+          username={username}
+          displayName={displayName}
+          data={data}
+          accentColor={accentColor}
+          findImage={campaignId ? findImage : undefined}
+        />
+      ) : null}
+      {view === "reel" ? (
+        <IGReelMockup
+          username={username}
+          displayName={displayName}
+          data={data}
+          accentColor={accentColor}
+          findImage={campaignId ? findImage : undefined}
+        />
+      ) : null}
+    </div>
+  );
+}
+
+function ViewButton({
+  active,
+  onClick,
+  label,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
+        active
+          ? "border-accent/60 bg-accent/15 text-accent"
+          : "border-border bg-surface/40 text-text-muted hover:border-border-strong hover:text-text"
+      }`}
+    >
+      {label}
+    </button>
   );
 }
 

@@ -24,6 +24,8 @@ import { LandingPagePreview } from "@/components/artifacts/LandingPagePreview";
 import { ApprovalBar } from "@/components/client/ApprovalBar";
 import { usePublicCampaignImages } from "@/components/client/usePublicCampaignImages";
 import { IGProfileMockup } from "@/components/instagram/IGProfileMockup";
+import { IGStoryMockup } from "@/components/instagram/IGStoryMockup";
+import { IGReelMockup } from "@/components/instagram/IGReelMockup";
 import type { Campaign } from "@/lib/schemas/campaign";
 import { GradientMesh } from "@/components/motion/GradientMesh";
 import { Logo } from "@/components/chrome/Logo";
@@ -745,16 +747,57 @@ function Stat({ label, value }: { label: string; value: string }) {
 
 function PublicIGMockup({ campaign }: { campaign: Campaign }) {
   const { find } = usePublicCampaignImages(campaign.id);
+  const [view, setView] = useState<"profile" | "story" | "reel">("profile");
   const handle = `@${campaign.brief.name.toLowerCase().replace(/[^a-z0-9]/g, "")}`;
+
   return (
-    <IGProfileMockup
-      username={handle}
-      displayName={campaign.brief.name}
-      city={campaign.brief.city}
-      data={campaign.artifacts.instagram}
-      accentColor={campaign.brand.accent}
-      findImage={find}
-    />
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {(["profile", "story", "reel"] as const).map((v) => (
+          <button
+            key={v}
+            type="button"
+            onClick={() => setView(v)}
+            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-all ${
+              view === v
+                ? "border-accent/60 bg-accent/15 text-accent"
+                : "border-border bg-surface/40 text-text-muted hover:border-border-strong hover:text-text"
+            }`}
+          >
+            {v === "profile" ? "Profielpagina" : v === "story" ? "Story" : "Reel"}
+          </button>
+        ))}
+      </div>
+
+      {view === "profile" ? (
+        <IGProfileMockup
+          username={handle}
+          displayName={campaign.brief.name}
+          city={campaign.brief.city}
+          data={campaign.artifacts.instagram}
+          accentColor={campaign.brand.accent}
+          findImage={find}
+        />
+      ) : null}
+      {view === "story" ? (
+        <IGStoryMockup
+          username={handle}
+          displayName={campaign.brief.name}
+          data={campaign.artifacts.instagram}
+          accentColor={campaign.brand.accent}
+          findImage={find}
+        />
+      ) : null}
+      {view === "reel" ? (
+        <IGReelMockup
+          username={handle}
+          displayName={campaign.brief.name}
+          data={campaign.artifacts.instagram}
+          accentColor={campaign.brand.accent}
+          findImage={find}
+        />
+      ) : null}
+    </div>
   );
 }
 
