@@ -25,7 +25,9 @@ export function isOpenAIEnabled(): boolean {
 export async function generateImage(
   input: GenerateImageInput
 ): Promise<GenerateImageResult> {
-  const key = process.env.OPENAI_API_KEY;
+  // Strip alle whitespace — beschermt tegen plak-fouten waar een spatie of
+  // newline midden in de key terechtkomt (HTTP headers verbieden whitespace).
+  const key = (process.env.OPENAI_API_KEY ?? "").replace(/\s+/g, "");
   if (!key) {
     throw new Error("OPENAI_API_KEY ontbreekt — zet 'm in Vercel env vars.");
   }
