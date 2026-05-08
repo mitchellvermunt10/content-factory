@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const prompts = buildImagePrompts({
+    const prompts = await buildImagePrompts({
       campaign,
       artifactKey: body.artifactKey as ArtifactKey,
       itemIndex: body.itemIndex ?? null,

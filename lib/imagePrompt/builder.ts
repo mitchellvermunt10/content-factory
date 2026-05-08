@@ -1,6 +1,7 @@
 import type { Campaign } from "@/lib/schemas/campaign";
 import { getVerticalPack } from "@/lib/verticals";
 import { pickRecipe, getToneStyle } from "./recipes";
+import { translateToEnglish } from "./translate";
 
 export type ArtifactKey =
   | "instagram"
@@ -21,10 +22,11 @@ export interface PromptInput {
 }
 
 export interface BuiltPrompts {
-  openai: string; // for gpt-image-1 / Flux
-  midjourney: string; // for MJ Discord — includes --ar etc.
+  openai: string;
+  midjourney: string;
   reasoning: {
     sourceVisual: string;
+    sourceTranslated: string;
     cameraRecipe: string;
     toneStyle: string;
     moodFromCinematic: string;
@@ -33,13 +35,20 @@ export interface BuiltPrompts {
   };
 }
 
-export function buildImagePrompts(input: PromptInput): BuiltPrompts {
+export async function buildImagePrompts(
+  input: PromptInput
+): Promise<BuiltPrompts> {
   const { campaign, artifactKey, itemIndex, hint } = input;
 
-  const sourceVisual =
+  const rawSource =
     hint && hint.trim().length > 0
       ? hint.trim()
       : extractSourceVisual(campaign, artifactKey, itemIndex) ?? "";
+
+  // Vertaal NL → EN voor sterkere subject-adherence in MJ + Flux + OpenAI.
+  // Sonnet's NL visualDirection wordt door image-AI's lichter gewogen dan
+  // Engels, waardoor style-clauses (in EN) het overnemen.
+  const sourceTranslated = await translateToEnglish(rawSource);
 
   const tone = campaign.brief.tone;
   const toneStyle = getToneStyle(tone);
@@ -51,66 +60,59 @@ export function buildImagePrompts(input: PromptInput): BuiltPrompts {
   const grading = cinematic?.scenes?.[0]?.colorPalette ?? "";
 
   const pack = getVerticalPack(campaign.brief.businessType);
-  // Pak twee meest relevante photoDirection-regels (eerste 2). Meer = clutter.
-  const verticalPhoto = pack?.photoDirection?.slice(0, 2).join(". ") ?? "";
+  // Pak max 1 photoDirection-regel — meer = clutter dat subject overschaduwt
+  const verticalPhoto = pack?.photoDirection?.[0] ?? "";
 
   const aspectMidjourney = aspectForArtifact(artifactKey);
 
-  // === GPT-IMAGE-1 / FLUX PROMPT ===
-  // Bouwwijze: source-visual leidt, daarna camera-spec, tone, brand-mood,
-  // photographer-reference, anti-AI directives. Hierin GEEN "professional"
-  // of "high-quality" — die woorden triggeren stock-AI look.
-
-  const filmstockClause = recipe.filmstock
-    ? `Shot on ${recipe.filmstock} captured with ${recipe.camera}, ${recipe.lens}, ${recipe.lighting}.`
-    : `Shot on ${recipe.camera}, ${recipe.lens}, ${recipe.lighting}.`;
-
-  const openaiPrompt = [
-    sourceVisual,
-    verticalPhoto,
-    filmstockClause,
-    toneStyle.openai,
-    mood ? `Atmosphere: ${mood}.` : "",
-    reference
-      ? `In the visual tradition of ${reference} — observe the framing, restraint and quiet detail.`
-      : "",
-    grading ? `Color grade: ${grading}.` : "",
-    // Anti-AI directives — forceer imperfectie en documentary-feel
-    "Captured candidly. Asymmetric composition. Natural skin texture with pores and fine lines. Real materials and lived-in surfaces. Slight film grain.",
-    "Not stock photography. Not advertising. Not commercial product shot. Editorial documentary feel — as if photographed for a quiet magazine.",
-    "No text overlays. No logos. No watermarks. No frames. No signage.",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  // === MIDJOURNEY PROMPT ===
-  // MJ-syntax is anders: korter, komma-gescheiden, met flags. v6.1 + style raw
-  // forceert photoreal. stylize 100 minimaliseert MJ's "bombast".
+  // === MIDJOURNEY PROMPT (subject-first met weights) ===
+  // MJ leest komma-gescheiden en weegt eerste tokens zwaarder. Plus :: weights
+  // forceren dat het onderwerp dominant blijft.
+  // Belangrijk: minimum aan style-clauses — MJ's eigen --style raw + --stylize 100
+  // doen al het werk. Te veel style-tekst overschaduwt subject.
+  const filmStem = recipe.filmstock
+    ? `${recipe.filmstock} on ${recipe.camera}, ${recipe.lens}`
+    : `${recipe.camera}, ${recipe.lens}`;
 
   const midjourneyParts = [
-    sourceVisual,
-    recipe.filmstock
-      ? `${recipe.filmstock} on ${recipe.camera}`
-      : `${recipe.camera}`,
-    recipe.lens,
-    recipe.lighting,
-    toneStyle.midjourney,
-    mood,
-    reference ? `directorial style of ${reference}` : "",
-    grading,
-    verticalPhoto,
-    "candid editorial, asymmetric, natural skin texture, real materials, slight grain",
+    `${sourceTranslated}::3`, // SUBJECT — driedubbele weight
+    `${filmStem}, ${recipe.lighting}`, // technical recipe
+    toneStyle.midjourney, // ÉÉN tone-line
+    "candid documentary, natural skin, asymmetric, slight grain", // anti-AI hint
   ]
     .filter((s) => s && s.trim().length > 0)
     .join(", ");
 
   const midjourneyPrompt = `${midjourneyParts} --ar ${aspectMidjourney} --style raw --v 6.1 --stylize 100`;
 
+  // === GPT-IMAGE-1 / FLUX PROMPT (subject-first, hard sectie-grenzen) ===
+  // gpt-image-1 + Flux nemen de hele tekst in zich op — we kunnen :: weights
+  // niet gebruiken. Wel kunnen we structureren: SUBJECT eerst en expliciet
+  // gemarkeerd, daarna pas style. Tweede helft kort houden.
+  const filmstockClause = recipe.filmstock
+    ? `Shot on ${recipe.filmstock}, ${recipe.camera}, ${recipe.lens}, ${recipe.lighting}.`
+    : `Shot on ${recipe.camera}, ${recipe.lens}, ${recipe.lighting}.`;
+
+  const openaiPrompt = [
+    `SUBJECT (must be the focus): ${sourceTranslated}.`,
+    verticalPhoto ? `Setting note: ${verticalPhoto}` : "",
+    filmstockClause,
+    toneStyle.openai,
+    mood ? `Atmosphere: ${mood}.` : "",
+    grading ? `Color: ${grading}.` : "",
+    // Anti-AI directives compacter
+    "Candid documentary feel. Asymmetric composition. Natural skin texture with pores. Slight film grain. NOT stock photography. NOT a fashion portrait — show the actual scene described above.",
+    "No text. No logos. No watermarks.",
+  ]
+    .filter(Boolean)
+    .join(" ");
+
   return {
     openai: openaiPrompt,
     midjourney: midjourneyPrompt,
     reasoning: {
-      sourceVisual,
+      sourceVisual: rawSource,
+      sourceTranslated,
       cameraRecipe: `${recipe.camera} · ${recipe.lens} · ${recipe.lighting}${recipe.filmstock ? ` · ${recipe.filmstock}` : ""}`,
       toneStyle: toneStyle.openai,
       moodFromCinematic: mood,
