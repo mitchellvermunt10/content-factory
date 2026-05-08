@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -57,6 +57,56 @@ export default function ProspectsPage() {
   const [activeTab, setActiveTab] = useState<"input" | "top10" | "briefs">(
     "input"
   );
+
+  // Op mount: laatste afgeronde onderzoek-run ophalen voor deze owner-email,
+  // zodat tabs 2 en 3 ook beschikbaar zijn na pagina-refresh.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      let ownerEmail: string | null = null;
+      try {
+        const cached = localStorage.getItem("content-factory:owner-email");
+        if (cached?.includes("@")) ownerEmail = cached;
+      } catch {
+        // niet beschikbaar
+      }
+      if (!ownerEmail) return;
+
+      try {
+        const res = await fetch(
+          `/api/prospects?owner=${encodeURIComponent(ownerEmail)}`
+        );
+        if (!res.ok) return;
+        const j = (await res.json()) as {
+          research?: Array<{
+            id: string;
+            status: string;
+            result: ResearchResult | null;
+            costCents: number;
+            durationMs: number | null;
+          }>;
+        };
+        if (cancelled) return;
+        const latest = (j.research ?? []).find(
+          (r) => r.status === "complete" && r.result
+        );
+        if (latest && latest.result) {
+          setResult({
+            id: latest.id,
+            result: latest.result,
+            costCents: latest.costCents,
+            durationMs: latest.durationMs ?? 0,
+          });
+          setActiveTab("top10");
+        }
+      } catch {
+        // niet bereikbaar — geen probleem, user kan opnieuw starten
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function startResearch() {
     if (!city.trim() || city.length < 2) {
