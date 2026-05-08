@@ -14,6 +14,8 @@ import {
   Smartphone,
   Sparkles,
   Music,
+  Phone,
+  Wand2,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,7 @@ import { useCampaigns } from "@/lib/store/campaigns";
 import { LandingPagePreview } from "@/components/artifacts/LandingPagePreview";
 import { ApprovalBar } from "@/components/client/ApprovalBar";
 import { PublicFeedGrid } from "@/components/client/PublicFeedGrid";
+import { usePublicCampaignImages } from "@/components/client/usePublicCampaignImages";
 import { GradientMesh } from "@/components/motion/GradientMesh";
 import { Logo } from "@/components/chrome/Logo";
 import { Timecode } from "@/components/cinematic/Timecode";
@@ -39,6 +42,8 @@ const SECTIONS = [
   { id: "cinematic", label: "Cinematic", icon: Film },
   { id: "shorts", label: "Reels", icon: Smartphone },
   { id: "voiceover", label: "Voice-over", icon: Mic },
+  { id: "prompts", label: "Visual style", icon: Wand2 },
+  { id: "receptionist", label: "Receptionist", icon: Phone },
 ];
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -278,6 +283,11 @@ export default function ClientCampaignPage() {
                 {v.hook}
               </p>
               <p className="mt-2 text-sm text-text-muted">{v.primaryText}</p>
+              <PublicAdImage
+                campaignId={campaign.id}
+                itemIndex={i}
+                fallback={v.visualDirection}
+              />
               <div className="mt-4 grid grid-cols-[1fr_auto] gap-2 rounded-lg border border-border bg-bg/40 p-3">
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-text">{v.headline}</p>
@@ -287,12 +297,29 @@ export default function ClientCampaignPage() {
                   {v.cta}
                 </span>
               </div>
-              <p className="mt-3 text-xs italic text-text-subtle">
-                Beeld: {v.visualDirection}
-              </p>
             </Card>
           ))}
         </div>
+
+        {ads.storyAds.length > 0 ? (
+          <div className="mt-8">
+            <h3 className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-text-subtle">
+              Story-varianten
+            </h3>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {ads.storyAds.map((s, i) => (
+                <PublicStoryAd
+                  key={i}
+                  campaignId={campaign.id}
+                  itemIndex={i}
+                  hook={s.hook}
+                  body={s.body}
+                  sticker={s.sticker}
+                />
+              ))}
+            </div>
+          </div>
+        ) : null}
       </Section>
 
       {/* === Instagram === */}
@@ -514,6 +541,133 @@ export default function ClientCampaignPage() {
         </Card>
       </Section>
 
+      {/* === Prompt Packs / Visual Style === */}
+      <Section
+        id="prompts"
+        title="Visual style"
+        subtitle="Beeld-richtlijn + AI-prompts voor MJ, Firefly, Runway, Kling, Veo"
+      >
+        <Card title="Globale stijl">
+          <div className="mt-3 grid gap-4 md:grid-cols-2">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                Moodboard
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                {campaign.artifacts.promptPacks.globalStyle.moodboard}
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                Color script
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                {campaign.artifacts.promptPacks.globalStyle.colorScript}
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                Color grade
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                {campaign.artifacts.promptPacks.globalStyle.grading}
+              </p>
+            </div>
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+                Lensing
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-text-muted">
+                {campaign.artifacts.promptPacks.globalStyle.lensing}
+              </p>
+            </div>
+          </div>
+        </Card>
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card title={`Image pack · ${campaign.artifacts.promptPacks.imagePack.prompts.length} prompts`}>
+            <p className="mt-3 text-sm leading-relaxed text-text-muted">
+              {campaign.artifacts.promptPacks.imagePack.style}
+            </p>
+            <ul className="mt-4 space-y-1 text-xs text-text-subtle">
+              {campaign.artifacts.promptPacks.imagePack.prompts.slice(0, 4).map((p) => (
+                <li key={p.id}>· {p.context}</li>
+              ))}
+              {campaign.artifacts.promptPacks.imagePack.prompts.length > 4 ? (
+                <li>· +{campaign.artifacts.promptPacks.imagePack.prompts.length - 4} meer</li>
+              ) : null}
+            </ul>
+          </Card>
+          <Card title={`Video pack · ${campaign.artifacts.promptPacks.videoPack.prompts.length} prompts`}>
+            <p className="mt-3 text-sm leading-relaxed text-text-muted">
+              {campaign.artifacts.promptPacks.videoPack.style}
+            </p>
+            <ul className="mt-4 space-y-1 text-xs text-text-subtle">
+              {campaign.artifacts.promptPacks.videoPack.prompts.slice(0, 4).map((p) => (
+                <li key={p.id}>· {p.context}</li>
+              ))}
+              {campaign.artifacts.promptPacks.videoPack.prompts.length > 4 ? (
+                <li>· +{campaign.artifacts.promptPacks.videoPack.prompts.length - 4} meer</li>
+              ) : null}
+            </ul>
+          </Card>
+          <Card title={`B-roll pack · ${campaign.artifacts.promptPacks.bRollPack.items.length} clips`}>
+            <p className="mt-3 text-sm leading-relaxed text-text-muted">
+              {campaign.artifacts.promptPacks.bRollPack.style}
+            </p>
+            <ul className="mt-4 space-y-1 text-xs text-text-subtle">
+              {campaign.artifacts.promptPacks.bRollPack.items.slice(0, 4).map((p) => (
+                <li key={p.id}>· {p.topic}</li>
+              ))}
+              {campaign.artifacts.promptPacks.bRollPack.items.length > 4 ? (
+                <li>· +{campaign.artifacts.promptPacks.bRollPack.items.length - 4} meer</li>
+              ) : null}
+            </ul>
+          </Card>
+        </div>
+      </Section>
+
+      {/* === AI Receptionist (upsell) === */}
+      <Section
+        id="receptionist"
+        title="AI Receptionist"
+        subtitle="Optionele upsell — telefoonbeantwoording in jouw merk-stem"
+      >
+        <Card>
+          <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-start">
+            <div>
+              <Badge variant="accent" className="mb-3">
+                Beschikbaar als upsell
+              </Badge>
+              <p className="text-base leading-relaxed text-text">
+                Een Nederlandstalige AI-telefonist die afspraken inplant,
+                vragen beantwoordt en bij urgentie netjes doorzet. Persona,
+                openingstijden, FAQs en booking-flow zijn al voor{" "}
+                <strong>{campaign.brief.name}</strong> ingericht — klaar om
+                live te zetten in Vapi.ai of Retell AI.
+              </p>
+              <ul className="mt-5 space-y-2 text-sm text-text-muted">
+                <li>· Eigen NL-stem (cloned of Library voice)</li>
+                <li>· 10-20 FAQs op maat van jouw branche</li>
+                <li>· Booking-flow met automatische bevestigings-SMS</li>
+                <li>· Doorzet-regels bij klacht of spoed</li>
+              </ul>
+            </div>
+            <div className="rounded-xl border border-accent/30 bg-accent/5 p-5 text-center">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-accent">
+                Tarief
+              </p>
+              <p className="mt-2 text-3xl font-medium tracking-tight">
+                €299
+              </p>
+              <p className="text-xs text-text-muted">/ maand</p>
+              <p className="mt-3 text-xs text-text-subtle">
+                Inclusief setup +<br />onbeperkte gesprekken
+              </p>
+            </div>
+          </div>
+        </Card>
+      </Section>
+
       {/* === Footer === */}
       <footer className="border-t border-border bg-bg/40 py-12 mt-16">
         <div className="container space-y-4 text-center">
@@ -593,6 +747,89 @@ function Stat({ label, value }: { label: string; value: string }) {
         {label}
       </p>
       <p className="mt-2 text-sm text-text">{value}</p>
+    </div>
+  );
+}
+
+function PublicAdImage({
+  campaignId,
+  itemIndex,
+  fallback,
+}: {
+  campaignId: string;
+  itemIndex: number;
+  fallback: string;
+}) {
+  const { find } = usePublicCampaignImages(campaignId);
+  const img = find("metaAds", itemIndex);
+  if (img) {
+    return (
+      <div className="mt-4 overflow-hidden rounded-lg border border-border">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={img.publicUrl}
+          alt={`Ad variant ${itemIndex + 1}`}
+          className="aspect-square w-full object-cover"
+        />
+      </div>
+    );
+  }
+  return (
+    <div className="mt-4 aspect-[1.91/1] overflow-hidden rounded-lg border border-dashed border-border bg-bg/40">
+      <div className="grid h-full place-items-center px-4 text-center">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle">
+          {fallback.slice(0, 80)}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function PublicStoryAd({
+  campaignId,
+  itemIndex,
+  hook,
+  body,
+  sticker,
+}: {
+  campaignId: string;
+  itemIndex: number;
+  hook: string;
+  body: string;
+  sticker: string;
+}) {
+  const { find } = usePublicCampaignImages(campaignId);
+  const img = find("metaAdsStory", itemIndex);
+  return (
+    <div className="relative aspect-[9/16] overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-surface/80 to-elevated">
+      {img ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={img.publicUrl}
+          alt={`Story ${itemIndex + 1}`}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : null}
+      <div className="absolute inset-0 flex flex-col p-4">
+        <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/80 drop-shadow">
+          Story · {itemIndex + 1}
+        </div>
+        <div className="flex flex-1 flex-col items-center justify-center text-center">
+          <p
+            className={`text-base font-medium leading-tight tracking-tight ${img ? "text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" : "text-text"}`}
+          >
+            {hook}
+          </p>
+          <p
+            className={`mt-3 text-xs leading-relaxed ${img ? "text-white/90 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]" : "text-text-muted"}`}
+          >
+            {body}
+          </p>
+          <Badge variant="accent" className="mt-5">
+            {sticker}
+          </Badge>
+        </div>
+      </div>
     </div>
   );
 }

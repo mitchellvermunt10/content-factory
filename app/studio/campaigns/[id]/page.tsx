@@ -235,7 +235,9 @@ export default function CampaignPage() {
                   <TabsTrigger value="cinematic">Cinematic</TabsTrigger>
                   <TabsTrigger value="social-shorts">Social shorts</TabsTrigger>
                   <TabsTrigger value="prompt-packs">Prompt packs</TabsTrigger>
-                  <TabsTrigger value="video-production">Video productie</TabsTrigger>
+                  <TabsTrigger value="video-production">
+                    Productie · intern
+                  </TabsTrigger>
                   <TabsTrigger value="receptionist">Receptionist</TabsTrigger>
                 </TabsList>
               </div>
@@ -317,6 +319,19 @@ export default function CampaignPage() {
                 value="video-production"
                 data-testid="tab-video-production"
               >
+                <div className="mb-6 rounded-xl border border-warning/40 bg-warning/5 p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-warning">
+                      Intern
+                    </span>
+                    <p className="text-sm leading-relaxed text-text-muted">
+                      Deze tab is een productie-checklist voor jou — niet
+                      zichtbaar voor de klant op /c/[id]. De render-pipeline
+                      en export-knoppen zijn nog niet gekoppeld aan
+                      Runway/Kling. Voice-over via ElevenLabs werkt wel.
+                    </p>
+                  </div>
+                </div>
                 <VideoProductionPreview
                   data={campaign.artifacts.videoProduction}
                   cinematic={campaign.artifacts.cinematic}
