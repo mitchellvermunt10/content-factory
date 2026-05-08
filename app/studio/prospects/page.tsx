@@ -58,11 +58,30 @@ export default function ProspectsPage() {
     "input"
   );
 
-  // Op mount: laatste afgeronde onderzoek-run ophalen voor deze owner-email,
-  // zodat tabs 2 en 3 ook beschikbaar zijn na pagina-refresh.
+  // Op mount: probeer eerdere onderzoek-run te hydrateeren zodat tabs 2 + 3
+  // klikbaar zijn na refresh. Twee strategieën:
+  // 1. owner-email lookup (alleen werkt als email gezet was tijdens originele run)
+  // 2. fallback: directe research-id uit localStorage (altijd betrouwbaar)
   useEffect(() => {
     let cancelled = false;
+    const hydrateFromResult = (r: {
+      id: string;
+      result: ResearchResult;
+      costCents: number;
+      durationMs: number | null;
+    }) => {
+      if (cancelled) return;
+      setResult({
+        id: r.id,
+        result: r.result,
+        costCents: r.costCents,
+        durationMs: r.durationMs ?? 0,
+      });
+      setActiveTab("top10");
+    };
+
     (async () => {
+      // Strategy 1: owner-email lookup
       let ownerEmail: string | null = null;
       try {
         const cached = localStorage.getItem("content-factory:owner-email");
@@ -70,37 +89,75 @@ export default function ProspectsPage() {
       } catch {
         // niet beschikbaar
       }
-      if (!ownerEmail) return;
+
+      if (ownerEmail) {
+        try {
+          const res = await fetch(
+            `/api/prospects?owner=${encodeURIComponent(ownerEmail)}`
+          );
+          if (res.ok) {
+            const j = (await res.json()) as {
+              research?: Array<{
+                id: string;
+                status: string;
+                result: ResearchResult | null;
+                costCents: number;
+                durationMs: number | null;
+              }>;
+            };
+            const latest = (j.research ?? []).find(
+              (r) => r.status === "complete" && r.result
+            );
+            if (latest && latest.result) {
+              hydrateFromResult({
+                id: latest.id,
+                result: latest.result,
+                costCents: latest.costCents,
+                durationMs: latest.durationMs,
+              });
+              return;
+            }
+          }
+        } catch {
+          // val terug op strategie 2
+        }
+      }
+
+      // Strategy 2: directe research-id uit localStorage
+      let lastId: string | null = null;
+      try {
+        lastId = localStorage.getItem("content-factory:last-research-id");
+      } catch {
+        // niet beschikbaar
+      }
+      if (!lastId) return;
 
       try {
-        const res = await fetch(
-          `/api/prospects?owner=${encodeURIComponent(ownerEmail)}`
-        );
+        const res = await fetch(`/api/prospects/${lastId}`);
         if (!res.ok) return;
         const j = (await res.json()) as {
-          research?: Array<{
+          research?: {
             id: string;
             status: string;
             result: ResearchResult | null;
             costCents: number;
             durationMs: number | null;
-          }>;
+          } | null;
         };
-        if (cancelled) return;
-        const latest = (j.research ?? []).find(
-          (r) => r.status === "complete" && r.result
-        );
-        if (latest && latest.result) {
-          setResult({
-            id: latest.id,
-            result: latest.result,
-            costCents: latest.costCents,
-            durationMs: latest.durationMs ?? 0,
+        if (
+          j.research &&
+          j.research.status === "complete" &&
+          j.research.result
+        ) {
+          hydrateFromResult({
+            id: j.research.id,
+            result: j.research.result,
+            costCents: j.research.costCents,
+            durationMs: j.research.durationMs,
           });
-          setActiveTab("top10");
         }
       } catch {
-        // niet bereikbaar — geen probleem, user kan opnieuw starten
+        // geen probleem
       }
     })();
     return () => {
@@ -145,6 +202,13 @@ export default function ProspectsPage() {
       const j = (await res.json()) as ApiResponse;
       setResult(j);
       setActiveTab("top10");
+      // Bewaar research-ID lokaal — fallback voor pagina-refresh als
+      // owner-email niet was gezet tijdens de run
+      try {
+        localStorage.setItem("content-factory:last-research-id", j.id);
+      } catch {
+        // niet beschikbaar
+      }
       toast.success(`${j.result.prospects.length} kandidaten gevonden`, {
         description: `Run kostte €${(j.costCents / 100).toFixed(2)} in ${Math.round(j.durationMs / 1000)}s`,
       });
@@ -323,6 +387,23 @@ export default function ProspectsPage() {
                         Sonnet 4.6 doorzoekt nu het web. Dit kan 90-180 seconden
                         duren. Sluit deze tab niet.
                       </p>
+                    ) : null}
+
+                    {!result ? (
+                      <LoadByIdInput
+                        onLoaded={(r) => {
+                          setResult(r);
+                          setActiveTab("top10");
+                          try {
+                            localStorage.setItem(
+                              "content-factory:last-research-id",
+                              r.id
+                            );
+                          } catch {
+                            /* niet beschikbaar */
+                          }
+                        }}
+                      />
                     ) : null}
                   </div>
 
@@ -809,6 +890,96 @@ function BriefField({
         value
       )}
     </div>
+  );
+}
+
+// ======================== Load by ID (fallback) ========================
+
+function LoadByIdInput({
+  onLoaded,
+}: {
+  onLoaded: (r: ApiResponse) => void;
+}) {
+  const [id, setId] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function load() {
+    const trimmed = id.trim();
+    if (!trimmed) return;
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/prospects/${trimmed}`);
+      if (!res.ok) {
+        toast.error("Niet gevonden", {
+          description: "Check de research-ID in Supabase table prospect_research.",
+        });
+        return;
+      }
+      const j = (await res.json()) as {
+        research?: {
+          id: string;
+          status: string;
+          result: ResearchResult | null;
+          costCents: number;
+          durationMs: number | null;
+        } | null;
+      };
+      if (
+        !j.research ||
+        j.research.status !== "complete" ||
+        !j.research.result
+      ) {
+        toast.error("Run niet compleet", {
+          description: `Status: ${j.research?.status ?? "onbekend"}`,
+        });
+        return;
+      }
+      onLoaded({
+        id: j.research.id,
+        result: j.research.result,
+        costCents: j.research.costCents,
+        durationMs: j.research.durationMs ?? 0,
+      });
+      toast.success("Onderzoek geladen");
+    } catch (err) {
+      toast.error("Laden mislukt", {
+        description: err instanceof Error ? err.message : "Onbekende fout",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <details className="mt-2 rounded-lg border border-dashed border-border bg-bg/40 p-3">
+      <summary className="cursor-pointer text-xs text-text-subtle">
+        Eerder onderzoek terughalen via ID?
+      </summary>
+      <p className="mt-3 text-xs text-text-muted">
+        Als je een onderzoek hebt gedraaid maar de tabs leeg staan, plak de
+        research-ID hieronder. Te vinden in Supabase table{" "}
+        <span className="font-mono">prospect_research</span> kolom{" "}
+        <span className="font-mono">id</span>.
+      </p>
+      <div className="mt-3 flex gap-2">
+        <input
+          type="text"
+          value={id}
+          onChange={(e) => setId(e.target.value)}
+          placeholder="bijv. aBcDeFg123"
+          className="flex-1 rounded-lg border border-border bg-elevated px-3 py-2 text-sm font-mono text-text"
+          disabled={loading}
+        />
+        <Button
+          variant="secondary"
+          onClick={load}
+          disabled={loading || !id.trim()}
+        >
+          {loading ? <Loader2 className="size-4 animate-spin" /> : null}
+          Laden
+        </Button>
+      </div>
+    </details>
   );
 }
 
