@@ -14,12 +14,17 @@ export function SmoothScrollProvider({
   children: React.ReactNode;
 }) {
   useEffect(() => {
+    // Lerp-mode i.p.v. duration: continue interpolatie naar target-scroll.
+    // Lerp 0.07 = traag-vloeiend (Awwwards/luxury sites), 0.1 = standaard.
+    // Wheel multipliers lager = per scroll-tik beweeg je minder, voelt
+    // alsof de pagina een gewicht heeft en glijdt na.
     const lenis = new Lenis({
-      duration: 1.4,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      lerp: 0.07,
       smoothWheel: true,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.2,
+      wheelMultiplier: 0.7,
+      touchMultiplier: 1.0,
+      syncTouch: true,
+      syncTouchLerp: 0.075,
     });
 
     let rafId = 0;
