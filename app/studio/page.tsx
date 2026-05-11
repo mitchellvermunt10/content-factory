@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Plus, Sparkles, Mail, RefreshCw, Loader2, Search } from "lucide-react";
+import { Plus, Sparkles, Mail, RefreshCw, Loader2, Search, Inbox, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CampaignListItem } from "@/components/studio/CampaignListItem";
@@ -18,6 +18,8 @@ export default function StudioDashboard() {
   const upsertCampaign = useCampaigns((s) => s.upsertCampaign);
   const [ownerEmail, setOwnerEmail] = useState("");
   const [syncing, setSyncing] = useState(false);
+  const [followupCount, setFollowupCount] = useState(0);
+  const [pipelineCount, setPipelineCount] = useState(0);
 
   useEffect(() => {
     try {
@@ -27,6 +29,29 @@ export default function StudioDashboard() {
       // niet beschikbaar — geen probleem
     }
   }, []);
+
+  // Fetch follow-up + pipeline counts voor dashboard-badge
+  useEffect(() => {
+    if (!ownerEmail || !ownerEmail.includes("@")) return;
+    Promise.all([
+      fetch(
+        `/api/outreach?owner=${encodeURIComponent(ownerEmail)}&followups=1`
+      )
+        .then((r) => (r.ok ? r.json() : { outreach: [] }))
+        .catch(() => ({ outreach: [] })),
+      fetch(`/api/outreach?owner=${encodeURIComponent(ownerEmail)}`)
+        .then((r) => (r.ok ? r.json() : { outreach: [] }))
+        .catch(() => ({ outreach: [] })),
+    ]).then(([f, all]) => {
+      setFollowupCount((f.outreach ?? []).length);
+      setPipelineCount(
+        (all.outreach ?? []).filter(
+          (o: { status: string }) =>
+            !["closed_won", "closed_lost", "dead"].includes(o.status)
+        ).length
+      );
+    });
+  }, [ownerEmail]);
 
   async function syncFromServer() {
     if (!ownerEmail || !ownerEmail.includes("@")) {
@@ -101,6 +126,17 @@ export default function StudioDashboard() {
                   Outreach kit
                 </Link>
               </Button>
+              <Button asChild size="lg" variant="ghost">
+                <Link href="/studio/pipeline">
+                  <Inbox className="size-4" />
+                  Pipeline
+                  {pipelineCount > 0 ? (
+                    <span className="ml-1 rounded-full bg-accent/20 px-1.5 py-0.5 text-[10px] font-medium text-accent">
+                      {pipelineCount}
+                    </span>
+                  ) : null}
+                </Link>
+              </Button>
               <Button asChild size="lg" variant="secondary">
                 <Link href="/studio/prospects">
                   <Search className="size-4" />
@@ -115,6 +151,27 @@ export default function StudioDashboard() {
               </Button>
             </div>
           </div>
+
+          {followupCount > 0 ? (
+            <div className="mt-6 flex items-center justify-between gap-3 rounded-xl border border-warning/40 bg-warning/5 p-4">
+              <div className="flex items-center gap-3">
+                <Clock className="size-4 text-warning" />
+                <div>
+                  <p className="text-sm font-medium">
+                    {followupCount} follow-up
+                    {followupCount === 1 ? "" : "s"} nodig
+                  </p>
+                  <p className="text-xs text-text-muted">
+                    Prospects ouder dan 4 dagen zonder reactie — tijd voor een
+                    bumpje.
+                  </p>
+                </div>
+              </div>
+              <Button asChild variant="secondary" size="sm">
+                <Link href="/studio/pipeline">Bekijk →</Link>
+              </Button>
+            </div>
+          ) : null}
 
           <div className="mt-10 rounded-2xl border border-border bg-surface/40 p-4">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">

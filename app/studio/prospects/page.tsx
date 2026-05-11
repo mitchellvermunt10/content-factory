@@ -18,6 +18,7 @@ import {
   Globe,
   ChevronDown,
   ChevronUp,
+  Send,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -489,6 +490,8 @@ function ProspectListView({
 function ProspectCard({ prospect }: { prospect: ProspectEntry }) {
   const [copiedSubject, setCopiedSubject] = useState(false);
   const [copiedBody, setCopiedBody] = useState(false);
+  const [tracking, setTracking] = useState(false);
+  const [tracked, setTracked] = useState(false);
 
   async function copy(text: string, which: "subject" | "body") {
     await navigator.clipboard.writeText(text);
@@ -500,6 +503,59 @@ function ProspectCard({ prospect }: { prospect: ProspectEntry }) {
       setTimeout(() => setCopiedBody(false), 2000);
     }
     toast.success("Gekopieerd");
+  }
+
+  // Track als verzonden: maak outreach-record + status='sent'
+  async function markAsSent() {
+    let ownerEmail: string | null = null;
+    try {
+      const cached = localStorage.getItem("content-factory:owner-email");
+      if (cached?.includes("@")) ownerEmail = cached;
+    } catch {
+      // niet beschikbaar
+    }
+    if (!ownerEmail) {
+      toast.error("Owner-email niet ingesteld", {
+        description: "Ga naar /studio en vul je email in bij Owner sync.",
+      });
+      return;
+    }
+    setTracking(true);
+    try {
+      const res = await fetch("/api/outreach", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ownerEmail,
+          prospectName: prospect.name,
+          prospectEmail: prospect.ownerEmail ?? null,
+          prospectPhone: prospect.phoneNumber ?? null,
+          prospectCity: prospect.city,
+          prospectVertical: prospect.suggestedBrief.businessType,
+          prospectWebsite: prospect.websiteUrl ?? null,
+          prospectInstagram: prospect.instagramHandle ?? null,
+          emailSubject: prospect.emailDraft.subject,
+          emailBody: prospect.emailDraft.body,
+          status: "sent",
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(
+          (err as { error?: string }).error ?? `HTTP ${res.status}`
+        );
+      }
+      setTracked(true);
+      toast.success("Toegevoegd aan pipeline", {
+        description: "Track de status op /studio/pipeline",
+      });
+    } catch (err) {
+      toast.error("Tracking faalde", {
+        description: err instanceof Error ? err.message : "Onbekende fout",
+      });
+    } finally {
+      setTracking(false);
+    }
   }
 
   const fitColor =
@@ -649,6 +705,26 @@ function ProspectCard({ prospect }: { prospect: ProspectEntry }) {
         <pre className="mt-2 whitespace-pre-wrap font-sans text-sm leading-relaxed text-text-muted">
           {prospect.emailDraft.body}
         </pre>
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3">
+          <p className="text-xs text-text-muted">
+            Email verstuurd? Track 'm in je pipeline.
+          </p>
+          <Button
+            variant={tracked ? "ghost" : "accent"}
+            size="sm"
+            onClick={markAsSent}
+            disabled={tracking || tracked}
+          >
+            {tracking ? (
+              <Loader2 className="size-3 animate-spin" />
+            ) : tracked ? (
+              <Check className="size-3" />
+            ) : (
+              <Send className="size-3" />
+            )}
+            {tracked ? "Toegevoegd" : "Markeer als verzonden"}
+          </Button>
+        </div>
       </div>
     </div>
   );

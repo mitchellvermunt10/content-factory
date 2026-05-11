@@ -83,6 +83,21 @@ export default function ClientCampaignPage() {
     fetchFromServer(params.id).finally(() => setServerChecked(true));
   }, [hydrated, campaign, params.id, fetchFromServer, serverChecked]);
 
+  // Page-view tracking: log één keer dat deze klant de spec heeft geopend.
+  // Werkt via /api/events/campaign-view → bumpt outreach.open_count.
+  useEffect(() => {
+    if (!params.id) return;
+    // Skip eigen-views (op localhost) en bot-scrapers
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") return;
+    fetch("/api/events/campaign-view", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ campaignId: params.id }),
+    }).catch(() => {
+      // analytics is best-effort — geen showstopper
+    });
+  }, [params.id]);
+
   if (!hydrated || (!campaign && !serverChecked) || fetching) {
     return (
       <div className="grid min-h-screen place-items-center text-text-muted">
