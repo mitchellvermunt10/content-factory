@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowRight, MapPin, Phone } from "lucide-react";
 import { SmoothScrollProvider } from "@/components/sites/SmoothScrollProvider";
 import { ImageSequence } from "@/components/sites/ImageSequence";
-import { Scene, SceneText } from "@/components/sites/Scene";
+import { Scene, SceneText, SceneStagger } from "@/components/sites/Scene";
 import type { NextLevelSiteData } from "@/lib/sites/types";
 
 /**
@@ -40,10 +40,13 @@ export function SiteExperience({ data }: { data: NextLevelSiteData }) {
         {/* Scenes — zitten boven de pinned canvas dankzij z-10 */}
         <div className="relative z-10 -mt-[100vh]">
           {/* Scene 1 — Intro: gevel + bedrijfsnaam */}
-          <Scene vhMultiplier={2}>
+          <Scene vhMultiplier={2.5}>
             <SceneText
-              enterAt={0.05}
-              exitAt={0.7}
+              enterStart={0.05}
+              enterEnd={0.4}
+              exitStart={0.75}
+              exitEnd={0.95}
+              travel={48}
               className="px-6 text-center"
             >
               <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/60">
@@ -59,10 +62,13 @@ export function SiteExperience({ data }: { data: NextLevelSiteData }) {
           </Scene>
 
           {/* Scene 2 — Aankomst: je bent binnen */}
-          <Scene vhMultiplier={2}>
+          <Scene vhMultiplier={2.5}>
             <SceneText
-              enterAt={0.15}
-              exitAt={0.75}
+              enterStart={0.1}
+              enterEnd={0.45}
+              exitStart={0.75}
+              exitEnd={0.95}
+              travel={56}
               className="px-6 text-center"
             >
               <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/50">
@@ -84,21 +90,38 @@ export function SiteExperience({ data }: { data: NextLevelSiteData }) {
             </SceneText>
           </Scene>
 
-          {/* Scene 3 — Menu / diensten (placeholder voor Phase 3) */}
-          <Scene vhMultiplier={2.5}>
-            <SceneText className="w-full px-6">
+          {/* Scene 3 — Menu / diensten */}
+          <Scene vhMultiplier={3}>
+            <div className="w-full px-6">
               <div className="mx-auto max-w-4xl">
-                <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
-                  De kaart
-                </p>
-                <h2 className="mt-4 text-center font-serif text-4xl font-light md:text-5xl">
-                  Wat we serveren
-                </h2>
-                <div className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 md:grid-cols-2">
+                <SceneText
+                  enterStart={0.0}
+                  enterEnd={0.25}
+                  exitStart={0.85}
+                  exitEnd={1.0}
+                  travel={40}
+                >
+                  <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
+                    De kaart
+                  </p>
+                  <h2 className="mt-4 text-center font-serif text-4xl font-light md:text-5xl">
+                    Wat we serveren
+                  </h2>
+                </SceneText>
+
+                <SceneStagger
+                  windowStart={0.2}
+                  windowEnd={0.75}
+                  perItemDuration={0.28}
+                  exitStart={0.88}
+                  exitEnd={1.0}
+                  travel={32}
+                  className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 md:grid-cols-2"
+                >
                   {(data.items ?? []).slice(0, 6).map((item) => (
                     <div
                       key={item.name}
-                      className="bg-black/60 p-6 backdrop-blur-sm"
+                      className="h-full bg-black/60 p-6 backdrop-blur-sm"
                     >
                       <div className="flex items-baseline justify-between gap-4">
                         <h3 className="font-serif text-lg font-medium">
@@ -117,22 +140,39 @@ export function SiteExperience({ data }: { data: NextLevelSiteData }) {
                       ) : null}
                     </div>
                   ))}
-                </div>
+                </SceneStagger>
               </div>
-            </SceneText>
+            </div>
           </Scene>
 
           {/* Scene 4 — Sfeerbeelden grid */}
-          <Scene vhMultiplier={2}>
-            <SceneText className="w-full px-6">
+          <Scene vhMultiplier={2.5}>
+            <div className="w-full px-6">
               <div className="mx-auto max-w-5xl">
-                <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
-                  Sfeer
-                </p>
-                <h2 className="mt-4 text-center font-serif text-4xl font-light md:text-5xl">
-                  Zoals het écht voelt
-                </h2>
-                <div className="mt-12 grid grid-cols-3 gap-2 md:gap-3">
+                <SceneText
+                  enterStart={0.0}
+                  enterEnd={0.22}
+                  exitStart={0.88}
+                  exitEnd={1.0}
+                  travel={40}
+                >
+                  <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
+                    Sfeer
+                  </p>
+                  <h2 className="mt-4 text-center font-serif text-4xl font-light md:text-5xl">
+                    Zoals het écht voelt
+                  </h2>
+                </SceneText>
+
+                <SceneStagger
+                  windowStart={0.18}
+                  windowEnd={0.78}
+                  perItemDuration={0.32}
+                  exitStart={0.9}
+                  exitEnd={1.0}
+                  travel={28}
+                  className="mt-12 grid grid-cols-3 gap-2 md:gap-3"
+                >
                   {(data.photos ?? []).slice(0, 6).map((p, i) => (
                     <div
                       key={i}
@@ -147,14 +187,21 @@ export function SiteExperience({ data }: { data: NextLevelSiteData }) {
                       />
                     </div>
                   ))}
-                </div>
+                </SceneStagger>
               </div>
-            </SceneText>
+            </div>
           </Scene>
 
           {/* Scene 5 — Contact / reservering */}
-          <Scene vhMultiplier={1.5}>
-            <SceneText className="w-full px-6 text-center">
+          <Scene vhMultiplier={2}>
+            <SceneText
+              enterStart={0.05}
+              enterEnd={0.4}
+              exitStart={0.85}
+              exitEnd={1.0}
+              travel={48}
+              className="w-full px-6 text-center"
+            >
               <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/50">
                 Tot snel
               </p>
