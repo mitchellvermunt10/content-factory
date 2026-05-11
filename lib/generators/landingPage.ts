@@ -20,7 +20,7 @@ const SCHEMA_HINT = `{
   },
   "experience": { "headline": string<=100, "body": string<=420, "bullets": [string<=80] (3-5) },
   "testimonial": { "quote": string 20-280, "author": string<=60, "role": string<=60 },
-  "pricing": [ { "name": string<=40, "price": string<=20, "cadence": string<=20, "description": string<=120, "features": [string<=60] (2-5), "highlighted": boolean } ] (exactly 3),
+  "pricing": [ { "name": string<=40, "price": string<=20, "cadence": string<=20, "description": string<=120, "features": [string<=60] (2-5), "highlighted": boolean } ] (0-3 — LAAT LEEG bij restaurant/garage/tandarts),
   "faq": [ { "question": string<=120, "answer": string<=320 } ] (4-6),
   "cta": { "headline": string<=100, "body": string<=220, "button": string<=28 }
 }`;
@@ -137,14 +137,47 @@ REGELS VOOR ITEMS:
 - duration: alleen voor tijd-gebonden services (salon, gym, dentist)
 - badge: gebruik spaarzaam, alleen 1-2 items "Populair" of "Nieuw"
 
-EISEN VOOR DE REST
+HERO — KRITISCH BELANGRIJK:
+De hero is wat de klant ALS EERSTE ziet. Hij moet meteen herkenbaar zijn voor het BEDRIJF, niet voor branche-cliché.
+
+VERBODEN openers (te generiek AI-marketing):
+- "Waar je [X] gaat" / "Waar je [X] voelt" / "Waar je hart sneller gaat kloppen"
+- "Beleef [X]" / "Ontdek [X]" / "Voel [X]" / "Proef [X]"
+- "Onvergetelijke [X]" / "Bijzondere [X]"
+- "Geen [restaurant/salon/bedrijf] dat..." (cliché tegenstelling)
+- "Het verschil tussen X en Y"
+
+VERPLICHT: de headline MOET refereren aan minimaal één van:
+- Een SPECIFIEK gerecht/behandeling/dienst (gebruik items uit verticalSection of scraped content)
+- Een SPECIFIEK USP (geen herhaling van branche-cliche)
+- Locatie + uniek detail (bv. "Op de Langestraat staat 's middags de keuken al aan")
+- Een sterke uitspraak die alleen voor DIT bedrijf geldt
+
+VOORBEELDEN GOEDE HEROS:
+- Bistro: "Little gem, pinda, limoen. En vijftien andere redenen om vanavond te reserveren."
+- Salon: "Balayage waar het haar over een half jaar nog blij van is."
+- Garage: "Vaste prijs voor je APK. Niet één euro meer dan afgesproken."
+
+VOORBEELDEN SLECHTE HEROS:
+- "Waar je hart sneller gaat kloppen van eten" — generieke poesi
+- "Beleef de smaak van vroeger" — branche-cliché
+- "Ontdek het verschil" — leeg
+
+PRICING — alleen waar logisch:
+- Restaurants/bistros: GEEN pricing-pakketten. LAAT pricing-ARRAY LEEG ([]).
+- Hotels: pricing PER KAMERTYPE kan ("Standard kamer", "Deluxe", "Suite").
+- Salons: pricing-pakketten optioneel ("Kleur-traject", "Knip & föhn"). Leeg mag ook.
+- Gyms: lidmaatschap-tiers werken.
+- Garages: GEEN pricing-pakketten. Laat LEEG.
+- Tandarts: GEEN pricing. Laat LEEG.
+- Twijfel? Laat array LEEG. BETER GEEN PRICING DAN VERZONNEN PRICING.
+
+ANDERE SECTIES:
 - De toon moet exact passen bij de gekozen tone of voice.
-- De hero moet onmiddellijk duidelijk maken wat het bedrijf doet, voor wie, en waarom het anders is.
 - "marquee": losse trefwoorden of korte taglines voor doorlopende strip onder hero.
-- "features": drie scherpe redenen om voor dit bedrijf te kiezen, NIET generiek.
+- "features": drie SCHERPE redenen om voor dit bedrijf te kiezen, NIET generiek.
 - "experience": beschrijft het bezoek/de service zintuiglijk en concreet.
 - "testimonial": geloofwaardig met realistische naam en context.
-- "pricing": drie pakketten/opties (middelste highlighted: true) — als logisch voor dit bedrijf, anders 3 service-tiers.
 - "faq": vier-zes meest urgente vragen van de doelgroep.
 - "cta": uitnodigend en concreet.
 

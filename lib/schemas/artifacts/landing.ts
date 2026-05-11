@@ -130,6 +130,9 @@ export const LandingPageSchema = z.object({
     author: z.string().max(80),
     role: z.string().max(80),
   }),
+  // Pricing — sommige branches hebben geen pakket-pricing (restaurants,
+  // hotels per nacht, gyms per maand). Dan blijft array leeg en wordt
+  // de hele pricing-sectie in de preview verborgen.
   pricing: z
     .array(
       z.object({
@@ -141,7 +144,7 @@ export const LandingPageSchema = z.object({
         highlighted: z.boolean(),
       })
     )
-    .length(3),
+    .max(3),
   faq: z
     .array(
       z.object({

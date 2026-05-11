@@ -215,6 +215,77 @@ function findSubpageLinks(html: string, baseUrl: string): string[] {
   return Array.from(found);
 }
 
+// Common menu/diensten-paden per branche — proberen we OOK als ze niet
+// vanaf homepage gelinkt zijn. Veel sites verbergen menu achter mooi-design
+// nav-items die niet als <a href="/menu"> zichtbaar zijn in HTML.
+const COMMON_SUBPAGE_PATHS: Record<string, string[]> = {
+  restaurant: [
+    "/menu",
+    "/kaart",
+    "/menus",
+    "/de-kaart",
+    "/onze-kaart",
+    "/eten",
+    "/spijskaart",
+    "/lunch",
+    "/diner",
+    "/gerechten",
+  ],
+  coffeeshop: ["/menu", "/kaart", "/eten", "/lunch"],
+  hotel: ["/kamers", "/rooms", "/reserveren", "/boeken"],
+  salon: ["/behandelingen", "/prijzen", "/menu", "/tarieven"],
+  barber: ["/diensten", "/prijzen", "/behandelingen"],
+  dentist: ["/behandelingen", "/tarieven", "/zorg"],
+  gym: ["/lidmaatschap", "/tarieven", "/lessen", "/personal-training"],
+  tattoo: ["/portfolio", "/prijzen", "/tarieven"],
+  autobedrijf: ["/diensten", "/onderhoud", "/apk", "/occasions"],
+};
+
+/**
+ * Probeer common menu-paden voor deze branche. Returnt URLs die 200 OK
+ * geven EN substantiele content hebben (>2KB stripped). Voorkomt dat we
+ * 404-pagina's of vrijwel lege redirect-targets meenemen.
+ */
+async function probeCommonSubpages(
+  baseUrl: string,
+  vertical: string,
+  alreadyFound: string[]
+): Promise<Array<{ url: string; html: string }>> {
+  const paths = COMMON_SUBPAGE_PATHS[vertical] ?? [];
+  if (paths.length === 0) return [];
+
+  const base = new URL(baseUrl);
+  const candidates = paths
+    .map((p) => `${base.protocol}//${base.host}${p}`)
+    .filter((url) => !alreadyFound.includes(url));
+
+  // Max 4 candidate-probes (anders kost het te lang)
+  const results: Array<{ url: string; html: string }> = [];
+  for (const url of candidates.slice(0, 6)) {
+    try {
+      const res = await fetch(url, {
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        },
+        redirect: "follow",
+        signal: AbortSignal.timeout(6000),
+      });
+      if (!res.ok) continue;
+      const text = await res.text();
+      const cleaned = cleanHtml(text);
+      // Alleen meenemen als substantieel — anders is het waarschijnlijk
+      // een redirect-stub of fallback-template-page
+      if (cleaned.length < 2000) continue;
+      results.push({ url, html: cleaned });
+      if (results.length >= 3) break; // genoeg, stop probing
+    } catch {
+      // ignore — gewoon doorgaan
+    }
+  }
+  return results;
+}
+
 /**
  * Fetch een sub-page en geef gestripped HTML terug.
  * Geeft lege string bij failure (geen showstopper).
@@ -290,6 +361,17 @@ export async function scrapeProspectWebsite(input: {
         );
       }
     }
+  }
+
+  // Stap 2c: probeer common menu-paden (ook als niet gelinkt — veel sites
+  // hebben /menu zonder zichtbare <a> tag, omdat het mooie design-nav is)
+  const probed = await probeCommonSubpages(
+    input.websiteUrl,
+    input.vertical,
+    subpageUrls
+  );
+  for (const p of probed) {
+    subpageHtmls.push(`\n\n=== SUBPAGINA (geprobeerd): ${p.url} ===\n${p.html}`);
   }
 
   // Combineer + budget-trim

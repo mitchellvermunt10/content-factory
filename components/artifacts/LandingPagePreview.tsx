@@ -258,62 +258,64 @@ export function LandingPagePreview({
           </Reveal>
         </section>
 
-        {/* === PRICING === */}
-        <section
-          className="px-8 md:px-16"
-          style={{
-            paddingTop: theme.sectionSpacingValue,
-            paddingBottom: theme.sectionSpacingValue,
-          }}
-        >
-          <Reveal>
-            <h2
-              className="balance mb-12 text-3xl tracking-tight md:text-4xl"
-              style={headingStyle}
-            >
-              Tarieven
-            </h2>
-          </Reveal>
-          <div className="grid gap-3 md:grid-cols-3">
-            {data.pricing.map((p, i) => (
-              <Reveal
-                key={i}
-                delay={i * 0.06}
-                className="relative border p-6"
-                style={{
-                  borderColor: p.highlighted
-                    ? `${brand.accent}66`
-                    : "var(--border, hsl(240 6% 16%))",
-                  background: p.highlighted
-                    ? `${brand.accent}10`
-                    : "var(--surface, hsl(240 6% 7%))",
-                  borderRadius: theme.cornerRadiusValue,
-                }}
+        {/* === PRICING === alleen tonen als er pakketten zijn */}
+        {data.pricing && data.pricing.length > 0 ? (
+          <section
+            className="px-8 md:px-16"
+            style={{
+              paddingTop: theme.sectionSpacingValue,
+              paddingBottom: theme.sectionSpacingValue,
+            }}
+          >
+            <Reveal>
+              <h2
+                className="balance mb-12 text-3xl tracking-tight md:text-4xl"
+                style={headingStyle}
               >
-                {p.highlighted ? (
-                  <Badge variant="accent" className="absolute right-4 top-4">
-                    populair
-                  </Badge>
-                ) : null}
-                <h3 className="text-lg tracking-tight" style={headingStyle}>
-                  {p.name}
-                </h3>
-                <p className="mt-1 text-sm text-text-muted">{p.description}</p>
-                <p className="mt-6 text-3xl tracking-tight" style={headingStyle}>
-                  {p.price}{" "}
-                  <span className="text-sm font-normal text-text-subtle">
-                    {p.cadence}
-                  </span>
-                </p>
-                <ul className="mt-6 space-y-2 text-sm text-text-muted">
-                  {p.features.map((f, j) => (
-                    <li key={j}>· {f}</li>
-                  ))}
-                </ul>
-              </Reveal>
-            ))}
-          </div>
-        </section>
+                Tarieven
+              </h2>
+            </Reveal>
+            <div className="grid gap-3 md:grid-cols-3">
+              {data.pricing.map((p, i) => (
+                <Reveal
+                  key={i}
+                  delay={i * 0.06}
+                  className="relative border p-6"
+                  style={{
+                    borderColor: p.highlighted
+                      ? `${brand.accent}66`
+                      : "var(--border, hsl(240 6% 16%))",
+                    background: p.highlighted
+                      ? `${brand.accent}10`
+                      : "var(--surface, hsl(240 6% 7%))",
+                    borderRadius: theme.cornerRadiusValue,
+                  }}
+                >
+                  {p.highlighted ? (
+                    <Badge variant="accent" className="absolute right-4 top-4">
+                      populair
+                    </Badge>
+                  ) : null}
+                  <h3 className="text-lg tracking-tight" style={headingStyle}>
+                    {p.name}
+                  </h3>
+                  <p className="mt-1 text-sm text-text-muted">{p.description}</p>
+                  <p className="mt-6 text-3xl tracking-tight" style={headingStyle}>
+                    {p.price}{" "}
+                    <span className="text-sm font-normal text-text-subtle">
+                      {p.cadence}
+                    </span>
+                  </p>
+                  <ul className="mt-6 space-y-2 text-sm text-text-muted">
+                    {p.features.map((f, j) => (
+                      <li key={j}>· {f}</li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
+          </section>
+        ) : null}
 
         {/* === FAQ === */}
         <section
