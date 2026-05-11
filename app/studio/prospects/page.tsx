@@ -674,10 +674,30 @@ function BriefListView({ prospects }: { prospects: ProspectEntry[] }) {
   );
 }
 
+// localStorage key voor scraped state per prospect — overleeft page-refresh
+function scrapedStorageKey(name: string): string {
+  const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  return `content-factory:scraped:${slug}`;
+}
+
 function BriefCard({ prospect }: { prospect: ProspectEntry }) {
   const [scraped, setScraped] = useState<ScrapedContent | null>(null);
   const [scrapeLoading, setScrapeLoading] = useState(false);
   const [showScraped, setShowScraped] = useState(false);
+
+  // Restore scraped uit localStorage op mount — voorkomt verlies bij refresh
+  useEffect(() => {
+    try {
+      const cached = localStorage.getItem(scrapedStorageKey(prospect.name));
+      if (cached) {
+        const parsed = JSON.parse(cached) as ScrapedContent;
+        setScraped(parsed);
+      }
+    } catch {
+      // niet beschikbaar — geen probleem
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [prospect.name]);
 
   // Bouw enriched brief: scraped data overschrijft Sonnet's gokjes
   const enrichedBrief = scraped
@@ -741,6 +761,15 @@ function BriefCard({ prospect }: { prospect: ProspectEntry }) {
       };
       setScraped(j.content);
       setShowScraped(true);
+      // Persist naar localStorage zodat 'ie page-refresh overleeft
+      try {
+        localStorage.setItem(
+          scrapedStorageKey(prospect.name),
+          JSON.stringify(j.content)
+        );
+      } catch {
+        // quota exceeded / niet beschikbaar — geen probleem
+      }
       toast.success(
         `${j.content.items.length} items + ${j.content.photos.length} foto's gevonden`,
         {
