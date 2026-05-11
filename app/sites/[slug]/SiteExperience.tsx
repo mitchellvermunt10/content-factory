@@ -18,23 +18,26 @@ import type { NextLevelSiteData } from "@/lib/sites/types";
  * hun sticky inhoud — de canvas zit erachter en pakt zijn progress
  * uit de totale main-container.
  */
+export type SiteRenderMode = "video" | "cinematic" | "stub";
+
 export function SiteExperience({
   data,
-  useCinematicShots = false,
+  mode = "stub",
 }: {
   data: NextLevelSiteData;
-  useCinematicShots?: boolean;
+  mode?: SiteRenderMode;
 }) {
   const containerRef = useRef<HTMLElement>(null);
-  const cinematicShots = useCinematicShots
-    ? buildRestaurantShots({
-        frames: [data.frames[0], data.frames[1], data.frames[2]] as [
-          string,
-          string,
-          string
-        ],
-      })
-    : null;
+  const cinematicShots =
+    mode === "cinematic"
+      ? buildRestaurantShots({
+          frames: [data.frames[0], data.frames[1], data.frames[2]] as [
+            string,
+            string,
+            string
+          ],
+        })
+      : null;
 
   return (
     <SmoothScrollProvider>
@@ -44,7 +47,16 @@ export function SiteExperience({
           className="pointer-events-none sticky top-0 z-0 h-screen w-full"
           aria-hidden="true"
         >
-          {cinematicShots ? (
+          {mode === "video" ? (
+            // Échte Kling video-frames — scroll-driven scrubbing
+            <ImageSequence
+              frames={data.frames}
+              scrollContainerRef={containerRef}
+              fit="cover"
+              className="relative h-full w-full"
+            />
+          ) : cinematicShots ? (
+            // Flux hero-frames + parametric dolly-in
             <CinematicCanvas
               shots={cinematicShots}
               scrollContainerRef={containerRef}
@@ -52,6 +64,7 @@ export function SiteExperience({
               className="relative h-full w-full"
             />
           ) : (
+            // SVG-stub fallback
             <ImageSequence
               frames={data.frames}
               scrollContainerRef={containerRef}

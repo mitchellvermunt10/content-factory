@@ -3,8 +3,9 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { notFound } from "next/navigation";
 import { generateStubFrames } from "@/lib/sites/stubFrames";
+import { readManifestSafe } from "@/lib/sites/frameExtract";
 import type { NextLevelSiteData } from "@/lib/sites/types";
-import { SiteExperience } from "./SiteExperience";
+import { SiteExperience, type SiteRenderMode } from "./SiteExperience";
 
 type DemoSpec = Omit<NextLevelSiteData, "frames"> & {
   /** Folder in /public/sites/ waar de Flux-gegenereerde hero-frames staan.
@@ -111,7 +112,7 @@ export async function generateStaticParams() {
   return Object.keys(DEMO_SITES).map((slug) => ({ slug }));
 }
 
-async function tryLoadRealFrames(folder: string): Promise<string[] | null> {
+async function tryLoadHeroFrames(folder: string): Promise<string[] | null> {
   const dir = path.join(process.cwd(), "public", "sites", folder);
   const required = ["exterior.jpg", "doorway.jpg", "interior.jpg"];
   try {
@@ -120,8 +121,34 @@ async function tryLoadRealFrames(folder: string): Promise<string[] | null> {
     }
     return required.map((f) => `/sites/${folder}/${f}`);
   } catch {
-    return null; // niet alle frames aanwezig — terugvallen op stubs
+    return null;
   }
+}
+
+/**
+ * Probeer Kling-gegenereerde video-frames te laden via manifest.json.
+ * Geeft de geordende lijst frame-URLs terug, of null als nog niet beschikbaar.
+ */
+async function tryLoadVideoFrames(
+  folder: string,
+  scene: string
+): Promise<string[] | null> {
+  const manifestPath = path.join(
+    process.cwd(),
+    "public",
+    "sites",
+    folder,
+    scene,
+    "manifest.json"
+  );
+  const manifest = await readManifestSafe(manifestPath);
+  if (!manifest || manifest.frameCount < 5) return null;
+  const frames: string[] = [];
+  for (let i = 1; i <= manifest.frameCount; i++) {
+    const padded = String(i).padStart(4, "0");
+    frames.push(`${manifest.publicPrefix}/frame_${padded}.jpg`);
+  }
+  return frames;
 }
 
 export default async function NextLevelSitePage({
@@ -133,19 +160,28 @@ export default async function NextLevelSitePage({
   const { frameFolder, ...base } = DEMO_SITES[slug] ?? {};
   if (!base.slug) notFound();
 
-  // Probeer eerst echte Flux-gegenereerde hero-frames te laden.
-  // Als die er niet zijn (bv. lokaal voor 'npm run dev' wordt aangeroepen
-  // op een verse checkout), valt de page terug op de stub SVG-sequence.
+  // Priority: Kling video-frames → Flux hero-frames → SVG stubs
   let frames: string[] = generateStubFrames();
-  let heroFrames: string[] | null = null;
+  let mode: SiteRenderMode = "stub";
+
   if (frameFolder) {
-    heroFrames = await tryLoadRealFrames(frameFolder);
-  }
-  if (heroFrames && heroFrames.length === 3) {
-    frames = heroFrames; // alleen 3 hero-frames bij real-mode
+    const videoFrames = await tryLoadVideoFrames(frameFolder, "intro");
+    if (videoFrames && videoFrames.length >= 5) {
+      frames = videoFrames;
+      mode = "video";
+    } else {
+      const heroFrames = await tryLoadHeroFrames(frameFolder);
+      if (heroFrames && heroFrames.length === 3) {
+        frames = heroFrames;
+        mode = "cinematic";
+      }
+    }
   }
 
-  const data: NextLevelSiteData = { ...(base as Omit<NextLevelSiteData, "frames">), frames };
+  const data: NextLevelSiteData = {
+    ...(base as Omit<NextLevelSiteData, "frames">),
+    frames,
+  };
 
-  return <SiteExperience data={data} useCinematicShots={heroFrames !== null} />;
+  return <SiteExperience data={data} mode={mode} />;
 }
