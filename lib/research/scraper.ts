@@ -152,6 +152,91 @@ function extractImageUrls(html: string, baseUrl: string): string[] {
   return Array.from(urls).slice(0, 50);
 }
 
+/**
+ * Vindt links naar menu/kaart/diensten-subpagina's in de homepage HTML.
+ * Restaurants houden hun menu vaak op /menu, /kaart, /eten, /lunch, /diner.
+ * Salons op /behandelingen, /prijzen. Garages op /diensten, /onderhoud.
+ *
+ * Geeft max 3 sub-page URLs terug — meer is overkill voor scrape.
+ */
+function findSubpageLinks(html: string, baseUrl: string): string[] {
+  const found = new Set<string>();
+  const base = new URL(baseUrl);
+
+  // Match <a href="..."> waar zowel href als link-tekst menu-trefwoorden bevatten,
+  // OF waar het href-pad zelf duidelijk een menu/diensten-pagina is.
+  const subpageKeywords =
+    /\b(menu|kaart|eten|lunch|diner|gerechten|prijzen|behandelingen|diensten|onderhoud|reserveren|reservering)\b/i;
+
+  const anchorRegex =
+    /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
+
+  for (const match of html.matchAll(anchorRegex)) {
+    const href = match[1]?.trim();
+    const linkText = match[2]?.replace(/<[^>]+>/g, "").trim() ?? "";
+    if (!href) continue;
+    if (
+      href.startsWith("#") ||
+      href.startsWith("mailto:") ||
+      href.startsWith("tel:") ||
+      href.startsWith("javascript:")
+    ) {
+      continue;
+    }
+
+    // Check of href-path of link-tekst een subpage-keyword bevat
+    const isMenuLink =
+      subpageKeywords.test(href) || subpageKeywords.test(linkText);
+    if (!isMenuLink) continue;
+
+    // Resolveer naar absolute URL
+    let absoluteUrl: string;
+    try {
+      absoluteUrl = new URL(href, baseUrl).href;
+    } catch {
+      continue;
+    }
+
+    // Alleen same-origin (geen externe links zoals Treatwell, TheFork)
+    try {
+      const linkOrigin = new URL(absoluteUrl).origin;
+      if (linkOrigin !== base.origin) continue;
+    } catch {
+      continue;
+    }
+
+    // Skip de homepage zelf
+    if (absoluteUrl === baseUrl || absoluteUrl === baseUrl + "/") continue;
+
+    found.add(absoluteUrl);
+    if (found.size >= 3) break;
+  }
+
+  return Array.from(found);
+}
+
+/**
+ * Fetch een sub-page en geef gestripped HTML terug.
+ * Geeft lege string bij failure (geen showstopper).
+ */
+async function fetchSubpageHtml(url: string): Promise<string> {
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent":
+          "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) return "";
+    const text = await res.text();
+    return cleanHtml(text);
+  } catch {
+    return "";
+  }
+}
+
 export interface ScrapeResult {
   content: ScrapedContent;
   costCents: number;
@@ -187,9 +272,31 @@ export async function scrapeProspectWebsite(input: {
     );
   }
 
-  // Stap 2: voorbewerken
+  // Stap 2: voorbewerken homepage
   const imageUrls = extractImageUrls(html, input.websiteUrl);
-  const cleaned = cleanHtml(html).slice(0, MAX_HTML_LENGTH);
+  const cleanedHome = cleanHtml(html);
+
+  // Stap 2b: ook menu/kaart/diensten-subpagina's fetchen (max 3)
+  // Restaurants houden hun menu vaak op /menu, /kaart — niet op homepage.
+  // Salons op /behandelingen. Garages op /diensten.
+  const subpageUrls = findSubpageLinks(html, input.websiteUrl);
+  const subpageHtmls: string[] = [];
+  if (subpageUrls.length > 0) {
+    const fetched = await Promise.all(subpageUrls.map(fetchSubpageHtml));
+    for (let i = 0; i < fetched.length; i++) {
+      if (fetched[i]) {
+        subpageHtmls.push(
+          `\n\n=== SUBPAGINA: ${subpageUrls[i]} ===\n${fetched[i]}`
+        );
+      }
+    }
+  }
+
+  // Combineer + budget-trim
+  const combined = (cleanedHome + subpageHtmls.join("")).slice(
+    0,
+    MAX_HTML_LENGTH
+  );
 
   // Stap 3: Sonnet structured extraction
   const client = getAnthropic();
@@ -306,8 +413,8 @@ WEBSITE: ${input.websiteUrl}
 ALLE GEVONDEN AFBEELDINGEN (geïndexeerd, kies de beste):
 ${imageUrls.map((u, i) => `${i}: ${u}`).join("\n")}
 
-GESTRIPDE HTML-CONTENT:
-${cleaned}
+GESTRIPDE HTML-CONTENT (homepage + relevante subpages zoals /menu, /kaart):
+${combined}
 
 OPDRACHT
 Extract structured content uit deze website. Roep submit_scraped_content aan.
