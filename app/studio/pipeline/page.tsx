@@ -16,6 +16,9 @@ import {
   MessageSquare,
   Send,
   Trash2,
+  CreditCard,
+  Copy,
+  Check,
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -307,6 +310,58 @@ function OutreachRow({
   const [updating, setUpdating] = useState<OutreachStatus | "delete" | null>(
     null
   );
+  const [showCheckout, setShowCheckout] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [copiedLink, setCopiedLink] = useState(false);
+
+  async function generateCheckout(
+    tier: "single" | "always-on" | "receptionist"
+  ) {
+    if (!record.prospectEmail) {
+      toast.error("Geen prospect-email bekend", {
+        description: "Stripe heeft een email nodig voor de checkout-link.",
+      });
+      return;
+    }
+    setCheckoutLoading(tier);
+    try {
+      const res = await fetch("/api/billing/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tier,
+          customerEmail: record.prospectEmail,
+          customerName: record.prospectName,
+          outreachId: record.id,
+          campaignId: record.campaignId ?? undefined,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(
+          (err as { error?: string }).error ?? `HTTP ${res.status}`
+        );
+      }
+      const j = (await res.json()) as { checkoutUrl: string };
+      setCheckoutUrl(j.checkoutUrl);
+      toast.success("Checkout-link klaar — kopieer en stuur");
+    } catch (err) {
+      toast.error("Checkout-link maken mislukt", {
+        description: err instanceof Error ? err.message : "Onbekende fout",
+      });
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }
+
+  async function copyCheckoutLink() {
+    if (!checkoutUrl) return;
+    await navigator.clipboard.writeText(checkoutUrl);
+    setCopiedLink(true);
+    toast.success("Link gekopieerd");
+    setTimeout(() => setCopiedLink(false), 2000);
+  }
 
   async function setStatus(status: OutreachStatus) {
     setUpdating(status);
@@ -476,6 +531,13 @@ function OutreachRow({
             <>
               <Button
                 size="sm"
+                variant="secondary"
+                onClick={() => setShowCheckout((v) => !v)}
+              >
+                <CreditCard className="size-3" /> Betaal-link
+              </Button>
+              <Button
+                size="sm"
                 variant="accent"
                 onClick={() => setStatus("closed_won")}
                 disabled={updating === "closed_won"}
@@ -505,6 +567,83 @@ function OutreachRow({
           ) : null}
         </div>
       </div>
+
+      {/* Checkout panel — verschijnt onder de row na klik op 'Betaal-link' */}
+      {showCheckout ? (
+        <div className="mt-5 rounded-xl border border-accent/30 bg-accent/5 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="text-sm font-medium">
+              Genereer Stripe checkout-link voor {record.prospectName}
+            </p>
+            <button
+              onClick={() => setShowCheckout(false)}
+              className="text-xs text-text-subtle hover:text-text"
+            >
+              Sluit
+            </button>
+          </div>
+
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            <button
+              onClick={() => generateCheckout("single")}
+              disabled={checkoutLoading !== null}
+              className="rounded-lg border border-border bg-elevated p-3 text-left transition-all hover:border-border-strong disabled:opacity-50"
+            >
+              <p className="text-sm font-medium">Eenmalig</p>
+              <p className="font-mono text-lg tracking-tight">€750</p>
+              <p className="text-xs text-text-subtle">1× betaling</p>
+              {checkoutLoading === "single" ? (
+                <Loader2 className="mt-2 size-3 animate-spin" />
+              ) : null}
+            </button>
+            <button
+              onClick={() => generateCheckout("always-on")}
+              disabled={checkoutLoading !== null}
+              className="rounded-lg border-2 border-accent/40 bg-accent/10 p-3 text-left transition-all hover:border-accent disabled:opacity-50"
+            >
+              <p className="text-sm font-medium">Always-On</p>
+              <p className="font-mono text-lg tracking-tight text-accent">
+                €497
+              </p>
+              <p className="text-xs text-text-subtle">/ maand</p>
+              {checkoutLoading === "always-on" ? (
+                <Loader2 className="mt-2 size-3 animate-spin" />
+              ) : null}
+            </button>
+            <button
+              onClick={() => generateCheckout("receptionist")}
+              disabled={checkoutLoading !== null}
+              className="rounded-lg border border-border bg-elevated p-3 text-left transition-all hover:border-border-strong disabled:opacity-50"
+            >
+              <p className="text-sm font-medium">Receptionist</p>
+              <p className="font-mono text-lg tracking-tight">€299</p>
+              <p className="text-xs text-text-subtle">/ maand</p>
+              {checkoutLoading === "receptionist" ? (
+                <Loader2 className="mt-2 size-3 animate-spin" />
+              ) : null}
+            </button>
+          </div>
+
+          {checkoutUrl ? (
+            <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-bg/40 p-3">
+              <input
+                value={checkoutUrl}
+                readOnly
+                onFocus={(e) => e.currentTarget.select()}
+                className="flex-1 bg-transparent font-mono text-xs text-text"
+              />
+              <Button size="sm" variant="secondary" onClick={copyCheckoutLink}>
+                {copiedLink ? (
+                  <Check className="size-3" />
+                ) : (
+                  <Copy className="size-3" />
+                )}
+                {copiedLink ? "Gekopieerd" : "Kopieer"}
+              </Button>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
