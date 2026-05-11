@@ -5,7 +5,9 @@ import Link from "next/link";
 import { ArrowRight, MapPin, Phone } from "lucide-react";
 import { SmoothScrollProvider } from "@/components/sites/SmoothScrollProvider";
 import { ImageSequence } from "@/components/sites/ImageSequence";
+import { CinematicCanvas } from "@/components/sites/CinematicCanvas";
 import { Scene, SceneText, SceneStagger } from "@/components/sites/Scene";
+import { buildRestaurantShots } from "@/lib/sites/shotPresets";
 import type { NextLevelSiteData } from "@/lib/sites/types";
 
 /**
@@ -16,23 +18,47 @@ import type { NextLevelSiteData } from "@/lib/sites/types";
  * hun sticky inhoud — de canvas zit erachter en pakt zijn progress
  * uit de totale main-container.
  */
-export function SiteExperience({ data }: { data: NextLevelSiteData }) {
+export function SiteExperience({
+  data,
+  useCinematicShots = false,
+}: {
+  data: NextLevelSiteData;
+  useCinematicShots?: boolean;
+}) {
   const containerRef = useRef<HTMLElement>(null);
+  const cinematicShots = useCinematicShots
+    ? buildRestaurantShots({
+        frames: [data.frames[0], data.frames[1], data.frames[2]] as [
+          string,
+          string,
+          string
+        ],
+      })
+    : null;
 
   return (
     <SmoothScrollProvider>
       <main ref={containerRef} className="relative bg-black text-white">
-        {/* Pinned image-sequence achtergrond — sticky top:0 binnen container */}
+        {/* Pinned cinematic achtergrond — sticky top:0 binnen container */}
         <div
           className="pointer-events-none sticky top-0 z-0 h-screen w-full"
           aria-hidden="true"
         >
-          <ImageSequence
-            frames={data.frames}
-            scrollContainerRef={containerRef}
-            fit="cover"
-            className="relative h-full w-full"
-          />
+          {cinematicShots ? (
+            <CinematicCanvas
+              shots={cinematicShots}
+              scrollContainerRef={containerRef}
+              fadeOverlap={0.08}
+              className="relative h-full w-full"
+            />
+          ) : (
+            <ImageSequence
+              frames={data.frames}
+              scrollContainerRef={containerRef}
+              fit="cover"
+              className="relative h-full w-full"
+            />
+          )}
           {/* Vignette voor leesbaarheid van tekst over alle frames */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/60" />
         </div>

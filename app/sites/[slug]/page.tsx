@@ -1,14 +1,23 @@
 import type { Metadata } from "next";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import { notFound } from "next/navigation";
 import { generateStubFrames } from "@/lib/sites/stubFrames";
 import type { NextLevelSiteData } from "@/lib/sites/types";
 import { SiteExperience } from "./SiteExperience";
 
-// Phase 1: één hardgecodeerde demo-case zodat we de architectuur kunnen valideren.
-// Phase 2+: vervangen door Supabase-lookup op slug.
-const DEMO_SITES: Record<string, Omit<NextLevelSiteData, "frames">> = {
+type DemoSpec = Omit<NextLevelSiteData, "frames"> & {
+  /** Folder in /public/sites/ waar de Flux-gegenereerde hero-frames staan.
+   *  Als de bestanden ontbreken, valt de page terug op stub-frames. */
+  frameFolder?: string;
+};
+
+// Phase 2: hardgecodeerde demo-case, maar nu met optionele real-frames folder.
+// Phase 3+: vervangen door Supabase-lookup op slug.
+const DEMO_SITES: Record<string, DemoSpec> = {
   "trattoria-sole": {
     slug: "trattoria-sole",
+    frameFolder: "italian-restaurant",
     business: {
       name: "Trattoria Sole",
       tagline:
@@ -102,17 +111,41 @@ export async function generateStaticParams() {
   return Object.keys(DEMO_SITES).map((slug) => ({ slug }));
 }
 
+async function tryLoadRealFrames(folder: string): Promise<string[] | null> {
+  const dir = path.join(process.cwd(), "public", "sites", folder);
+  const required = ["exterior.jpg", "doorway.jpg", "interior.jpg"];
+  try {
+    for (const f of required) {
+      await fs.access(path.join(dir, f));
+    }
+    return required.map((f) => `/sites/${folder}/${f}`);
+  } catch {
+    return null; // niet alle frames aanwezig — terugvallen op stubs
+  }
+}
+
 export default async function NextLevelSitePage({
   params,
 }: {
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const base = DEMO_SITES[slug];
-  if (!base) notFound();
+  const { frameFolder, ...base } = DEMO_SITES[slug] ?? {};
+  if (!base.slug) notFound();
 
-  const frames = generateStubFrames();
-  const data: NextLevelSiteData = { ...base, frames };
+  // Probeer eerst echte Flux-gegenereerde hero-frames te laden.
+  // Als die er niet zijn (bv. lokaal voor 'npm run dev' wordt aangeroepen
+  // op een verse checkout), valt de page terug op de stub SVG-sequence.
+  let frames: string[] = generateStubFrames();
+  let heroFrames: string[] | null = null;
+  if (frameFolder) {
+    heroFrames = await tryLoadRealFrames(frameFolder);
+  }
+  if (heroFrames && heroFrames.length === 3) {
+    frames = heroFrames; // alleen 3 hero-frames bij real-mode
+  }
 
-  return <SiteExperience data={data} />;
+  const data: NextLevelSiteData = { ...(base as Omit<NextLevelSiteData, "frames">), frames };
+
+  return <SiteExperience data={data} useCinematicShots={heroFrames !== null} />;
 }
