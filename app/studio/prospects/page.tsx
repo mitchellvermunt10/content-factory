@@ -505,6 +505,64 @@ function ProspectCard({ prospect }: { prospect: ProspectEntry }) {
     toast.success("Gekopieerd");
   }
 
+  // Verstuur via Resend (platform) — maakt outreach-record + verzendt email
+  async function sendViaPlatform() {
+    let ownerEmail: string | null = null;
+    try {
+      const cached = localStorage.getItem("content-factory:owner-email");
+      if (cached?.includes("@")) ownerEmail = cached;
+    } catch {
+      // niet beschikbaar
+    }
+    if (!ownerEmail) {
+      toast.error("Owner-email niet ingesteld", {
+        description: "Ga naar /studio en vul je email in bij Owner sync.",
+      });
+      return;
+    }
+    if (!prospect.ownerEmail) {
+      toast.error("Geen prospect-email", {
+        description: "Sonnet heeft geen email gevonden voor deze prospect.",
+      });
+      return;
+    }
+    setTracking(true);
+    try {
+      const res = await fetch("/api/outreach/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ownerEmail,
+          prospectName: prospect.name,
+          prospectEmail: prospect.ownerEmail,
+          prospectCity: prospect.city,
+          prospectVertical: prospect.suggestedBrief.businessType,
+          prospectWebsite: prospect.websiteUrl ?? null,
+          prospectInstagram: prospect.instagramHandle ?? null,
+          subject: prospect.emailDraft.subject,
+          body: prospect.emailDraft.body,
+          replyTo: ownerEmail,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(
+          (err as { error?: string }).error ?? `HTTP ${res.status}`
+        );
+      }
+      setTracked(true);
+      toast.success("Email verstuurd + getrackt in pipeline", {
+        description: `Naar ${prospect.ownerEmail}`,
+      });
+    } catch (err) {
+      toast.error("Verzenden mislukt", {
+        description: err instanceof Error ? err.message : "Onbekende fout",
+      });
+    } finally {
+      setTracking(false);
+    }
+  }
+
   // Track als verzonden: maak outreach-record + status='sent'
   async function markAsSent() {
     let ownerEmail: string | null = null;
@@ -705,25 +763,36 @@ function ProspectCard({ prospect }: { prospect: ProspectEntry }) {
         <pre className="mt-2 whitespace-pre-wrap font-sans text-sm leading-relaxed text-text-muted">
           {prospect.emailDraft.body}
         </pre>
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-border pt-3">
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
           <p className="text-xs text-text-muted">
-            Email verstuurd? Track 'm in je pipeline.
+            Verstuur direct of plak in eigen mail-client.
           </p>
-          <Button
-            variant={tracked ? "ghost" : "accent"}
-            size="sm"
-            onClick={markAsSent}
-            disabled={tracking || tracked}
-          >
-            {tracking ? (
-              <Loader2 className="size-3 animate-spin" />
-            ) : tracked ? (
-              <Check className="size-3" />
-            ) : (
-              <Send className="size-3" />
-            )}
-            {tracked ? "Toegevoegd" : "Markeer als verzonden"}
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              variant={tracked ? "ghost" : "accent"}
+              size="sm"
+              onClick={sendViaPlatform}
+              disabled={tracking || tracked || !prospect.ownerEmail}
+            >
+              {tracking ? (
+                <Loader2 className="size-3 animate-spin" />
+              ) : (
+                <Send className="size-3" />
+              )}
+              Verstuur via platform
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={markAsSent}
+              disabled={tracking || tracked}
+            >
+              {tracked ? (
+                <Check className="size-3" />
+              ) : null}
+              Markeer als verzonden
+            </Button>
+          </div>
         </div>
       </div>
     </div>
