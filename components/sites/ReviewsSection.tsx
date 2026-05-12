@@ -18,7 +18,7 @@ export function ReviewsSection({ socialProof }: Props) {
   if (testimonials.length === 0) return null;
 
   return (
-    <Scene vhMultiplier={2}>
+    <Scene vhMultiplier={2.4}>
       <div className="relative w-full">
         {/* Letterbox-style dark band achter de reviews voor leesbaarheid.
             Fade-in/out aan boven- en onderkant zodat het niet harde kantjes
@@ -31,8 +31,8 @@ export function ReviewsSection({ socialProof }: Props) {
         <div className="relative mx-auto max-w-4xl px-6">
           <SceneText
             enterStart={0.0}
-            enterEnd={0.22}
-            exitStart={0.88}
+            enterEnd={0.12}
+            exitStart={0.95}
             exitEnd={1.0}
             travel={32}
           >
@@ -47,10 +47,10 @@ export function ReviewsSection({ socialProof }: Props) {
           </SceneText>
 
           <SceneStagger
-            windowStart={0.15}
-            windowEnd={0.65}
-            perItemDuration={0.28}
-            exitStart={0.88}
+            windowStart={0.12}
+            windowEnd={0.5}
+            perItemDuration={0.2}
+            exitStart={0.95}
             exitEnd={1.0}
             travel={28}
             className="mt-16 flex flex-col gap-12 sm:gap-16"

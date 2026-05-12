@@ -124,12 +124,12 @@ export function SiteExperience({
         {/* Scenes — zitten boven de pinned canvas dankzij z-10 */}
         <div className="relative z-10 -mt-[100vh]">
           {/* Scene 1 — Intro: gevel + bedrijfsnaam */}
-          <Scene vhMultiplier={1.5}>
+          <Scene vhMultiplier={1.8}>
             <SceneText
-              enterStart={0.05}
-              enterEnd={0.4}
-              exitStart={0.75}
-              exitEnd={0.95}
+              enterStart={0.0}
+              enterEnd={0.18}
+              exitStart={0.92}
+              exitEnd={1.0}
               travel={48}
               className="px-6 text-center"
             >
@@ -151,12 +151,12 @@ export function SiteExperience({
           </Scene>
 
           {/* Scene 2 — Aankomst: je bent binnen */}
-          <Scene vhMultiplier={1.5}>
+          <Scene vhMultiplier={1.8}>
             <SceneText
-              enterStart={0.1}
-              enterEnd={0.45}
-              exitStart={0.75}
-              exitEnd={0.95}
+              enterStart={0.0}
+              enterEnd={0.2}
+              exitStart={0.92}
+              exitEnd={1.0}
               travel={56}
               className="px-6 text-center"
             >
@@ -180,13 +180,13 @@ export function SiteExperience({
           </Scene>
 
           {/* Scene 3 — Menu / diensten */}
-          <Scene vhMultiplier={2}>
+          <Scene vhMultiplier={2.6}>
             <div className="w-full px-6">
               <div className="mx-auto max-w-4xl">
                 <SceneText
                   enterStart={0.0}
-                  enterEnd={0.25}
-                  exitStart={0.85}
+                  enterEnd={0.12}
+                  exitStart={0.95}
                   exitEnd={1.0}
                   travel={40}
                 >
@@ -200,9 +200,9 @@ export function SiteExperience({
 
                 <SceneStagger
                   windowStart={0.08}
-                  windowEnd={0.55}
-                  perItemDuration={0.18}
-                  exitStart={0.85}
+                  windowEnd={0.4}
+                  perItemDuration={0.16}
+                  exitStart={0.95}
                   exitEnd={1.0}
                   travel={28}
                   className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 md:grid-cols-2"
@@ -240,13 +240,13 @@ export function SiteExperience({
           ) : null}
 
           {/* Scene 4 — Sfeerbeelden grid */}
-          <Scene vhMultiplier={1.5}>
+          <Scene vhMultiplier={2.2}>
             <div className="w-full px-6">
               <div className="mx-auto max-w-5xl">
                 <SceneText
                   enterStart={0.0}
-                  enterEnd={0.22}
-                  exitStart={0.88}
+                  enterEnd={0.12}
+                  exitStart={0.95}
                   exitEnd={1.0}
                   travel={40}
                 >
@@ -260,9 +260,9 @@ export function SiteExperience({
 
                 <SceneStagger
                   windowStart={0.08}
-                  windowEnd={0.55}
-                  perItemDuration={0.2}
-                  exitStart={0.88}
+                  windowEnd={0.42}
+                  perItemDuration={0.18}
+                  exitStart={0.92}
                   exitEnd={1.0}
                   travel={24}
                   className="mt-12 grid grid-cols-3 gap-2 md:gap-3"
@@ -286,9 +286,9 @@ export function SiteExperience({
                 {/* Subtiele 'over ons' uitnodiging — verschijnt nadat de
                     foto's zijn opgekomen, leidt naar /verhaal */}
                 <SceneText
-                  enterStart={0.55}
-                  enterEnd={0.78}
-                  exitStart={0.88}
+                  enterStart={0.45}
+                  enterEnd={0.6}
+                  exitStart={0.95}
                   exitEnd={1.0}
                   travel={16}
                   className="mt-12 text-center"
@@ -306,11 +306,11 @@ export function SiteExperience({
           </Scene>
 
           {/* Scene 5 — Contact / reservering */}
-          <Scene vhMultiplier={1.5}>
+          <Scene vhMultiplier={1.8}>
             <SceneText
-              enterStart={0.05}
-              enterEnd={0.4}
-              exitStart={0.85}
+              enterStart={0.0}
+              enterEnd={0.18}
+              exitStart={0.95}
               exitEnd={1.0}
               travel={48}
               className="w-full px-6 text-center"
