@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SubPageShell } from "@/components/sites/SubPageShell";
 import { loadSiteData, listSlugs } from "@/lib/sites/data";
+import { breadcrumbSchema, renderSchemaJson } from "@/lib/sites/schema";
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://contentfactory.nextlevelsites.nl";
 
 export async function generateMetadata({
   params,
@@ -11,9 +15,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await loadSiteData(slug);
   if (!result) return { title: "Niet gevonden" };
+  const { business, isDemo } = result.data;
+  const url = `${BASE_URL}/sites/${slug}/verhaal`;
   return {
-    title: `Verhaal — ${result.data.business.name}`,
-    description: `Het verhaal achter ${result.data.business.name}.`,
+    title: `Ons verhaal — ${business.name} in ${business.city}`,
+    description: `Het verhaal achter ${business.name} in ${business.city}.`,
+    alternates: { canonical: url },
+    openGraph: { url, locale: "nl_NL", type: "website" },
+    robots: isDemo
+      ? { index: false, follow: false }
+      : { index: true, follow: true },
   };
 }
 
@@ -31,6 +42,14 @@ export default async function VerhaalPage({
   if (!result) notFound();
   const { data } = result;
   const story = data.story;
+  const homeUrl = `${BASE_URL}/sites/${slug}`;
+  const url = `${BASE_URL}/sites/${slug}/verhaal`;
+  const schemaJson = renderSchemaJson(
+    breadcrumbSchema([
+      { name: data.business.name, url: homeUrl },
+      { name: "Verhaal", url },
+    ])
+  );
 
   return (
     <SubPageShell
@@ -40,6 +59,13 @@ export default async function VerhaalPage({
       heroTitle={story?.headline ?? data.business.name}
       heroSubtitle={story?.intro}
     >
+      {schemaJson ? (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: schemaJson }}
+        />
+      ) : null}
       <div className="mx-auto max-w-3xl px-6 py-20 sm:py-28">
         {story?.sections.map((section, i) => (
           <section

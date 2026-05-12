@@ -36,6 +36,33 @@ interface ImageSequenceProps {
  *
  * Performance: één canvas, geen DOM-thrash. requestAnimationFrame-throttled.
  */
+/**
+ * Detect of we 'cinematic mode' aankunnen (snelle connectie + geen
+ * reduced-motion). Op trage 3G/4G of bij accessibility-instelling
+ * verlagen we naar alleen het eerste frame om LCP te beschermen.
+ */
+function shouldRenderFullSequence(): boolean {
+  if (typeof window === "undefined") return true;
+  // Reduced motion (accessibility) → static hero
+  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    return false;
+  }
+  // Network Information API — beschikbaar in Chromium-based browsers
+  const conn = (
+    navigator as Navigator & {
+      connection?: { effectiveType?: string; saveData?: boolean };
+    }
+  ).connection;
+  if (conn?.saveData) return false;
+  if (
+    conn?.effectiveType &&
+    (conn.effectiveType === "slow-2g" || conn.effectiveType === "2g" || conn.effectiveType === "3g")
+  ) {
+    return false;
+  }
+  return true;
+}
+
 export function ImageSequence({
   frames,
   scrollContainerRef,
@@ -49,18 +76,32 @@ export function ImageSequence({
   const lastFractionalRef = useRef<number>(-1);
   const rafRef = useRef<number>(0);
   const [loaded, setLoaded] = useState(0);
+  const [fullSequence, setFullSequence] = useState(true);
 
-  // Preload alle frames
+  // Beslis bij mount of we cinematic OF lichtgewicht renderen
+  useEffect(() => {
+    setFullSequence(shouldRenderFullSequence());
+  }, []);
+
+  // Op lichte modus: alleen frame 0 laden + tonen, geen scroll-scrubbing
+  const activeFrames = fullSequence ? frames : frames.slice(0, 1);
+
+  // Preload frames — frame 0 heeft priority, rest lazy in batches
   useEffect(() => {
     let cancelled = false;
     imagesRef.current = [];
     setLoaded(0);
-
-    const total = frames.length;
     let done = 0;
 
-    frames.forEach((src, i) => {
+    // Eerste frame eager met fetchpriority high (LCP candidate)
+    activeFrames.forEach((src, i) => {
       const img = new Image();
+      if (i === 0) {
+        img.fetchPriority = "high";
+      } else {
+        img.fetchPriority = "low";
+        img.loading = "lazy";
+      }
       img.onload = () => {
         if (cancelled) return;
         done += 1;
@@ -78,9 +119,8 @@ export function ImageSequence({
     return () => {
       cancelled = true;
     };
-    // We willen deze pre-load alleen runnen bij frame-list change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [frames]);
+  }, [activeFrames]);
 
   // Canvas sizing — DPR-aware
   useEffect(() => {

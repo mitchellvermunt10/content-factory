@@ -17,20 +17,43 @@ export interface SceneSpec {
   content: Record<string, unknown>;
 }
 
+/** Gestructureerd adres voor Schema.org + lokale SEO */
+export interface StructuredAddress {
+  street: string; // "Voorstraat 84"
+  postalCode: string; // "3512 AS"
+  city: string;
+  region?: string; // "Utrecht" (provincie)
+  country: string; // "NL"
+  formatted: string; // "Voorstraat 84, 3512 AS Utrecht"
+}
+
 export interface NextLevelSiteData {
   slug: string;
+  /** Markeer als demo zodat sitemap/robots 'm uitsluiten en noindex aan staat */
+  isDemo?: boolean;
   business: {
     name: string;
     tagline: string;
-    vertical: string; // restaurant, salon, garage...
+    vertical: string;
+    /** Schema.org vertical type, bv. "Restaurant", "BeautySalon", "AutoRepair", "Dentist" */
+    schemaType?: "Restaurant" | "BeautySalon" | "AutoRepair" | "Dentist" | "LocalBusiness";
     city: string;
-    address?: string;
+    address?: StructuredAddress;
+    /** Latitude/longitude voor Google's local pack */
+    geo?: { lat: number; lng: number };
+    /** Cuisine voor restaurants, type-of-service voor andere verticals */
+    cuisine?: string;
+    /** "€", "€€", "€€€", "€€€€" */
+    priceRange?: "€" | "€€" | "€€€" | "€€€€";
     phone?: string;
     reservationUrl?: string;
-    /** WhatsApp-nummer in internationaal formaat (+31612345678) */
     whatsapp?: string;
-    /** Optioneel: bericht dat WhatsApp-link automatisch invult */
     whatsappMessage?: string;
+    /** Externe profielen voor sameAs in Schema (IG, FB, Google Business) */
+    sameAs?: string[];
+    /** Voor footer-compliance */
+    kvk?: string;
+    btw?: string;
   };
   /** Volledige frame-sequence (data URI of remote URL) */
   frames: string[];
@@ -90,6 +113,23 @@ export interface NextLevelSiteData {
   /** Extra contact-velden */
   email?: string;
   parkingInfo?: string;
+
+  /** Sociaal-bewijs blok — gebruikt door SocialProofStrip + ReviewsSection */
+  socialProof?: {
+    google?: {
+      rating: number; // 4.8
+      count: number; // 312
+      url?: string;
+    };
+    awards?: { name: string; year?: number; rank?: string }[]; // bv. Lekker500 #84
+    press?: { name: string; quote?: string; url?: string; logoUrl?: string }[];
+    testimonials?: {
+      quote: string;
+      author: string;
+      source?: string; // "Google review, maart 2026"
+      date?: string;
+    }[];
+  };
 
   brand?: {
     accentColor?: string;

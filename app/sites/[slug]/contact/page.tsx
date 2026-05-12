@@ -3,6 +3,14 @@ import { notFound } from "next/navigation";
 import { MapPin, Phone, Mail, Car } from "lucide-react";
 import { SubPageShell } from "@/components/sites/SubPageShell";
 import { loadSiteData, listSlugs } from "@/lib/sites/data";
+import {
+  businessSchema,
+  breadcrumbSchema,
+  renderSchemaJson,
+} from "@/lib/sites/schema";
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://contentfactory.nextlevelsites.nl";
 
 export async function generateMetadata({
   params,
@@ -12,9 +20,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await loadSiteData(slug);
   if (!result) return { title: "Niet gevonden" };
+  const { business, isDemo } = result.data;
+  const url = `${BASE_URL}/sites/${slug}/contact`;
   return {
-    title: `Contact — ${result.data.business.name}`,
-    description: `Adres, telefoonnummer en route naar ${result.data.business.name}.`,
+    title: `Contact — ${business.name} in ${business.city}`,
+    description: `Adres, telefoonnummer, openingstijden en route naar ${business.name} in ${business.city}.`,
+    alternates: { canonical: url },
+    openGraph: { url, locale: "nl_NL", type: "website" },
+    robots: isDemo
+      ? { index: false, follow: false }
+      : { index: true, follow: true },
   };
 }
 
@@ -46,11 +61,21 @@ export default async function ContactPage({
   const { data } = result;
 
   const mapsUrl = data.business.address
-    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.business.address)}`
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(data.business.address.formatted)}`
     : null;
   const mapEmbedUrl = data.business.address
-    ? `https://www.google.com/maps?q=${encodeURIComponent(data.business.address)}&output=embed`
+    ? `https://www.google.com/maps?q=${encodeURIComponent(data.business.address.formatted)}&output=embed`
     : null;
+
+  const homeUrl = `${BASE_URL}/sites/${slug}`;
+  const url = `${BASE_URL}/sites/${slug}/contact`;
+  const schemaJson = renderSchemaJson(
+    businessSchema(data, homeUrl),
+    breadcrumbSchema([
+      { name: data.business.name, url: homeUrl },
+      { name: "Contact", url },
+    ])
+  );
 
   return (
     <SubPageShell
@@ -60,6 +85,13 @@ export default async function ContactPage({
       heroTitle="Vind ons, bel ons"
       heroSubtitle={`${data.business.name} in ${data.business.city}.`}
     >
+      {schemaJson ? (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: schemaJson }}
+        />
+      ) : null}
       <div className="mx-auto max-w-5xl px-6 py-20 sm:py-28">
         <div className="grid gap-12 md:grid-cols-2 md:gap-16">
           {/* Kolom 1 — gegevens */}
@@ -71,9 +103,11 @@ export default async function ContactPage({
                   <p className="font-mono text-xs uppercase tracking-[0.3em] text-white/50">
                     Adres
                   </p>
-                  <p className="mt-2 font-serif text-xl leading-snug">
-                    {data.business.address}
-                  </p>
+                  <address className="mt-2 font-serif text-xl not-italic leading-snug">
+                    {data.business.address.street}
+                    <br />
+                    {data.business.address.postalCode} {data.business.address.city}
+                  </address>
                   {mapsUrl ? (
                     <a
                       href={mapsUrl}

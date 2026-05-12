@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SubPageShell } from "@/components/sites/SubPageShell";
 import { loadSiteData, listSlugs } from "@/lib/sites/data";
+import { menuSchema, breadcrumbSchema, renderSchemaJson } from "@/lib/sites/schema";
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://contentfactory.nextlevelsites.nl";
 
 export async function generateMetadata({
   params,
@@ -11,9 +15,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await loadSiteData(slug);
   if (!result) return { title: "Niet gevonden" };
+  const { business, isDemo } = result.data;
+  const url = `${BASE_URL}/sites/${slug}/menu`;
   return {
-    title: `Kaart — ${result.data.business.name}`,
-    description: `De volledige kaart van ${result.data.business.name} in ${result.data.business.city}.`,
+    title: `Kaart van ${business.name} — ${business.vertical} in ${business.city}`,
+    description: `De volledige kaart van ${business.name} in ${business.city}.`,
+    alternates: { canonical: url },
+    openGraph: { url, locale: "nl_NL", type: "website" },
+    robots: isDemo
+      ? { index: false, follow: false }
+      : { index: true, follow: true },
   };
 }
 
@@ -32,14 +43,31 @@ export default async function MenuPage({
   const { data } = result;
   const categories = data.menuCategories ?? [];
 
+  const url = `${BASE_URL}/sites/${slug}/menu`;
+  const homeUrl = `${BASE_URL}/sites/${slug}`;
+  const schemaJson = renderSchemaJson(
+    menuSchema(data, homeUrl),
+    breadcrumbSchema([
+      { name: data.business.name, url: homeUrl },
+      { name: "Kaart", url },
+    ])
+  );
+
   return (
     <SubPageShell
       data={data}
       heroImage="/sites/italian-restaurant/post-1-food.jpg"
       heroEyebrow="De kaart"
-      heroTitle="Wat we vandaag voor je hebben"
+      heroTitle={`Kaart van ${data.business.name}`}
       heroSubtitle="Wij koken met seizoensingrediënten, dus de kaart verschuift mee. Dit is een momentopname — bel of stap binnen voor de specials van vanavond."
     >
+      {schemaJson ? (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: schemaJson }}
+        />
+      ) : null}
       <div className="mx-auto max-w-4xl px-6 py-20 sm:py-28">
         {categories.length === 0 ? (
           <p className="text-center text-white/60">

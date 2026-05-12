@@ -4,6 +4,10 @@ import { notFound } from "next/navigation";
 import { ArrowRight, Phone, MessageCircle } from "lucide-react";
 import { SubPageShell } from "@/components/sites/SubPageShell";
 import { loadSiteData, listSlugs } from "@/lib/sites/data";
+import { breadcrumbSchema, renderSchemaJson } from "@/lib/sites/schema";
+
+const BASE_URL =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://contentfactory.nextlevelsites.nl";
 
 export async function generateMetadata({
   params,
@@ -13,9 +17,16 @@ export async function generateMetadata({
   const { slug } = await params;
   const result = await loadSiteData(slug);
   if (!result) return { title: "Niet gevonden" };
+  const { business, isDemo } = result.data;
+  const url = `${BASE_URL}/sites/${slug}/reserveren`;
   return {
-    title: `Reserveren — ${result.data.business.name}`,
-    description: `Reserveer een tafel bij ${result.data.business.name} in ${result.data.business.city}.`,
+    title: `Reserveren bij ${business.name} — ${business.vertical} ${business.city}`,
+    description: `Reserveer een tafel bij ${business.name} in ${business.city}. Online, telefoon of WhatsApp.`,
+    alternates: { canonical: url },
+    openGraph: { url, locale: "nl_NL", type: "website" },
+    robots: isDemo
+      ? { index: false, follow: false }
+      : { index: true, follow: true },
   };
 }
 
@@ -54,6 +65,15 @@ export default async function ReserverenPage({
   if (!result) notFound();
   const { data } = result;
 
+  const homeUrl = `${BASE_URL}/sites/${slug}`;
+  const url = `${BASE_URL}/sites/${slug}/reserveren`;
+  const schemaJson = renderSchemaJson(
+    breadcrumbSchema([
+      { name: data.business.name, url: homeUrl },
+      { name: "Reserveren", url },
+    ])
+  );
+
   const waDigits = data.business.whatsapp?.replace(/[^\d]/g, "") ?? null;
   const waUrl = waDigits
     ? `https://wa.me/${waDigits}?text=${encodeURIComponent(
@@ -70,6 +90,13 @@ export default async function ReserverenPage({
       heroTitle="Kom langs"
       heroSubtitle="Liever direct gebeld of geappt? Drie tappen of belletje en je tafel staat klaar."
     >
+      {schemaJson ? (
+        <script
+          type="application/ld+json"
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{ __html: schemaJson }}
+        />
+      ) : null}
       <div className="mx-auto max-w-4xl px-6 py-20 sm:py-28">
         {/* Drie primaire kanalen */}
         <div className="grid gap-4 sm:grid-cols-3">

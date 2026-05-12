@@ -6,6 +6,7 @@ import { Calendar, Phone, MapPin } from "lucide-react";
 interface Props {
   reservationUrl?: string;
   phone?: string;
+  /** Geformateerd adres-string voor Google Maps query */
   address?: string;
   scrollContainerRef: React.RefObject<HTMLElement | null>;
   /** Globale scroll-progress vanaf waar de bar verschijnt. Default 0.22. */

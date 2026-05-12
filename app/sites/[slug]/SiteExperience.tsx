@@ -9,6 +9,10 @@ import { CinematicCanvas } from "@/components/sites/CinematicCanvas";
 import { Scene, SceneText, SceneStagger } from "@/components/sites/Scene";
 import { StickyContactBar } from "@/components/sites/StickyContactBar";
 import { WhatsAppFAB } from "@/components/sites/WhatsAppFAB";
+import { ReviewsSection } from "@/components/sites/ReviewsSection";
+import { SocialProofInline } from "@/components/sites/SocialProofStrip";
+import { CookieBanner } from "@/components/sites/CookieBanner";
+import { SiteFooter } from "@/components/sites/SiteFooter";
 import { buildRestaurantShots } from "@/lib/sites/shotPresets";
 import type { CinematicShot } from "@/components/sites/CinematicCanvas";
 import type { NextLevelSiteData } from "@/lib/sites/types";
@@ -138,6 +142,11 @@ export function SiteExperience({
               <p className="mt-8 max-w-xl text-balance text-base text-white/70 md:text-lg">
                 {data.business.tagline}
               </p>
+              {data.socialProof ? (
+                <div className="mt-8">
+                  <SocialProofInline socialProof={data.socialProof} />
+                </div>
+              ) : null}
             </SceneText>
           </Scene>
 
@@ -225,6 +234,11 @@ export function SiteExperience({
             </div>
           </Scene>
 
+          {/* Reviews — sociaal bewijs tussen menu en sfeer */}
+          {data.socialProof?.testimonials && data.socialProof.testimonials.length > 0 ? (
+            <ReviewsSection socialProof={data.socialProof} />
+          ) : null}
+
           {/* Scene 4 — Sfeerbeelden grid */}
           <Scene vhMultiplier={1.5}>
             <div className="w-full px-6">
@@ -311,7 +325,7 @@ export function SiteExperience({
                 {data.business.address ? (
                   <span className="inline-flex items-center gap-2">
                     <MapPin className="size-4" />
-                    {data.business.address}
+                    {data.business.address.formatted}
                   </span>
                 ) : null}
                 {data.business.phone ? (
@@ -338,17 +352,13 @@ export function SiteExperience({
         </div>
 
         {/* Footer — buiten de pinned-canvas zone */}
-        <footer className="relative z-10 border-t border-white/10 bg-black px-6 py-12 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
-            Gemaakt door Next Level Sites
-          </p>
-        </footer>
+        <SiteFooter data={data} />
 
         {/* Sticky CTAs — alleen na de hero zichtbaar */}
         <StickyContactBar
           reservationUrl={data.business.reservationUrl}
           phone={data.business.phone}
-          address={data.business.address}
+          address={data.business.address?.formatted}
           scrollContainerRef={containerRef}
           appearAfter={0.22}
         />
@@ -359,6 +369,7 @@ export function SiteExperience({
             `Hoi! Ik bekeek net jullie pagina van ${data.business.name} en heb een vraag.`
           }
         />
+        <CookieBanner />
       </main>
     </SmoothScrollProvider>
   );

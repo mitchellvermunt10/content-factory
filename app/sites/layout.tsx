@@ -8,14 +8,9 @@ const cormorant = Cormorant_Garamond({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  robots: {
-    // Voorlopig niet indexeren — demo-cases zijn voor prospects, niet voor Google.
-    // In Phase 5 (echte klanten) zetten we dit per-slug aan.
-    index: false,
-    follow: false,
-  },
-};
+// Robots-policy is per-slug via generateMetadata in app/sites/[slug]/page.tsx.
+// Demo-cases (isDemo: true in data.ts) krijgen noindex. Echte klanten staan
+// gewoon in Google.
 
 export default function SitesLayout({
   children,

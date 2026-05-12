@@ -17,19 +17,37 @@ type DemoSpec = Omit<NextLevelSiteData, "frames"> & {
 const DEMO_SITES: Record<string, DemoSpec> = {
   "trattoria-sole": {
     slug: "trattoria-sole",
+    isDemo: true,
     frameFolder: "italian-restaurant",
     business: {
       name: "Trattoria Sole",
       tagline:
         "Een Italiaanse keuken die niet probeert te imponeren. Alleen te smaken.",
       vertical: "Italiaans restaurant",
+      schemaType: "Restaurant",
       city: "Utrecht",
-      address: "Voorstraat 84, 3512 AS Utrecht",
+      address: {
+        street: "Voorstraat 84",
+        postalCode: "3512 AS",
+        city: "Utrecht",
+        region: "Utrecht",
+        country: "NL",
+        formatted: "Voorstraat 84, 3512 AS Utrecht",
+      },
+      geo: { lat: 52.0934, lng: 5.1235 },
+      cuisine: "Italiaans",
+      priceRange: "€€",
       phone: "030 234 56 78",
       reservationUrl: "https://example.com/reserveren",
       whatsapp: "+31612345678",
       whatsappMessage:
         "Hoi! Ik wil graag een tafel reserveren bij Trattoria Sole.",
+      sameAs: [
+        "https://www.instagram.com/trattoriasole.demo",
+        "https://www.facebook.com/trattoriasole.demo",
+      ],
+      kvk: "98765432",
+      btw: "NL001234567B01",
     },
     scenes: [
       { id: "intro", kind: "intro", frameRange: { from: 0, to: 14 }, content: {} },
@@ -226,6 +244,50 @@ const DEMO_SITES: Record<string, DemoSpec> = {
     email: "ciao@trattoriasole.nl",
     parkingInfo:
       "Gratis straat-parkeren na 18:00 in de wijk. Betaald: P-Springweg op 4 min loopafstand.",
+    socialProof: {
+      google: {
+        rating: 4.8,
+        count: 312,
+        url: "https://maps.google.com/?cid=trattoria-sole-utrecht",
+      },
+      awards: [
+        { name: "Lekker500", year: 2026, rank: "#84" },
+        { name: "Iens beste van Utrecht", year: 2025 },
+      ],
+      press: [
+        {
+          name: "Volkskrant Magazine",
+          quote: "Een trattoria zoals trattoria's bedoeld waren.",
+        },
+        {
+          name: "Misset Horeca",
+          quote: "Eerlijk Italiaans op een plek waar de chef je nog zelf bedient.",
+        },
+      ],
+      testimonials: [
+        {
+          quote:
+            "We kwamen voor pasta, we bleven voor de chef. Drie uur later wilden we eigenlijk niet meer naar huis.",
+          author: "Renée",
+          source: "Google review",
+          date: "maart 2026",
+        },
+        {
+          quote:
+            "De tagliatelle al ragù is de beste die ik buiten Bologna heb gegeten. Geen overdrijving.",
+          author: "Tomas",
+          source: "Iens",
+          date: "januari 2026",
+        },
+        {
+          quote:
+            "Geen poespas. Gewoon goed eten, een mooie wijn en iemand die er trots op is. Wat je hoopt te vinden.",
+          author: "Lisa",
+          source: "Google review",
+          date: "december 2025",
+        },
+      ],
+    },
   },
 };
 

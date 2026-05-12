@@ -5,6 +5,8 @@ import { SmoothScrollProvider } from "@/components/sites/SmoothScrollProvider";
 import { SiteNav } from "@/components/sites/SiteNav";
 import { StickyContactBar } from "@/components/sites/StickyContactBar";
 import { WhatsAppFAB } from "@/components/sites/WhatsAppFAB";
+import { CookieBanner } from "@/components/sites/CookieBanner";
+import { SiteFooter } from "@/components/sites/SiteFooter";
 import type { NextLevelSiteData } from "@/lib/sites/types";
 
 interface Props {
@@ -83,16 +85,12 @@ export function SubPageShell({
         <div className="relative z-10">{children}</div>
 
         {/* Footer */}
-        <footer className="relative z-10 border-t border-white/10 bg-black px-6 py-12 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
-            Gemaakt door Next Level Sites
-          </p>
-        </footer>
+        <SiteFooter data={data} />
 
         <StickyContactBar
           reservationUrl={data.business.reservationUrl}
           phone={data.business.phone}
-          address={data.business.address}
+          address={data.business.address?.formatted}
           scrollContainerRef={containerRef}
           appearAfter={0.05}
         />
@@ -103,6 +101,7 @@ export function SubPageShell({
             `Hoi! Ik bekeek net jullie pagina van ${data.business.name} en heb een vraag.`
           }
         />
+        <CookieBanner />
       </main>
     </SmoothScrollProvider>
   );
