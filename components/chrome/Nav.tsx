@@ -11,8 +11,8 @@ const links = [
   { label: "Demo", href: "/sites/trattoria-sole" },
   { label: "Werkwijze", href: "/#werkwijze" },
   { label: "Pricing", href: "/#pricing" },
+  { label: "Voor bureaus", href: "/partners" },
   { label: "Campagnes", href: "/ai-content-factory" },
-  { label: "Cases", href: "/cases" },
 ];
 
 export function Nav() {
