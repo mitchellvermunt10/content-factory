@@ -4,62 +4,26 @@ import { useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight, Calendar } from "lucide-react";
 import { ImageSequence } from "@/components/sites/ImageSequence";
-import {
-  CinematicCanvas,
-  type CinematicShot,
-} from "@/components/sites/CinematicCanvas";
 import { Scene, SceneText } from "@/components/sites/Scene";
 import { SmoothScrollProvider } from "@/components/sites/SmoothScrollProvider";
 
-// Trattoria Kling dolly frames — onze échte werk als hero showcase
-const TRATTORIA_FRAMES = Array.from(
+// Agency hero Kling-frames — cinematic dolly-in naar laptop met website,
+// representeert wat WIJ maken voor de bezoeker (niet één specifieke klant).
+const AGENCY_HERO_FRAMES = Array.from(
   { length: 121 },
   (_, i) =>
-    `/sites/italian-restaurant/intro/frames/frame_${String(i + 1).padStart(4, "0")}.jpg`
+    `/sites/lifestyle/agency-hero/frames/frame_${String(i + 1).padStart(4, "0")}.jpg`
 );
-
-// Vertical-showcase shots na de dolly — Ken Burns over concept renders
-const VERTICAL_SHOTS: CinematicShot[] = [
-  {
-    imageUrl: "/sites/concepts/salon.jpg",
-    startProgress: 0.32,
-    endProgress: 0.58,
-    scale: { from: 1.15, to: 1.0 },
-    offsetY: { from: 0.02, to: -0.02 },
-    warmth: { from: 0.08, to: 0.18 },
-    brightness: { from: 0.95, to: 1.0 },
-    vignette: { from: 0.18, to: 0.08 },
-  },
-  {
-    imageUrl: "/sites/concepts/garage.jpg",
-    startProgress: 0.55,
-    endProgress: 0.8,
-    scale: { from: 1.12, to: 1.0 },
-    warmth: { from: -0.05, to: 0.05 },
-    brightness: { from: 0.92, to: 1.0 },
-    vignette: { from: 0.2, to: 0.1 },
-  },
-  {
-    imageUrl: "/sites/concepts/tandarts.jpg",
-    startProgress: 0.77,
-    endProgress: 1.0,
-    scale: { from: 1.08, to: 1.0 },
-    warmth: { from: 0.05, to: 0.12 },
-    brightness: { from: 0.95, to: 1.0 },
-    vignette: { from: 0.12, to: 0.22 },
-  },
-];
 
 /**
  * Cinematic scroll-driven hero voor de agency homepage.
  *
- * Architectuur identiek aan /sites/[slug] SiteExperience maar dan gericht
- * op een agency-pitch over meerdere verticals:
- * 1. Scene 1 (0-28% scroll): Trattoria Kling dolly speelt af — onze échte work
- * 2. Scene 2-4 (32-100%): Crossfade Ken Burns door salon/garage/tandarts
- *    concepts — de breedte van wat we maken
+ * 1. Scene 1 (0-50% scroll): Kling dolly-in toward a laptop showing a
+ *    beautiful website — vertelt direct WAT we maken
+ * 2. Scene 2 (50-100%): Verticals-showcase met bridging context —
+ *    "Hetzelfde format voor elk vakgebied" + 3 concept-stills naast elkaar
  *
- * Na deze ~5vh van cinematic experience volgt normale homepage-content.
+ * Na deze ~3.5vh van cinematic experience volgt normale homepage-content.
  */
 export function AgencyHeroExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,24 +36,15 @@ export function AgencyHeroExperience() {
           className="pointer-events-none sticky top-0 z-0 h-screen w-full"
           aria-hidden="true"
         >
-          {/* Verticals Ken Burns onderaan — komt op vanaf 32% */}
-          <CinematicCanvas
-            shots={VERTICAL_SHOTS}
-            scrollContainerRef={
-              containerRef as React.RefObject<HTMLElement | null>
-            }
-            fadeOverlap={0.08}
-            className="absolute inset-0 h-full w-full"
-          />
-          {/* Trattoria dolly bovenop — speelt 0-28%, fade-out 26-36% */}
+          {/* Agency hero Kling dolly — speelt 0-45%, fade-out 42-55% naar pure black */}
           <ImageSequence
-            frames={TRATTORIA_FRAMES}
+            frames={AGENCY_HERO_FRAMES}
             scrollContainerRef={
               containerRef as React.RefObject<HTMLElement | null>
             }
             fit="cover"
-            progressRange={{ from: 0, to: 0.28 }}
-            fadeOutAfter={{ from: 0.26, to: 0.36 }}
+            progressRange={{ from: 0, to: 0.45 }}
+            fadeOutAfter={{ from: 0.42, to: 0.55 }}
             className="absolute inset-0 h-full w-full"
           />
           {/* Vignette voor tekst-leesbaarheid */}
@@ -99,11 +54,11 @@ export function AgencyHeroExperience() {
         {/* Scenes — overlay content boven de pinned canvas */}
         <div className="relative z-10 -mt-[100vh]">
           {/* Scene 1 — Hero pitch + CTAs */}
-          <Scene vhMultiplier={1.8}>
+          <Scene vhMultiplier={2.2}>
             <SceneText
               enterStart={0.0}
-              enterEnd={0.18}
-              exitStart={0.92}
+              enterEnd={0.15}
+              exitStart={0.93}
               exitEnd={1.0}
               travel={48}
               className="px-6 text-center"
@@ -129,7 +84,7 @@ export function AgencyHeroExperience() {
                   rel="noreferrer"
                   className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
                 >
-                  Bekijk de Trattoria-case
+                  Bekijk een live voorbeeld
                   <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </Link>
                 <a
@@ -147,67 +102,89 @@ export function AgencyHeroExperience() {
             </SceneText>
           </Scene>
 
-          {/* Scene 2 — Voor kapsalons */}
-          <Scene vhMultiplier={1.3}>
-            <SceneText
-              enterStart={0.0}
-              enterEnd={0.2}
-              exitStart={0.88}
-              exitEnd={1.0}
-              travel={40}
-              className="px-6 text-center"
-            >
-              <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
-                Voor kapsalons
-              </p>
-              <h2 className="mt-5 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-                Je vakwerk
-                <br />
-                <span className="text-white/70">als merk.</span>
-              </h2>
-            </SceneText>
-          </Scene>
+          {/* Scene 2 — Verticals showcase: één scene met 3 concepts + bridging copy */}
+          <Scene vhMultiplier={2.2}>
+            <div className="w-full px-6">
+              <div className="mx-auto max-w-6xl">
+                <SceneText
+                  enterStart={0.0}
+                  enterEnd={0.15}
+                  exitStart={0.93}
+                  exitEnd={1.0}
+                  travel={40}
+                  className="text-center"
+                >
+                  <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
+                    Voor elke vakman
+                  </p>
+                  <h2 className="mt-5 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
+                    Hetzelfde cinematic format.
+                    <br />
+                    <span className="text-white/70">Voor elke branche.</span>
+                  </h2>
+                  <p className="mx-auto mt-6 max-w-2xl text-base text-white/65 sm:text-lg">
+                    Restaurants nu live. Kapsalons, autobedrijven en
+                    tandartsen volgen — dezelfde scrolldriven ervaring, per
+                    branche eigen scènes en sfeer.
+                  </p>
+                </SceneText>
 
-          {/* Scene 3 — Voor autobedrijven */}
-          <Scene vhMultiplier={1.3}>
-            <SceneText
-              enterStart={0.0}
-              enterEnd={0.2}
-              exitStart={0.88}
-              exitEnd={1.0}
-              travel={40}
-              className="px-6 text-center"
-            >
-              <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
-                Voor autobedrijven
-              </p>
-              <h2 className="mt-5 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-                Vakmanschap dat
-                <br />
-                <span className="text-white/70">vertrouwen wekt.</span>
-              </h2>
-            </SceneText>
-          </Scene>
-
-          {/* Scene 4 — Voor tandartspraktijken */}
-          <Scene vhMultiplier={1.3}>
-            <SceneText
-              enterStart={0.0}
-              enterEnd={0.2}
-              exitStart={0.88}
-              exitEnd={1.0}
-              travel={40}
-              className="px-6 text-center"
-            >
-              <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
-                Voor tandartspraktijken
-              </p>
-              <h2 className="mt-5 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-                Rust voor de
-                <br />
-                <span className="text-white/70">eerste afspraak.</span>
-              </h2>
-            </SceneText>
+                <SceneText
+                  enterStart={0.15}
+                  enterEnd={0.35}
+                  exitStart={0.93}
+                  exitEnd={1.0}
+                  travel={32}
+                  className="mt-12"
+                >
+                  <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
+                    {[
+                      {
+                        label: "Kapsalons",
+                        image: "/sites/concepts/salon.jpg",
+                        line: "Vakwerk als merk",
+                      },
+                      {
+                        label: "Autobedrijven",
+                        image: "/sites/concepts/garage.jpg",
+                        line: "Vakmanschap dat vertrouwen wekt",
+                      },
+                      {
+                        label: "Tandartspraktijken",
+                        image: "/sites/concepts/tandarts.jpg",
+                        line: "Rust voor de eerste afspraak",
+                      },
+                    ].map((v) => (
+                      <div
+                        key={v.label}
+                        className="group relative overflow-hidden rounded-2xl border border-white/15 bg-black/40 backdrop-blur-md"
+                      >
+                        <div className="relative aspect-[4/5] overflow-hidden">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={v.image}
+                            alt={`Concept voor ${v.label}`}
+                            className="h-full w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                          <div className="absolute left-3 top-3 rounded-full border border-white/25 bg-black/55 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.3em] text-white/75 backdrop-blur-md">
+                            Concept
+                          </div>
+                          <div className="absolute inset-x-0 bottom-0 p-5">
+                            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
+                              {v.label}
+                            </p>
+                            <p className="mt-2 font-serif text-xl leading-tight md:text-2xl">
+                              {v.line}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </SceneText>
+              </div>
+            </div>
           </Scene>
         </div>
 
