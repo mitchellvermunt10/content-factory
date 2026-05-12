@@ -268,6 +268,25 @@ export function SiteExperience({
                     </div>
                   ))}
                 </SceneStagger>
+
+                {/* Subtiele 'over ons' uitnodiging — verschijnt nadat de
+                    foto's zijn opgekomen, leidt naar /verhaal */}
+                <SceneText
+                  enterStart={0.55}
+                  enterEnd={0.78}
+                  exitStart={0.88}
+                  exitEnd={1.0}
+                  travel={16}
+                  className="mt-12 text-center"
+                >
+                  <Link
+                    href={`/sites/${data.slug}/verhaal`}
+                    className="inline-flex items-center gap-2 border-b border-white/20 pb-1.5 font-mono text-xs uppercase tracking-[0.3em] text-white/55 transition-colors hover:border-white hover:text-white"
+                  >
+                    Lees het verhaal achter deze plek
+                    <ArrowRight className="size-3.5" />
+                  </Link>
+                </SceneText>
               </div>
             </div>
           </Scene>
