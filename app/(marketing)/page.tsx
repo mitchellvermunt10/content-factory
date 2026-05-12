@@ -228,12 +228,14 @@ export default function HomePage() {
               Volgende lanceringen
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-              Wat we komende maanden bouwen
+              Jouw zaak blijft modaal.
+              <br />
+              <span className="text-white/70">Je website wordt next level.</span>
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-              Voor andere lokale verticals. Concept-mockups in ontwikkeling —
-              eerlijk: nog geen live klanten, wel het format en de ervaring
-              klaar.
+              Geen boutique-praktijk, geen Lamborghini-dealer. Gewoon de zaak
+              die jij elke dag draait — maar met een website die voelt als
+              een merk. Concept-mockups voor andere verticals, in ontwikkeling.
             </p>
           </div>
 
@@ -242,20 +244,20 @@ export default function HomePage() {
               {
                 vertical: "Salon",
                 image: "/sites/concepts/salon.jpg",
-                title: "Voor kapsalons & beautysalons",
-                desc: "Cinematische opening met camera door de spiegelwand, zachte intieme verlichting, online afspraken boeken. Voor zaken die uitstraling als merk zien.",
+                title: "Voor de kapsalon op de hoek",
+                desc: "Geen boutique. Gewoon vier stoelen, gewoon goed werk. Maar een website die je vakwerk laat zien als merk — klanten zien wie je bent, geen templated agency-look.",
               },
               {
                 vertical: "Garage",
                 image: "/sites/concepts/garage.jpg",
-                title: "Voor autobedrijven & garages",
-                desc: "Industrieel, masculien, vakwerk-eerst. APK-boeken inline, RDW-koppeling, vertrouwen door portfolio van werk en vakmanschap.",
+                title: "Voor het autobedrijf van de buurt",
+                desc: "Geen exclusieve dealer. Gewoon auto's, tools, jullie. Maar een website die vertrouwen wekt — klanten zien wie er aan hun auto sleutelt, en waarom dat goud waard is.",
               },
               {
                 vertical: "Tandarts",
                 image: "/sites/concepts/tandarts.jpg",
-                title: "Voor tandartspraktijken",
-                desc: "Boutique-kliniek aanvoelend, niet steriel. Patiënt-portaal voor afspraken, BIG-nummers zichtbaar, vertrouwen door zachte design.",
+                title: "Voor de tandarts in jouw straat",
+                desc: "Geen lifestyle-kliniek. Gewoon zorg, gewoon vakmanschap. Maar een website die rust uitstraalt — patiënten voelen al voor de eerste afspraak dat ze in goede handen zijn.",
               },
             ].map((concept) => (
               <div
