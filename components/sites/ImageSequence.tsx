@@ -76,25 +76,25 @@ export function ImageSequence({
   const lastFractionalRef = useRef<number>(-1);
   const rafRef = useRef<number>(0);
   const [loaded, setLoaded] = useState(0);
-  const [fullSequence, setFullSequence] = useState(true);
+  // Lightweight-mode pas activeren ALS de heuristic dat zegt — start standaard
+  // op false zodat alle echte gebruikers (snelle connectie, no reduced-motion)
+  // direct de cinematic ervaring krijgen.
+  const [lightweight, setLightweight] = useState(false);
 
-  // Beslis bij mount of we cinematic OF lichtgewicht renderen
   useEffect(() => {
-    setFullSequence(shouldRenderFullSequence());
+    setLightweight(!shouldRenderFullSequence());
   }, []);
 
-  // Op lichte modus: alleen frame 0 laden + tonen, geen scroll-scrubbing
-  const activeFrames = fullSequence ? frames : frames.slice(0, 1);
-
-  // Preload frames — frame 0 heeft priority, rest lazy in batches
+  // Preload alle frames altijd — fetchPriority handelt LCP-optimalisatie af.
+  // De useEffect dep MOET op `frames` (stable ref van props) zijn, niet op
+  // een afgeleide array (die elke render een nieuwe referentie krijgt).
   useEffect(() => {
     let cancelled = false;
     imagesRef.current = [];
     setLoaded(0);
     let done = 0;
 
-    // Eerste frame eager met fetchpriority high (LCP candidate)
-    activeFrames.forEach((src, i) => {
+    frames.forEach((src, i) => {
       const img = new Image();
       if (i === 0) {
         img.fetchPriority = "high";
@@ -120,7 +120,7 @@ export function ImageSequence({
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeFrames]);
+  }, [frames]);
 
   // Canvas sizing — DPR-aware
   useEffect(() => {
@@ -255,8 +255,9 @@ export function ImageSequence({
         }
       }
 
-      // Fractionele frame-index voor vloeiende cross-fade tussen frames
-      const fractional = videoProgress * (frames.length - 1);
+      // Bij prefers-reduced-motion / slow connection: bevries op frame 0
+      // (geen scroll-scrubbing). Anders fractionele frame-index voor smooth blend.
+      const fractional = lightweight ? 0 : videoProgress * (frames.length - 1);
       // Skip redraw als de fractie nauwelijks is veranderd (perf)
       if (Math.abs(fractional - lastFractionalRef.current) > 0.05) {
         drawFractional(fractional);
@@ -301,7 +302,7 @@ export function ImageSequence({
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [frames, scrollContainerRef, fit, progressRange, fadeOutAfter, loaded]);
+  }, [frames, scrollContainerRef, fit, progressRange, fadeOutAfter, loaded, lightweight]);
 
   return (
     <div className={className}>
