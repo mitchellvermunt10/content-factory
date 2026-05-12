@@ -19,8 +19,16 @@ export function ReviewsSection({ socialProof }: Props) {
 
   return (
     <Scene vhMultiplier={2}>
-      <div className="w-full px-6">
-        <div className="mx-auto max-w-4xl">
+      <div className="relative w-full">
+        {/* Letterbox-style dark band achter de reviews voor leesbaarheid.
+            Fade-in/out aan boven- en onderkant zodat het niet harde kantjes
+            heeft tegen de cinematic Ken Burns laag eronder. */}
+        <div
+          className="pointer-events-none absolute inset-x-0 top-1/2 -z-10 h-[120%] -translate-y-1/2 bg-gradient-to-b from-transparent via-black/70 to-transparent"
+          aria-hidden="true"
+        />
+
+        <div className="relative mx-auto max-w-4xl px-6">
           <SceneText
             enterStart={0.0}
             enterEnd={0.22}
@@ -28,11 +36,11 @@ export function ReviewsSection({ socialProof }: Props) {
             exitEnd={1.0}
             travel={32}
           >
-            <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
+            <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/70">
               Wat gasten zeggen
             </p>
             {socialProof.google ? (
-              <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
+              <p className="mt-3 text-center font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
                 ★ {socialProof.google.rating.toFixed(1)} Google · {socialProof.google.count} recensies
               </p>
             ) : null}
@@ -49,10 +57,13 @@ export function ReviewsSection({ socialProof }: Props) {
           >
             {testimonials.map((t, i) => (
               <blockquote key={i} className="text-center">
-                <p className="font-serif text-2xl font-light leading-snug text-white/85 md:text-3xl">
+                <p
+                  className="font-serif text-2xl font-light leading-snug text-white md:text-3xl"
+                  style={{ textShadow: "0 2px 24px rgba(0,0,0,0.55)" }}
+                >
                   {`"${t.quote}"`}
                 </p>
-                <footer className="mt-5 font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
+                <footer className="mt-5 font-mono text-[10px] uppercase tracking-[0.3em] text-white/65">
                   — {t.author}
                   {t.source ? ` · ${t.source}` : ""}
                   {t.date ? ` · ${t.date}` : ""}
