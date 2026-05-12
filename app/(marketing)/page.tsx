@@ -9,6 +9,9 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { AgencyHeroExperience } from "@/components/marketing/AgencyHeroExperience";
+import { HorizontalVerticals } from "@/components/marketing/HorizontalVerticals";
+import { Manifesto } from "@/components/marketing/Manifesto";
+import { UspMarquee } from "@/components/marketing/UspMarquee";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion/Reveal";
 
 export default function HomePage() {
@@ -17,77 +20,8 @@ export default function HomePage() {
       {/* Cinematic scroll-driven hero — Kling orbit dolly */}
       <AgencyHeroExperience />
 
-      {/* ───────────────────────────────────────────────────────────
-          VERTICALS SHOWCASE — normaal flowing, niet meer pinned
-          ─────────────────────────────────────────────────────────── */}
-      <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-6xl">
-          <Reveal className="text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-              Voor elke vakman
-            </p>
-            <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-              Hetzelfde cinematic format.
-              <br />
-              <span className="text-white/70">Voor elke branche.</span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-              Restaurants nu live. Kapsalons, autobedrijven en tandartsen
-              volgen — dezelfde scroll-driven ervaring, per branche eigen
-              scènes en sfeer.
-            </p>
-          </Reveal>
-
-          <RevealStagger
-            className="mt-16 grid gap-4 md:grid-cols-3 md:gap-6"
-            stagger={0.12}
-          >
-            {[
-              {
-                label: "Kapsalons",
-                image: "/sites/concepts/salon.jpg",
-                line: "Vakwerk als merk",
-              },
-              {
-                label: "Autobedrijven",
-                image: "/sites/concepts/garage.jpg",
-                line: "Vakmanschap dat vertrouwen wekt",
-              },
-              {
-                label: "Tandartspraktijken",
-                image: "/sites/concepts/tandarts.jpg",
-                line: "Rust voor de eerste afspraak",
-              },
-            ].map((v) => (
-              <RevealItem
-                key={v.label}
-                className="group relative overflow-hidden rounded-2xl border border-white/15 bg-black/40 transition-all hover:-translate-y-1 hover:border-white/30"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={v.image}
-                    alt={`Concept voor ${v.label}`}
-                    className="h-full w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                  <div className="absolute left-4 top-4 rounded-full border border-white/25 bg-black/55 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-white/75 backdrop-blur-md">
-                    Concept
-                  </div>
-                  <div className="absolute inset-x-0 bottom-0 p-6">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/65">
-                      {v.label}
-                    </p>
-                    <p className="mt-2 font-serif text-2xl leading-tight md:text-3xl">
-                      {v.line}
-                    </p>
-                  </div>
-                </div>
-              </RevealItem>
-            ))}
-          </RevealStagger>
-        </div>
-      </section>
+      {/* Horizontal-scroll cinematic verticals — Awwwards-stijl pinned */}
+      <HorizontalVerticals />
 
       {/* ───────────────────────────────────────────────────────────
           PROBLEEM — met cinematic parallax achtergrond
@@ -142,6 +76,9 @@ export default function HomePage() {
           </RevealStagger>
         </div>
       </section>
+
+      {/* Sticky-pinned manifesto — cinematic statement-moment */}
+      <Manifesto />
 
       {/* ───────────────────────────────────────────────────────────
           EERSTE LANCERING — single demo geframed als selectiviteit
@@ -257,6 +194,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* USP-marquee — eindeloze motion-break tussen content-blokken */}
+      <UspMarquee />
+
       {/* ───────────────────────────────────────────────────────────
           WEDGE — vergelijking, met subtiele backdrop
           ─────────────────────────────────────────────────────────── */}
@@ -351,9 +291,18 @@ export default function HomePage() {
           ─────────────────────────────────────────────────────────── */}
       <section
         id="werkwijze"
-        className="relative scroll-mt-20 border-t border-white/10 bg-zinc-950 px-6 py-24 sm:py-32"
+        className="relative scroll-mt-20 overflow-hidden border-t border-white/10 px-6 py-24 sm:py-32"
       >
-        <div className="mx-auto max-w-5xl">
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/sites/lifestyle/espresso-start.jpg"
+            alt=""
+            className="h-full w-full scale-110 object-cover opacity-15"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-zinc-950/85 to-zinc-950" />
+        </div>
+        <div className="relative mx-auto max-w-5xl">
           <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Hoe het werkt
@@ -474,9 +423,18 @@ export default function HomePage() {
           ─────────────────────────────────────────────────────────── */}
       <section
         id="pricing"
-        className="relative scroll-mt-20 border-t border-white/10 bg-zinc-950 px-6 py-24 sm:py-32"
+        className="relative scroll-mt-20 overflow-hidden border-t border-white/10 px-6 py-24 sm:py-32"
       >
-        <div className="mx-auto max-w-6xl">
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/sites/italian-restaurant/post-1-food.jpg"
+            alt=""
+            className="h-full w-full scale-110 object-cover opacity-15"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-zinc-950 via-zinc-950/85 to-zinc-950" />
+        </div>
+        <div className="relative mx-auto max-w-6xl">
           <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Wat het kost
@@ -646,8 +604,17 @@ export default function HomePage() {
       {/* ───────────────────────────────────────────────────────────
           FAQ
           ─────────────────────────────────────────────────────────── */}
-      <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-3xl">
+      <section className="relative overflow-hidden border-t border-white/10 px-6 py-24 sm:py-32">
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/sites/italian-restaurant/doorway.jpg"
+            alt=""
+            className="h-full w-full scale-110 object-cover opacity-15"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/85 to-black" />
+        </div>
+        <div className="relative mx-auto max-w-3xl">
           <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Vragen
