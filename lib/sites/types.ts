@@ -37,8 +37,60 @@ export interface NextLevelSiteData {
   scenes: SceneSpec[];
   /** Sfeerbeelden uit IG/website */
   photos?: { url: string; alt?: string }[];
-  /** Menu / dienst-items */
+  /** Menu / dienst-items (korte versie voor home-page scene 3) */
   items?: { name: string; description?: string; price?: string }[];
+
+  // ────────────────────────────────────────────────────────────
+  // Subpage content — uitgebreid per-pagina materiaal
+  // ────────────────────────────────────────────────────────────
+
+  /** /menu — volledige kaart met categorieën */
+  menuCategories?: {
+    name: string;
+    description?: string;
+    items: {
+      name: string;
+      description?: string;
+      price?: string;
+      photo?: string;
+      tags?: string[]; // bv. "vegetarisch", "specialty"
+    }[];
+  }[];
+
+  /** /verhaal — over de zaak */
+  story?: {
+    headline: string;
+    intro: string; // 1-2 paragrafen, opening
+    sections: {
+      headline?: string;
+      body: string;
+      image?: string;
+    }[];
+    chef?: {
+      name: string;
+      role?: string;
+      photo?: string;
+      quote?: string;
+    };
+  };
+
+  /** /contact + /reserveren — openingstijden */
+  hours?: {
+    monday?: string;
+    tuesday?: string;
+    wednesday?: string;
+    thursday?: string;
+    friday?: string;
+    saturday?: string;
+    sunday?: string;
+    /** Optionele losse opmerking, bv. "Keuken sluit 30 min eerder" */
+    note?: string;
+  };
+
+  /** Extra contact-velden */
+  email?: string;
+  parkingInfo?: string;
+
   brand?: {
     accentColor?: string;
     fontDisplay?: string;
