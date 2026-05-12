@@ -8,7 +8,35 @@ import { ImageSequence } from "@/components/sites/ImageSequence";
 import { CinematicCanvas } from "@/components/sites/CinematicCanvas";
 import { Scene, SceneText, SceneStagger } from "@/components/sites/Scene";
 import { buildRestaurantShots } from "@/lib/sites/shotPresets";
+import type { CinematicShot } from "@/components/sites/CinematicCanvas";
 import type { NextLevelSiteData } from "@/lib/sites/types";
+
+/**
+ * Shots die NA de Kling-dolly volgen — Ken Burns over een food-hero en
+ * een atmosfeer-hero, gemapt op de scroll-progress 0.35-1.0 zodat ze in
+ * komen wanneer de video uitfade.
+ */
+const POST_VIDEO_SHOTS: CinematicShot[] = [
+  {
+    imageUrl: "/sites/italian-restaurant/post-1-food.jpg",
+    startProgress: 0.32,
+    endProgress: 0.72,
+    scale: { from: 1.05, to: 1.35 },
+    offsetY: { from: 0.02, to: -0.04 },
+    warmth: { from: 0.2, to: 0.35 },
+    brightness: { from: 0.95, to: 1.05 },
+    vignette: { from: 0.2, to: 0.05 },
+  },
+  {
+    imageUrl: "/sites/italian-restaurant/post-2-ambiance.jpg",
+    startProgress: 0.68,
+    endProgress: 1.0,
+    scale: { from: 1.15, to: 1.0 },
+    warmth: { from: 0.25, to: 0.3 },
+    brightness: { from: 1.0, to: 0.95 },
+    vignette: { from: 0.1, to: 0.25 },
+  },
+];
 
 /**
  * De cinematic experience composer.
@@ -48,13 +76,24 @@ export function SiteExperience({
           aria-hidden="true"
         >
           {mode === "video" ? (
-            // Échte Kling video-frames — scroll-driven scrubbing
-            <ImageSequence
-              frames={data.frames}
-              scrollContainerRef={containerRef}
-              fit="cover"
-              className="relative h-full w-full"
-            />
+            // Twee-laagse cinematic: video bovenop (0-35%, fade-out 32-45%),
+            // food/atmosphere Ken Burns erachter (komt op vanaf 32%).
+            <>
+              <CinematicCanvas
+                shots={POST_VIDEO_SHOTS}
+                scrollContainerRef={containerRef}
+                fadeOverlap={0.08}
+                className="absolute inset-0 h-full w-full"
+              />
+              <ImageSequence
+                frames={data.frames}
+                scrollContainerRef={containerRef}
+                fit="cover"
+                progressRange={{ from: 0, to: 0.32 }}
+                fadeOutAfter={{ from: 0.3, to: 0.42 }}
+                className="absolute inset-0 h-full w-full"
+              />
+            </>
           ) : cinematicShots ? (
             // Flux hero-frames + parametric dolly-in
             <CinematicCanvas
@@ -79,7 +118,7 @@ export function SiteExperience({
         {/* Scenes — zitten boven de pinned canvas dankzij z-10 */}
         <div className="relative z-10 -mt-[100vh]">
           {/* Scene 1 — Intro: gevel + bedrijfsnaam */}
-          <Scene vhMultiplier={2.5}>
+          <Scene vhMultiplier={1.5}>
             <SceneText
               enterStart={0.05}
               enterEnd={0.4}
@@ -101,7 +140,7 @@ export function SiteExperience({
           </Scene>
 
           {/* Scene 2 — Aankomst: je bent binnen */}
-          <Scene vhMultiplier={2.5}>
+          <Scene vhMultiplier={1.5}>
             <SceneText
               enterStart={0.1}
               enterEnd={0.45}
@@ -130,7 +169,7 @@ export function SiteExperience({
           </Scene>
 
           {/* Scene 3 — Menu / diensten */}
-          <Scene vhMultiplier={3}>
+          <Scene vhMultiplier={2}>
             <div className="w-full px-6">
               <div className="mx-auto max-w-4xl">
                 <SceneText
@@ -149,12 +188,12 @@ export function SiteExperience({
                 </SceneText>
 
                 <SceneStagger
-                  windowStart={0.2}
-                  windowEnd={0.75}
-                  perItemDuration={0.28}
-                  exitStart={0.88}
+                  windowStart={0.08}
+                  windowEnd={0.55}
+                  perItemDuration={0.18}
+                  exitStart={0.85}
                   exitEnd={1.0}
-                  travel={32}
+                  travel={28}
                   className="mt-12 grid gap-px overflow-hidden rounded-2xl bg-white/10 md:grid-cols-2"
                 >
                   {(data.items ?? []).slice(0, 6).map((item) => (
@@ -185,7 +224,7 @@ export function SiteExperience({
           </Scene>
 
           {/* Scene 4 — Sfeerbeelden grid */}
-          <Scene vhMultiplier={2.5}>
+          <Scene vhMultiplier={1.5}>
             <div className="w-full px-6">
               <div className="mx-auto max-w-5xl">
                 <SceneText
@@ -204,12 +243,12 @@ export function SiteExperience({
                 </SceneText>
 
                 <SceneStagger
-                  windowStart={0.18}
-                  windowEnd={0.78}
-                  perItemDuration={0.32}
-                  exitStart={0.9}
+                  windowStart={0.08}
+                  windowEnd={0.55}
+                  perItemDuration={0.2}
+                  exitStart={0.88}
                   exitEnd={1.0}
-                  travel={28}
+                  travel={24}
                   className="mt-12 grid grid-cols-3 gap-2 md:gap-3"
                 >
                   {(data.photos ?? []).slice(0, 6).map((p, i) => (
@@ -232,7 +271,7 @@ export function SiteExperience({
           </Scene>
 
           {/* Scene 5 — Contact / reservering */}
-          <Scene vhMultiplier={2}>
+          <Scene vhMultiplier={1.5}>
             <SceneText
               enterStart={0.05}
               enterEnd={0.4}

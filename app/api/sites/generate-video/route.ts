@@ -32,10 +32,12 @@ const Body = z.object({
   prompt: z.string().min(20).max(2000),
   /** 5 of 10 sec */
   duration: z.union([z.literal(5), z.literal(10)]).default(5),
-  /** Frames per seconde voor extractie. Default 20. */
-  fps: z.number().int().min(8).max(30).default(20),
-  /** Max breedte in pixels. Default 1920. */
-  maxWidth: z.number().int().min(640).max(3840).default(1920),
+  /** Frames per seconde voor extractie. Default 24 (premium-tier). */
+  fps: z.number().int().min(8).max(30).default(24),
+  /** Max breedte in pixels. Default 2400 (premium-tier). */
+  maxWidth: z.number().int().min(640).max(3840).default(2400),
+  /** JPG quality (1=best, 31=worst). Default 3 (premium-tier). */
+  quality: z.number().int().min(1).max(31).default(3),
 });
 
 /**
@@ -120,7 +122,7 @@ export async function POST(req: NextRequest) {
       outDir: framesDir,
       fps: body.fps,
       maxWidth: body.maxWidth,
-      quality: 6,
+      quality: body.quality,
     });
 
     // 4. Manifest

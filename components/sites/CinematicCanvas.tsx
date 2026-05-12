@@ -228,9 +228,8 @@ export function CinematicCanvas({
       const cw = canvas.clientWidth;
       const ch = canvas.clientHeight;
 
-      // Zwarte baseline
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0, 0, cw, ch);
+      // Transparante baseline — kan onder andere layers staan
+      ctx.clearRect(0, 0, cw, ch);
 
       const containerEl = container;
       if (!containerEl) return;
