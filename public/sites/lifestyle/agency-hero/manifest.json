@@ -1,8 +1,8 @@
 {
   "scene": "agency-hero",
   "fps": 24,
-  "frameCount": 121,
+  "frameCount": 241,
   "publicPrefix": "/sites/lifestyle/agency-hero/frames",
-  "generatedAt": "2026-05-12T12:20:39.281Z",
-  "prompt": "Slow cinematic dolly-in starting from a wide-angle view of the entire workspace, camera moves steadily forward at walking pace through the room toward the silver laptop on the desk in the middle distance. The laptop and desk grow significantly larger throughout the shot as the camera approaches from far away to close. By the end of the shot the camera has moved a great distance forward and the laptop screen with its glowing website now fills much more of the frame, revealing detail that was invisible at the start. Smooth gimbal motion, completely locked steady, no shake, no rotation, no zoom artifacts, just pure forward translation through the room. Anamorphic shallow depth of field shifts naturally as we approach. Subtle ambient motion: dust particles drift in light beams from window, slight micro-shift in warm lighting. Roger Deakins cinematography, photorealistic, 35mm anamorphic prime lens, film grain, intimate premium creator workspace atmosphere. No people, no hands, no shadows crossing frame."
+  "generatedAt": "2026-05-12T12:33:22.617Z",
+  "prompt": "Cinematic shot of a premium creator workspace at golden hour. Camera starts wide and slowly orbits the desk in a smooth arc, gradually moving forward at the same time � like a Steadicam tracking shot that circles inward. The orbit reveals the workspace from a changing angle: leather chair to the side, ceramic coffee cup, plant by window blinds, the silver laptop in the middle. In the final third of the shot, the camera commits to a strong forward dolly-in directly toward the laptop screen which fills the frame, revealing the elegant cinematic website with serif typography displayed on it. Smooth gimbal motion, no shake, no rotation around camera axis, locked steady, anamorphic shallow depth of field with golden bokeh. Dust particles drifting in light beams from window. Roger Deakins cinematography, photorealistic, 35mm anamorphic prime lens, film grain. No people visible, no hands, intimate premium workspace atmosphere."
 }

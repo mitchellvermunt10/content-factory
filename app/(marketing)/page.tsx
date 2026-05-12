@@ -257,16 +257,16 @@ export default function HomePage() {
         className="relative scroll-mt-20 border-t border-white/10 bg-zinc-950 px-6 py-24 sm:py-32"
       >
         <div className="mx-auto max-w-5xl">
-          <div className="text-center">
+          <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Hoe het werkt
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
               Van intake naar live — 2 weken
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-2">
+          <RevealStagger className="mt-16 grid gap-6 md:grid-cols-2" stagger={0.15}>
             {[
               {
                 week: "Week 1",
@@ -293,9 +293,9 @@ export default function HomePage() {
             ].map((phase) => {
               const Icon = phase.icon;
               return (
-                <div
+                <RevealItem
                   key={phase.week}
-                  className="rounded-3xl border border-white/10 bg-black p-8 sm:p-10"
+                  className="rounded-3xl border border-white/10 bg-black p-8 transition-all hover:border-white/25 hover:-translate-y-1 sm:p-10"
                 >
                   <div className="flex items-center justify-between">
                     <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/45">
@@ -312,10 +312,10 @@ export default function HomePage() {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </RevealItem>
               );
             })}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
@@ -323,7 +323,7 @@ export default function HomePage() {
           WIE — persoonlijk, niet anoniem bureau
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-3xl text-center">
+        <Reveal className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
             Wie zit erachter
           </p>
@@ -360,7 +360,7 @@ export default function HomePage() {
             <span className="text-white/20">·</span>
             <span>Next Level Sites · Nederland</span>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* ───────────────────────────────────────────────────────────
@@ -371,18 +371,18 @@ export default function HomePage() {
         className="relative scroll-mt-20 border-t border-white/10 bg-zinc-950 px-6 py-24 sm:py-32"
       >
         <div className="mx-auto max-w-6xl">
-          <div className="text-center">
+          <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Wat het kost
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
               Eerlijke prijzen, geen verrassingen
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 grid gap-4 lg:grid-cols-3 lg:gap-6">
+          <RevealStagger className="mt-16 grid gap-4 lg:grid-cols-3 lg:gap-6" stagger={0.12}>
             {/* STUDIO — efficient cinematic via geverifieerde format */}
-            <div className="rounded-3xl border border-white/10 bg-black p-8 sm:p-10">
+            <RevealItem className="rounded-3xl border border-white/10 bg-black p-8 transition-all hover:border-white/25 hover:-translate-y-1 sm:p-10">
               <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/45">
                 Studio
               </p>
@@ -422,10 +422,10 @@ export default function HomePage() {
                 Vraag offerte aan
                 <ArrowRight className="size-4" />
               </a>
-            </div>
+            </RevealItem>
 
             {/* SIGNATURE — populair, hoogwaardig */}
-            <div className="relative rounded-3xl border-2 border-accent/50 bg-accent/[0.06] p-8 sm:p-10 lg:-mt-4 lg:mb-4">
+            <RevealItem className="relative rounded-3xl border-2 border-accent/50 bg-accent/[0.06] p-8 transition-all hover:scale-[1.02] hover:shadow-[0_30px_60px_-20px_rgba(0,0,0,0.8)] sm:p-10 lg:-mt-4 lg:mb-4">
               <div className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-black">
                 Populair
               </div>
@@ -467,10 +467,10 @@ export default function HomePage() {
                 Plan kennismaking
                 <ArrowRight className="size-4" />
               </a>
-            </div>
+            </RevealItem>
 
             {/* AI RECEPTIONIST — add-on */}
-            <div className="rounded-3xl border border-white/10 bg-black p-8 sm:p-10">
+            <RevealItem className="rounded-3xl border border-white/10 bg-black p-8 transition-all hover:border-white/25 hover:-translate-y-1 sm:p-10">
               <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/45">
                 AI Receptionist · Add-on
               </p>
@@ -508,16 +508,18 @@ export default function HomePage() {
                 Meer info
                 <ArrowRight className="size-4" />
               </a>
-            </div>
-          </div>
+            </RevealItem>
+          </RevealStagger>
 
           {/* Schaarste-regel — premium agencies positioneren capaciteit als luxe */}
-          <p className="mt-10 text-center font-mono text-xs uppercase tracking-[0.3em] text-white/45">
-            We nemen 4 projecten per kwartaal aan.
-          </p>
+          <Reveal>
+            <p className="mt-10 text-center font-mono text-xs uppercase tracking-[0.3em] text-white/45">
+              We nemen 4 projecten per kwartaal aan.
+            </p>
+          </Reveal>
 
           {/* Secundaire product — AI Content Factory link */}
-          <div className="mt-16 rounded-2xl border border-white/10 bg-black/40 p-6 text-center sm:p-8">
+          <Reveal className="mt-16 rounded-2xl border border-white/10 bg-black/40 p-6 text-center sm:p-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
               Geen volledige website nodig?
             </p>
@@ -531,7 +533,7 @@ export default function HomePage() {
             >
               Bekijk AI Content Factory →
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -540,16 +542,16 @@ export default function HomePage() {
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-3xl">
-          <div className="text-center">
+          <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Vragen
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-5xl">
               Veel gestelde vragen
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 divide-y divide-white/10">
+          <RevealStagger className="mt-16 divide-y divide-white/10" stagger={0.08}>
             {[
               {
                 q: "Wat als ik al een website heb?",
@@ -580,21 +582,23 @@ export default function HomePage() {
                 a: "Tot het launch-moment heb je twee gratis revisie-rondes na het concept-voorstel. Na launch: 14 dagen gratis bug-fixes. Als de website niet brengt wat we beloofden, krijg je je geld terug — geen kleine lettertjes.",
               },
             ].map((faq, i) => (
-              <details key={i} className="group py-6">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
-                  <h3 className="font-serif text-xl text-white sm:text-2xl">
-                    {faq.q}
-                  </h3>
-                  <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/15 text-white/65 transition-transform group-open:rotate-45">
-                    +
-                  </span>
-                </summary>
-                <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65">
-                  {faq.a}
-                </p>
-              </details>
+              <RevealItem key={i}>
+                <details className="group py-6">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
+                    <h3 className="font-serif text-xl text-white sm:text-2xl">
+                      {faq.q}
+                    </h3>
+                    <span className="grid size-8 shrink-0 place-items-center rounded-full border border-white/15 text-white/65 transition-transform group-open:rotate-45">
+                      +
+                    </span>
+                  </summary>
+                  <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/65">
+                    {faq.a}
+                  </p>
+                </details>
+              </RevealItem>
             ))}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 

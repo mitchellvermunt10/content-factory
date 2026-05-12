@@ -6,10 +6,10 @@ import { ArrowUpRight, Calendar } from "lucide-react";
 import { ImageSequence } from "@/components/sites/ImageSequence";
 import { Scene, SceneText } from "@/components/sites/Scene";
 
-// Agency hero Kling-frames — cinematic dolly-in naar laptop met website,
-// representeert wat WIJ maken voor de bezoeker (niet één specifieke klant).
+// Agency hero Kling-frames — 10-sec orbit-met-zoom dolly door workspace
+// naar close-up van laptop scherm. 241 frames @ 24fps premium.
 const AGENCY_HERO_FRAMES = Array.from(
-  { length: 121 },
+  { length: 241 },
   (_, i) =>
     `/sites/lifestyle/agency-hero/frames/frame_${String(i + 1).padStart(4, "0")}.jpg`
 );
