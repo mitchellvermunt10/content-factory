@@ -28,6 +28,9 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       address: "Voorstraat 84, Utrecht",
       phone: "030 234 56 78",
       reservationUrl: "https://example.com/reserveren",
+      whatsapp: "+31612345678",
+      whatsappMessage:
+        "Hoi! Ik wil graag een tafel reserveren bij Trattoria Sole.",
     },
     scenes: [
       { id: "intro", kind: "intro", frameRange: { from: 0, to: 14 }, content: {} },

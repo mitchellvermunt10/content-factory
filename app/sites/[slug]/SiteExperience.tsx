@@ -7,6 +7,8 @@ import { SmoothScrollProvider } from "@/components/sites/SmoothScrollProvider";
 import { ImageSequence } from "@/components/sites/ImageSequence";
 import { CinematicCanvas } from "@/components/sites/CinematicCanvas";
 import { Scene, SceneText, SceneStagger } from "@/components/sites/Scene";
+import { StickyContactBar } from "@/components/sites/StickyContactBar";
+import { WhatsAppFAB } from "@/components/sites/WhatsAppFAB";
 import { buildRestaurantShots } from "@/lib/sites/shotPresets";
 import type { CinematicShot } from "@/components/sites/CinematicCanvas";
 import type { NextLevelSiteData } from "@/lib/sites/types";
@@ -322,6 +324,22 @@ export function SiteExperience({
             Gemaakt door Next Level Sites
           </p>
         </footer>
+
+        {/* Sticky CTAs — alleen na de hero zichtbaar */}
+        <StickyContactBar
+          reservationUrl={data.business.reservationUrl}
+          phone={data.business.phone}
+          address={data.business.address}
+          scrollContainerRef={containerRef}
+          appearAfter={0.22}
+        />
+        <WhatsAppFAB
+          whatsapp={data.business.whatsapp}
+          defaultMessage={
+            data.business.whatsappMessage ??
+            `Hoi! Ik bekeek net jullie pagina van ${data.business.name} en heb een vraag.`
+          }
+        />
       </main>
     </SmoothScrollProvider>
   );

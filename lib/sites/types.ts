@@ -27,6 +27,10 @@ export interface NextLevelSiteData {
     address?: string;
     phone?: string;
     reservationUrl?: string;
+    /** WhatsApp-nummer in internationaal formaat (+31612345678) */
+    whatsapp?: string;
+    /** Optioneel: bericht dat WhatsApp-link automatisch invult */
+    whatsappMessage?: string;
   };
   /** Volledige frame-sequence (data URI of remote URL) */
   frames: string[];
