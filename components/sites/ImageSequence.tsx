@@ -36,33 +36,6 @@ interface ImageSequenceProps {
  *
  * Performance: één canvas, geen DOM-thrash. requestAnimationFrame-throttled.
  */
-/**
- * Detect of we 'cinematic mode' aankunnen (snelle connectie + geen
- * reduced-motion). Op trage 3G/4G of bij accessibility-instelling
- * verlagen we naar alleen het eerste frame om LCP te beschermen.
- */
-function shouldRenderFullSequence(): boolean {
-  if (typeof window === "undefined") return true;
-  // Reduced motion (accessibility) → static hero
-  if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-    return false;
-  }
-  // Network Information API — beschikbaar in Chromium-based browsers
-  const conn = (
-    navigator as Navigator & {
-      connection?: { effectiveType?: string; saveData?: boolean };
-    }
-  ).connection;
-  if (conn?.saveData) return false;
-  if (
-    conn?.effectiveType &&
-    (conn.effectiveType === "slow-2g" || conn.effectiveType === "2g" || conn.effectiveType === "3g")
-  ) {
-    return false;
-  }
-  return true;
-}
-
 export function ImageSequence({
   frames,
   scrollContainerRef,
@@ -76,18 +49,9 @@ export function ImageSequence({
   const lastFractionalRef = useRef<number>(-1);
   const rafRef = useRef<number>(0);
   const [loaded, setLoaded] = useState(0);
-  // Lightweight-mode pas activeren ALS de heuristic dat zegt — start standaard
-  // op false zodat alle echte gebruikers (snelle connectie, no reduced-motion)
-  // direct de cinematic ervaring krijgen.
-  const [lightweight, setLightweight] = useState(false);
 
-  useEffect(() => {
-    setLightweight(!shouldRenderFullSequence());
-  }, []);
-
-  // Preload alle frames altijd — fetchPriority handelt LCP-optimalisatie af.
-  // De useEffect dep MOET op `frames` (stable ref van props) zijn, niet op
-  // een afgeleide array (die elke render een nieuwe referentie krijgt).
+  // Preload alle frames altijd. Frame 0 krijgt fetchPriority high (LCP)
+  // — dat is de enige LCP-optimalisatie. Geen conditional rendering.
   useEffect(() => {
     let cancelled = false;
     imagesRef.current = [];
@@ -255,9 +219,8 @@ export function ImageSequence({
         }
       }
 
-      // Bij prefers-reduced-motion / slow connection: bevries op frame 0
-      // (geen scroll-scrubbing). Anders fractionele frame-index voor smooth blend.
-      const fractional = lightweight ? 0 : videoProgress * (frames.length - 1);
+      // Fractionele frame-index voor smooth cross-fade tussen frames
+      const fractional = videoProgress * (frames.length - 1);
       // Skip redraw als de fractie nauwelijks is veranderd (perf)
       if (Math.abs(fractional - lastFractionalRef.current) > 0.05) {
         drawFractional(fractional);
@@ -302,7 +265,7 @@ export function ImageSequence({
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(rafRef.current);
     };
-  }, [frames, scrollContainerRef, fit, progressRange, fadeOutAfter, loaded, lightweight]);
+  }, [frames, scrollContainerRef, fit, progressRange, fadeOutAfter, loaded]);
 
   return (
     <div className={className}>
