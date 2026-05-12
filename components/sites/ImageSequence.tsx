@@ -50,8 +50,7 @@ export function ImageSequence({
   const rafRef = useRef<number>(0);
   const [loaded, setLoaded] = useState(0);
 
-  // Preload alle frames altijd. Frame 0 krijgt fetchPriority high (LCP)
-  // — dat is de enige LCP-optimalisatie. Geen conditional rendering.
+  // Preload alle frames — dead-simple, geen priority-hints die requests blokkeren
   useEffect(() => {
     let cancelled = false;
     imagesRef.current = [];
@@ -60,12 +59,6 @@ export function ImageSequence({
 
     frames.forEach((src, i) => {
       const img = new Image();
-      if (i === 0) {
-        img.fetchPriority = "high";
-      } else {
-        img.fetchPriority = "low";
-        img.loading = "lazy";
-      }
       img.onload = () => {
         if (cancelled) return;
         done += 1;
