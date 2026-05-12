@@ -8,85 +8,13 @@ import {
   Calendar,
   MessageCircle,
 } from "lucide-react";
+import { AgencyHeroExperience } from "@/components/marketing/AgencyHeroExperience";
 
 export default function HomePage() {
   return (
     <div className="relative bg-black text-white">
-      {/* ───────────────────────────────────────────────────────────
-          HERO
-          ─────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0">
-          {/* Kling 3.0 lifestyle loop — espresso met opstijgende steam,
-              poster-fallback voor snelle LCP */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster="/sites/lifestyle/espresso-start.jpg"
-            className="h-full w-full scale-110 object-cover"
-            aria-hidden="true"
-          >
-            <source src="/sites/lifestyle/espresso-hero.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black" />
-        </div>
-
-        <div className="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-between px-6 pb-20 pt-32 sm:px-10 sm:pt-40">
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/55 sm:text-xs">
-              Premium maatwerk · Voor lokale ondernemers
-            </p>
-            <h1 className="mt-6 max-w-4xl font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-7xl md:text-8xl">
-              De website die je
-              <br />
-              <span className="text-white/70">zaak verdient.</span>
-            </h1>
-            <p className="mt-8 max-w-2xl text-pretty text-lg text-white/70 sm:text-xl">
-              Premium maatwerk voor restaurants, kapsalons en lokale
-              ondernemers die opvallen tussen de templated rest. Een website
-              die klanten binnenbrengt — niet alleen mooi om naar te kijken.
-            </p>
-
-            <div className="mt-12 flex flex-wrap gap-3">
-              <Link
-                href="/sites/trattoria-sole"
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
-              >
-                Bekijk de Trattoria-case
-                <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </Link>
-              <a
-                href="mailto:mitchell@nextlevelsites.nl?subject=Proposal aanvraag Next Level Site"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-4 text-sm font-medium text-white transition-colors hover:bg-white/10"
-              >
-                <Calendar className="size-4" />
-                Vraag een proposal aan
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-white/10 pt-8 sm:max-w-3xl sm:grid-cols-4">
-            {[
-              { label: "Vanaf", value: "€3.500" },
-              { label: "Levertijd", value: "1-2 weken" },
-              { label: "Onderhoud", value: "vanaf €197" },
-              { label: "Verticals", value: "Horeca, MKB" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
-                  {stat.label}
-                </p>
-                <p className="mt-1 font-serif text-2xl">{stat.value}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* Cinematic scroll-driven hero — Trattoria Kling dolly + verticals showcase */}
+      <AgencyHeroExperience />
 
       {/* ───────────────────────────────────────────────────────────
           PROBLEEM
