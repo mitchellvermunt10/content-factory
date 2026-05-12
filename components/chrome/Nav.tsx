@@ -8,10 +8,11 @@ import { ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { label: "Cases", href: "/cases" },
+  { label: "Demo", href: "/sites/trattoria-sole" },
   { label: "Werkwijze", href: "/#werkwijze" },
   { label: "Pricing", href: "/#pricing" },
-  { label: "Partners", href: "/partners" },
+  { label: "Campagnes", href: "/ai-content-factory" },
+  { label: "Cases", href: "/cases" },
 ];
 
 export function Nav() {
@@ -62,10 +63,10 @@ export function Nav() {
               <Link href="/studio">Studio</Link>
             </Button>
             <Button asChild variant="primary" size="sm">
-              <Link href="/studio/nieuw">
-                Start campagne
+              <a href="mailto:mitchell@nextlevelsites.nl?subject=Demo-call Next Level Site">
+                Plan demo
                 <ArrowUpRight className="size-3.5" />
-              </Link>
+              </a>
             </Button>
           </div>
         </div>
