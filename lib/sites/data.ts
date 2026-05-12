@@ -39,7 +39,7 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       priceRange: "€€",
       phone: "030 234 56 78",
       reservationUrl: "https://example.com/reserveren",
-      whatsapp: "+31612345678",
+      whatsapp: "+31681299321",
       whatsappMessage:
         "Hoi! Ik wil graag een tafel reserveren bij Trattoria Sole.",
       sameAs: [

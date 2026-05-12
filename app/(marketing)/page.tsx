@@ -607,7 +607,7 @@ export default function HomePage() {
               Plan een demo-call
             </a>
             <a
-              href="https://wa.me/31612345678?text=Hoi%20Mitchell%2C%20vraag%20over%20Next%20Level%20Site"
+              href="https://wa.me/31681299321?text=Hoi%20Mitchell%2C%20vraag%20over%20Next%20Level%20Site"
               target="_blank"
               rel="noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-4 text-sm font-medium text-white transition-colors hover:bg-white/10"
