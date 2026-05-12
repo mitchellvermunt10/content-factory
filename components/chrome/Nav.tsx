@@ -63,8 +63,8 @@ export function Nav() {
               <Link href="/studio">Studio</Link>
             </Button>
             <Button asChild variant="primary" size="sm">
-              <a href="mailto:mitchell@nextlevelsites.nl?subject=Demo-call Next Level Site">
-                Plan demo
+              <a href="mailto:mitchell@nextlevelsites.nl?subject=Proposal aanvraag Next Level Site">
+                Proposal
                 <ArrowUpRight className="size-3.5" />
               </a>
             </Button>

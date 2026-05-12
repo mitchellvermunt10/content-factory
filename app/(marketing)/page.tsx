@@ -29,19 +29,17 @@ export default function HomePage() {
         <div className="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-between px-6 pb-20 pt-32 sm:px-10 sm:pt-40">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/55 sm:text-xs">
-              Next Level Sites · Voor lokale ondernemers
+              Premium maatwerk · Voor lokale ondernemers
             </p>
             <h1 className="mt-6 max-w-4xl font-serif text-5xl font-light leading-[0.95] tracking-tight sm:text-7xl md:text-8xl">
-              Niet nog een website.
+              De website die je
               <br />
-              <span className="text-white/70">Een ervaring.</span>
+              <span className="text-white/70">zaak verdient.</span>
             </h1>
             <p className="mt-8 max-w-2xl text-pretty text-lg text-white/70 sm:text-xl">
-              Cinematische websites voor restaurants, kapsalons en lokale
-              ondernemers die uit de massa willen springen. Camera door je
-              deur, video die met scrollen meebeweegt, design dat klanten doet
-              zeggen <em className="not-italic text-white">wow</em> — niet{" "}
-              <em className="not-italic">volgende</em>.
+              Premium maatwerk voor restaurants, kapsalons en lokale
+              ondernemers die opvallen tussen de templated rest. Een website
+              die klanten binnenbrengt — niet alleen mooi om naar te kijken.
             </p>
 
             <div className="mt-12 flex flex-wrap gap-3">
@@ -51,15 +49,15 @@ export default function HomePage() {
                 rel="noreferrer"
                 className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
               >
-                Bekijk de live demo
+                Bekijk de Trattoria-case
                 <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               </Link>
               <a
-                href="mailto:mitchell@nextlevelsites.nl?subject=Demo-call Next Level Site"
+                href="mailto:mitchell@nextlevelsites.nl?subject=Proposal aanvraag Next Level Site"
                 className="inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-4 text-sm font-medium text-white transition-colors hover:bg-white/10"
               >
                 <Calendar className="size-4" />
-                Plan een demo-call
+                Vraag een proposal aan
               </a>
             </div>
           </div>
@@ -88,22 +86,21 @@ export default function HomePage() {
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-3xl">
           <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-            Het probleem
+            Wat we vaak horen
           </p>
           <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-            De meeste websites zijn online folders.
+            <span className="italic">&ldquo;Mijn website levert geen klanten op.&rdquo;</span>
           </h2>
           <div className="mt-10 space-y-6 text-lg leading-relaxed text-white/75 md:text-xl">
             <p>
-              Een gemiddelde MKB-website kost €1.500 – €3.000 bij een bureau.
-              Bezoekers blijven 8 seconden, klikken weg, vergeten je naam. Een
-              online folder, niet meer.
+              Bekend? De meeste websites zijn online folders geworden. Mensen
+              komen, klikken weg, vergeten je naam. Je betaalt elke maand voor
+              hosting maar het brengt niets op.
             </p>
             <p>
-              Wat als de website van jouw zaak aanvoelt als een 30-seconden
-              trailer? Een camera die door je deur naar binnen glijdt, sfeer
-              die je voelt, een verhaal dat blijft hangen — alsof ze er al
-              zijn voor ze geboekt hebben.
+              Een goede website is geen visitekaartje. Het is iemand die je
+              voorstelt aan een nieuwe klant — overtuigend, persoonlijk,
+              precies op het moment dat ze twijfelen.
             </p>
             <p className="font-serif text-2xl italic text-white md:text-3xl">
               Dat is wat wij maken.
@@ -113,21 +110,64 @@ export default function HomePage() {
       </section>
 
       {/* ───────────────────────────────────────────────────────────
-          LIVE DEMO SHOWCASE
+          EERSTE LANCERING — single demo geframed als selectiviteit
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 bg-zinc-950 px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
           <div className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-              Live demo
+              Eerste lancering
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-              Zo voelt het.
+              Het bewijs dat het werkt.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-              Trattoria Sole, een Italiaans restaurant in Utrecht. Scroll
-              langzaam — je loopt door de deur naar binnen.
+              Trattoria Sole, een Italiaans restaurant in Utrecht. Onze eerste
+              publieke lancering — en het format waar elke volgende klant op
+              voortbouwt.
             </p>
+          </div>
+
+          {/* KPI-tiles — concrete deliverables, geen fake performance-getallen */}
+          <div className="mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4">
+            {[
+              {
+                label: "Levertijd",
+                value: "14",
+                unit: "dagen",
+                sub: "van briefing naar live",
+              },
+              {
+                label: "Architectuur",
+                value: "5",
+                unit: "pagina's",
+                sub: "cinematic, scrollable, eigen domein",
+              },
+              {
+                label: "Contact",
+                value: "1op1",
+                unit: "",
+                sub: "geen account-manager-tussenlaag",
+              },
+            ].map((kpi) => (
+              <div
+                key={kpi.label}
+                className="rounded-2xl border border-white/10 bg-black/40 p-6 sm:p-8"
+              >
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
+                  {kpi.label}
+                </p>
+                <p className="mt-3 flex items-baseline gap-2">
+                  <span className="font-serif text-5xl text-white sm:text-6xl">
+                    {kpi.value}
+                  </span>
+                  {kpi.unit ? (
+                    <span className="text-sm text-white/55">{kpi.unit}</span>
+                  ) : null}
+                </p>
+                <p className="mt-3 text-sm text-white/55">{kpi.sub}</p>
+              </div>
+            ))}
           </div>
 
           <Link
@@ -226,17 +266,17 @@ export default function HomePage() {
                 Next Level Site
               </p>
               <p className="mt-3 font-serif text-2xl text-white">
-                Een cinematische ervaring
+                Een premium website op maat
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white">
                 {[
                   "€7.500 eenmalig — alles inbegrepen",
                   "+ €497/mnd onderhoud (optioneel)",
                   "Live binnen 2 weken",
-                  "AI-gegenereerde video op maat",
-                  "Scroll-driven storytelling (5 pagina's)",
-                  "Mobile-first, glass-morphism CTAs",
-                  "SEO + Schema.org klaar voor lokaal Google",
+                  "Eigen AI-video op de homepage",
+                  "5 pagina's, scrollable verhaal",
+                  "Mobile-first, snel op elke telefoon",
+                  "Klaar voor lokaal Google (SEO + maps)",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Check className="mt-0.5 size-4 shrink-0 text-accent" />
@@ -326,25 +366,34 @@ export default function HomePage() {
       </section>
 
       {/* ───────────────────────────────────────────────────────────
-          WIE
+          WIE — persoonlijk, niet anoniem bureau
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
             Wie zit erachter
           </p>
-          <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-5xl">
-            Niet een bureau van 50.
-            <br />
-            <span className="text-white/70">
-              Eén persoon die het echt geeft.
-            </span>
+
+          {/* Avatar — placeholder met initial tot foto er is */}
+          <div className="mx-auto mt-10 grid size-28 place-items-center rounded-full border border-white/15 bg-gradient-to-br from-zinc-700 via-zinc-800 to-black font-serif text-4xl text-white/85 shadow-2xl">
+            M
+          </div>
+
+          <h2 className="mt-8 font-serif text-4xl font-light leading-tight tracking-tight md:text-5xl">
+            Mitchell Vermunt
           </h2>
+          <p className="mt-3 font-mono text-xs uppercase tracking-[0.3em] text-white/45">
+            Maker · Next Level Sites
+          </p>
+
           <p className="mx-auto mt-10 max-w-xl text-lg leading-relaxed text-white/70">
-            Next Level Sites wordt gemaakt door Mitchell Vermunt — Nederlandse
-            web-developer met 8+ jaar ervaring in MKB-websites. Geen anoniem
-            bureau, geen account-manager-tussenlaag. Eén persoon die jouw
-            website met dezelfde aandacht maakt als jouw chef-kok zijn pasta.
+            Ik bouw één site per maand. Persoonlijk, met al mijn aandacht, in
+            14 dagen. Geen bureau van 50 met account-managers ertussen —
+            gewoon jij en ik, tot het staat zoals het moet.
+          </p>
+
+          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-white/55">
+            8+ jaar ervaring in MKB-websites. Nederlands. Lokaal. Bereikbaar.
           </p>
 
           <div className="mt-12 inline-flex flex-wrap items-center justify-center gap-6 text-sm text-white/55">
@@ -489,6 +538,11 @@ export default function HomePage() {
             </div>
           </div>
 
+          {/* Schaarste-regel — premium agencies positioneren capaciteit als luxe */}
+          <p className="mt-10 text-center font-mono text-xs uppercase tracking-[0.3em] text-white/45">
+            We nemen 4 projecten per kwartaal aan.
+          </p>
+
           {/* Secundaire product — AI Content Factory link */}
           <div className="mt-16 rounded-2xl border border-white/10 bg-black/40 p-6 text-center sm:p-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
@@ -587,24 +641,24 @@ export default function HomePage() {
 
         <div className="relative mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
-            Klaar voor next level?
+            Klaar om te beginnen?
           </p>
           <h2 className="mt-6 font-serif text-5xl font-light leading-[0.95] tracking-tight md:text-7xl">
             Laten we koffie drinken.
           </h2>
           <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-white/75">
-            Plan een vrijblijvende 30-minuten demo-call. Ik laat je een live
-            versie zien voor jouw type zaak en je krijgt direct een offerte.
-            Geen pushy verkoop — beloofd.
+            Vraag een vrijblijvende proposal aan. Ik laat je een eerste opzet
+            zien voor jouw type zaak en je krijgt direct een offerte. Geen
+            pushy verkoop — beloofd.
           </p>
 
           <div className="mt-12 flex flex-wrap justify-center gap-3">
             <a
-              href="mailto:mitchell@nextlevelsites.nl?subject=Demo-call Next Level Site"
+              href="mailto:mitchell@nextlevelsites.nl?subject=Proposal aanvraag Next Level Site"
               className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-4 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
             >
               <Calendar className="size-4" />
-              Plan een demo-call
+              Vraag een proposal aan
             </a>
             <a
               href="https://wa.me/31681299321?text=Hoi%20Mitchell%2C%20vraag%20over%20Next%20Level%20Site"
