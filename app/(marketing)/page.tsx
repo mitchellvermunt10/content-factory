@@ -17,12 +17,20 @@ export default function HomePage() {
           ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/sites/italian-restaurant/exterior.jpg"
-            alt=""
+          {/* Kling 3.0 lifestyle loop — espresso met opstijgende steam,
+              poster-fallback voor snelle LCP */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="/sites/lifestyle/espresso-start.jpg"
             className="h-full w-full scale-110 object-cover"
-          />
+            aria-hidden="true"
+          >
+            <source src="/sites/lifestyle/espresso-hero.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black" />
         </div>
 
