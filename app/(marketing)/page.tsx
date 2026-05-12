@@ -219,6 +219,89 @@ export default function HomePage() {
       </section>
 
       {/* ───────────────────────────────────────────────────────────
+          VOLGENDE LANCERINGEN — concept-mockups, eerlijk gelabeld
+          ─────────────────────────────────────────────────────────── */}
+      <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl">
+          <div className="text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
+              Volgende lanceringen
+            </p>
+            <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
+              Wat we komende maanden bouwen
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
+              Voor andere lokale verticals. Concept-mockups in ontwikkeling —
+              eerlijk: nog geen live klanten, wel het format en de ervaring
+              klaar.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-4 md:grid-cols-3 md:gap-6">
+            {[
+              {
+                vertical: "Salon",
+                image: "/sites/concepts/salon.jpg",
+                title: "Voor kapsalons & beautysalons",
+                desc: "Cinematische opening met camera door de spiegelwand, zachte intieme verlichting, online afspraken boeken. Voor zaken die uitstraling als merk zien.",
+              },
+              {
+                vertical: "Garage",
+                image: "/sites/concepts/garage.jpg",
+                title: "Voor autobedrijven & garages",
+                desc: "Industrieel, masculien, vakwerk-eerst. APK-boeken inline, RDW-koppeling, vertrouwen door portfolio van werk en vakmanschap.",
+              },
+              {
+                vertical: "Tandarts",
+                image: "/sites/concepts/tandarts.jpg",
+                title: "Voor tandartspraktijken",
+                desc: "Boutique-kliniek aanvoelend, niet steriel. Patiënt-portaal voor afspraken, BIG-nummers zichtbaar, vertrouwen door zachte design.",
+              },
+            ].map((concept) => (
+              <div
+                key={concept.vertical}
+                className="group overflow-hidden rounded-3xl border border-white/10 bg-zinc-950 transition-all hover:-translate-y-1"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={concept.image}
+                    alt={`Concept-mockup voor ${concept.vertical}`}
+                    className="h-full w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  <div className="absolute left-4 top-4 rounded-full border border-white/25 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-white/75 backdrop-blur-md">
+                    Concept
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
+                      {concept.vertical}
+                    </p>
+                    <h3 className="mt-3 font-serif text-2xl sm:text-3xl">
+                      {concept.title}
+                    </h3>
+                  </div>
+                </div>
+                <p className="p-6 text-sm leading-relaxed text-white/65 sm:p-8">
+                  {concept.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-10 text-center text-sm text-white/55">
+            Wil je de eerste zijn in je vertical? Dan praten we graag.{" "}
+            <a
+              href="mailto:mitchell@nextlevelsites.nl?subject=Eerste in vertical"
+              className="text-white underline-offset-4 hover:underline"
+            >
+              Stuur een berichtje →
+            </a>
+          </p>
+        </div>
+      </section>
+
+      {/* ───────────────────────────────────────────────────────────
           WEDGE — vergelijking
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
