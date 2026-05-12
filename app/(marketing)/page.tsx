@@ -9,6 +9,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { AgencyHeroExperience } from "@/components/marketing/AgencyHeroExperience";
+import { Reveal, RevealStagger, RevealItem } from "@/components/motion/Reveal";
 
 export default function HomePage() {
   return (
@@ -20,29 +21,38 @@ export default function HomePage() {
           PROBLEEM
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-3xl">
+        <Reveal className="mx-auto max-w-3xl">
           <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
             Wat we vaak horen
           </p>
           <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
             <span className="italic">&ldquo;Mijn website levert geen klanten op.&rdquo;</span>
           </h2>
-          <div className="mt-10 space-y-6 text-lg leading-relaxed text-white/75 md:text-xl">
+        </Reveal>
+        <RevealStagger
+          className="mx-auto mt-10 max-w-3xl space-y-6 text-lg leading-relaxed text-white/75 md:text-xl"
+          stagger={0.12}
+        >
+          <RevealItem>
             <p>
               Bekend? De meeste websites zijn online folders geworden. Mensen
               komen, klikken weg, vergeten je naam. Je betaalt elke maand voor
               hosting maar het brengt niets op.
             </p>
+          </RevealItem>
+          <RevealItem>
             <p>
               Een goede website is geen visitekaartje. Het is iemand die je
               voorstelt aan een nieuwe klant — overtuigend, persoonlijk,
               precies op het moment dat ze twijfelen.
             </p>
+          </RevealItem>
+          <RevealItem>
             <p className="font-serif text-2xl italic text-white md:text-3xl">
               Dat is wat wij maken.
             </p>
-          </div>
-        </div>
+          </RevealItem>
+        </RevealStagger>
       </section>
 
       {/* ───────────────────────────────────────────────────────────
@@ -50,7 +60,7 @@ export default function HomePage() {
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 bg-zinc-950 px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-6xl">
-          <div className="text-center">
+          <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Eerste lancering
             </p>
@@ -62,10 +72,10 @@ export default function HomePage() {
               publieke lancering — en het format waar elke volgende klant op
               voortbouwt.
             </p>
-          </div>
+          </Reveal>
 
           {/* KPI-tiles — concrete deliverables, geen fake performance-getallen */}
-          <div className="mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4">
+          <RevealStagger className="mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4" stagger={0.1}>
             {[
               {
                 label: "Levertijd",
@@ -86,9 +96,9 @@ export default function HomePage() {
                 sub: "geen account-manager-tussenlaag",
               },
             ].map((kpi) => (
-              <div
+              <RevealItem
                 key={kpi.label}
-                className="rounded-2xl border border-white/10 bg-black/40 p-6 sm:p-8"
+                className="rounded-2xl border border-white/10 bg-black/40 p-6 transition-colors hover:border-white/25 sm:p-8"
               >
                 <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
                   {kpi.label}
@@ -102,15 +112,19 @@ export default function HomePage() {
                   ) : null}
                 </p>
                 <p className="mt-3 text-sm text-white/55">{kpi.sub}</p>
-              </div>
+              </RevealItem>
             ))}
-          </div>
+          </RevealStagger>
 
+          <Reveal
+            className="mt-16"
+            delay={0.15}
+          >
           <Link
             href="/sites/trattoria-sole"
             target="_blank"
             rel="noreferrer"
-            className="group mt-16 block overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl transition-transform hover:-translate-y-1"
+            className="group block overflow-hidden rounded-2xl border border-white/15 bg-black shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-white/30 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.8)]"
           >
             <div className="flex items-center gap-2 border-b border-white/10 bg-zinc-900 px-4 py-3">
               <div className="flex gap-1.5">
@@ -147,94 +161,10 @@ export default function HomePage() {
               </div>
             </div>
           </Link>
+          </Reveal>
 
           <p className="mt-8 text-center text-sm text-white/45">
             Tip: scroll rustig met je trackpad. Op mobiel: gewoon swipen.
-          </p>
-        </div>
-      </section>
-
-      {/* ───────────────────────────────────────────────────────────
-          VOLGENDE LANCERINGEN — concept-mockups, eerlijk gelabeld
-          ─────────────────────────────────────────────────────────── */}
-      <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-6xl">
-          <div className="text-center">
-            <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-              Volgende lanceringen
-            </p>
-            <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-              Een website die jouw
-              <br />
-              <span className="text-white/70">vakwerk eer aandoet.</span>
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-              Voor kapsalons, autobedrijven en tandartsen die hun vakmanschap
-              op het niveau willen tonen dat het verdient. Concept-mockups
-              voor andere verticals — in ontwikkeling.
-            </p>
-          </div>
-
-          <div className="mt-16 grid gap-4 md:grid-cols-3 md:gap-6">
-            {[
-              {
-                vertical: "Salon",
-                image: "/sites/concepts/salon.jpg",
-                title: "Voor kapsalons",
-                desc: "Een website die je vakwerk en sfeer toont als merk. Geen templated agency-look — klanten zien wie je écht bent, en waarom ze bij jou willen knippen.",
-              },
-              {
-                vertical: "Garage",
-                image: "/sites/concepts/garage.jpg",
-                title: "Voor autobedrijven",
-                desc: "Een website die vakmanschap en vertrouwen uitstraalt. Klanten zien wie er aan hun auto sleutelt — en waarom ze bij jou veilig zitten.",
-              },
-              {
-                vertical: "Tandarts",
-                image: "/sites/concepts/tandarts.jpg",
-                title: "Voor tandartspraktijken",
-                desc: "Een website die rust en vertrouwen uitstraalt. Patiënten voelen al voor de eerste afspraak dat ze bij jou in goede handen zijn.",
-              },
-            ].map((concept) => (
-              <div
-                key={concept.vertical}
-                className="group overflow-hidden rounded-3xl border border-white/10 bg-zinc-950 transition-all hover:-translate-y-1"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={concept.image}
-                    alt={`Concept-mockup voor ${concept.vertical}`}
-                    className="h-full w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
-                  <div className="absolute left-4 top-4 rounded-full border border-white/25 bg-black/40 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-white/75 backdrop-blur-md">
-                    Concept
-                  </div>
-                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
-                      {concept.vertical}
-                    </p>
-                    <h3 className="mt-3 font-serif text-2xl sm:text-3xl">
-                      {concept.title}
-                    </h3>
-                  </div>
-                </div>
-                <p className="p-6 text-sm leading-relaxed text-white/65 sm:p-8">
-                  {concept.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <p className="mt-10 text-center text-sm text-white/55">
-            Wil je de eerste zijn in je vertical? Dan praten we graag.{" "}
-            <a
-              href="mailto:mitchell@nextlevelsites.nl?subject=Eerste in vertical"
-              className="text-white underline-offset-4 hover:underline"
-            >
-              Stuur een berichtje →
-            </a>
           </p>
         </div>
       </section>
@@ -244,17 +174,17 @@ export default function HomePage() {
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
         <div className="mx-auto max-w-5xl">
-          <div className="text-center">
+          <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Vergelijking
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
               Wat krijg je per euro?
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="mt-16 grid gap-4 md:grid-cols-2 md:gap-6">
-            <div className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-10">
+          <RevealStagger className="mt-16 grid gap-4 md:grid-cols-2 md:gap-6" stagger={0.15}>
+            <RevealItem className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-10">
               <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40">
                 Traditioneel webbureau
               </p>
@@ -277,9 +207,9 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </RevealItem>
 
-            <div className="relative rounded-3xl border border-accent/40 bg-accent/[0.05] p-8 sm:p-10">
+            <RevealItem className="relative rounded-3xl border border-accent/40 bg-accent/[0.05] p-8 sm:p-10">
               <div className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-black">
                 Wat wij maken
               </div>
@@ -305,15 +235,17 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
+            </RevealItem>
+          </RevealStagger>
 
-          <p className="mt-12 text-center text-sm text-white/55">
-            Een traditioneel bureau kost over een jaar zo'n €5.000–€10.000
-            inclusief wijzigingen. Bij Studio zit je op €5.864 jaar 1
-            (eenmalig + onderhoud), bij Signature €13.464 — maar alles erbij
-            inbegrepen, geen factuurtjes per pasta-foto.
-          </p>
+          <Reveal>
+            <p className="mt-12 text-center text-sm text-white/55">
+              Een traditioneel bureau kost over een jaar zo'n €5.000–€10.000
+              inclusief wijzigingen. Bij Studio zit je op €5.864 jaar 1
+              (eenmalig + onderhoud), bij Signature €13.464 — maar alles erbij
+              inbegrepen, geen factuurtjes per pasta-foto.
+            </p>
+          </Reveal>
         </div>
       </section>
 
@@ -667,20 +599,26 @@ export default function HomePage() {
       </section>
 
       {/* ───────────────────────────────────────────────────────────
-          FINAL CTA
+          FINAL CTA — autoplay espresso loop voor cinematic afsluiting
           ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden border-t border-white/10 px-6 py-32">
         <div className="absolute inset-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/sites/italian-restaurant/post-2-ambiance.jpg"
-            alt=""
-            className="h-full w-full scale-110 object-cover opacity-40"
-          />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster="/sites/lifestyle/espresso-start.jpg"
+            className="h-full w-full scale-110 object-cover opacity-50"
+            aria-hidden="true"
+          >
+            <source src="/sites/lifestyle/espresso-hero.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black" />
         </div>
 
-        <div className="relative mx-auto max-w-3xl text-center">
+        <Reveal className="relative mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
             Klaar om te beginnen?
           </p>
@@ -715,7 +653,7 @@ export default function HomePage() {
           <p className="mt-8 text-xs text-white/45">
             Geen verplichting · Geen kleine lettertjes · Reactie binnen 24 uur
           </p>
-        </div>
+        </Reveal>
       </section>
     </div>
   );

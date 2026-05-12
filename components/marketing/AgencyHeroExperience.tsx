@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ArrowUpRight, Calendar } from "lucide-react";
 import { ImageSequence } from "@/components/sites/ImageSequence";
 import { Scene, SceneText } from "@/components/sites/Scene";
-import { SmoothScrollProvider } from "@/components/sites/SmoothScrollProvider";
 
 // Agency hero Kling-frames — cinematic dolly-in naar laptop met website,
 // representeert wat WIJ maken voor de bezoeker (niet één specifieke klant).
@@ -29,7 +28,7 @@ export function AgencyHeroExperience() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <SmoothScrollProvider>
+    <>
       <div ref={containerRef} className="relative bg-black text-white">
         {/* Pinned cinematic background — sticky tijdens scroll over de hero */}
         <div
@@ -207,6 +206,6 @@ export function AgencyHeroExperience() {
           </div>
         </div>
       </div>
-    </SmoothScrollProvider>
+    </>
   );
 }
