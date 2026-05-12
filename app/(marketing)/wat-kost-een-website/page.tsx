@@ -46,7 +46,7 @@ const FAQ_SCHEMA = {
       name: "Wat kost een Next Level Site precies?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Twee tiers: Essentials (€3.500 eenmalig + €197/mnd onderhoud optioneel) voor modaal MKB met slim hergebruik per branche, live in 1 week. Signature (€7.500 eenmalig + €497/mnd aanbevolen) voor wie volledig op maat wil — eigen video, eigen scènes, eigen verhaal. Beide leveren een complete 5-pagina cinematic website.",
+        text: "Twee tiers: Studio (€3.500 eenmalig + €197/mnd onderhoud optioneel) voor modaal MKB met slim hergebruik per branche, live in 1 week. Signature (€7.500 eenmalig + €497/mnd aanbevolen) voor wie volledig op maat wil — eigen video, eigen scènes, eigen verhaal. Beide leveren een complete 5-pagina cinematic website.",
       },
     },
     {
@@ -54,7 +54,7 @@ const FAQ_SCHEMA = {
       name: "Wat zijn de jaarlijkse kosten van een website?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Hosting (€50–€200/jaar), domein (€10–€30/jaar), onderhoud variabel (€50/uur bij meeste bureaus). Bij Next Level Sites is het vanaf €197/maand (Essentials) of €497/maand (Signature) all-in: content-updates, hosting, security en support inbegrepen — geen uurtarieven achteraf.",
+        text: "Hosting (€50–€200/jaar), domein (€10–€30/jaar), onderhoud variabel (€50/uur bij meeste bureaus). Bij Next Level Sites is het vanaf €197/maand (Studio) of €497/maand (Signature) all-in: content-updates, hosting, security en support inbegrepen — geen uurtarieven achteraf.",
       },
     },
     {
@@ -130,17 +130,17 @@ export default function WatKostEenWebsitePage() {
                   cons: "Generieke 'agency look', maandelijkse facturen voor wijzigingen (€50/u), 4–8 weken levertijd",
                 },
                 {
-                  range: "€3.500 (Essentials)",
-                  type: "Cinematic maatwerk-format — modaal toegankelijk",
-                  desc: "Onze instaptier. Hetzelfde cinematic format als Signature, maar met slim hergebruik per branche: gedeelde dolly-video + 2 custom hero-shots per klant. Volledige 5-pagina site, live in 1 week.",
-                  cons: "Hero-video is een vertical-template (niet uniek), beperkter aantal custom hero-shots",
+                  range: "€3.500 (Studio)",
+                  type: "Cinematic format — efficiënte productie",
+                  desc: "Onze studio-tier. Cinematic format met branche-specifieke template-systeem (dolly-video + 2 custom hero-shots per klant). Volledige 5-pagina site, premium uitvoering, live in 1 week.",
+                  cons: "Hero-video is een branche-template (niet volledig uniek), 2 hero-shots ipv 3-5",
                   highlight: true,
                 },
                 {
                   range: "€7.500 (Signature)",
                   type: "Volledig op maat — fully custom",
                   desc: "Onze premium tier. Eigen Kling cinematic dolly-video op maat, eigen Flux Pro hero-shots, uniek scene-design, persoonlijke begeleiding. Voor wie de mooiste van zijn stad wil zijn.",
-                  cons: "Overkill als je geen unieke video-content wilt — neem dan Essentials",
+                  cons: "Overkill als je geen unieke video-content wilt — neem dan Studio",
                   highlight: true,
                 },
                 {
@@ -189,7 +189,7 @@ export default function WatKostEenWebsitePage() {
               Tot op de regel transparant
             </h2>
             <p className="mt-4 max-w-2xl text-base text-white/65">
-              Voor Essentials (€3.500) lopen alle posten ~40% korter — slim
+              Voor Studio (€3.500) lopen alle posten ~40% korter — slim
               hergebruik per branche, ~30 uur ipv 64 uur ontwikkeltijd.
             </p>
 
@@ -257,7 +257,7 @@ export default function WatKostEenWebsitePage() {
             </div>
 
             <p className="mt-8 text-center text-sm text-white/55">
-              Signature: ~64 uur ontwikkelwerk = €117/uur. Essentials: ~30
+              Signature: ~64 uur ontwikkelwerk = €117/uur. Studio: ~30
               uur = €117/uur. Onder NL-bureau-tarief (€85–€150/u) maar mét
               de AI-power die normaal alleen agencies van €40k+ leveren.
             </p>

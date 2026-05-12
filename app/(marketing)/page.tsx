@@ -228,14 +228,14 @@ export default function HomePage() {
               Volgende lanceringen
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-              Jouw zaak blijft modaal.
+              Een website die jouw
               <br />
-              <span className="text-white/70">Je website wordt next level.</span>
+              <span className="text-white/70">vakwerk eer aandoet.</span>
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-              Geen boutique-praktijk, geen Lamborghini-dealer. Gewoon de zaak
-              die jij elke dag draait — maar met een website die voelt als
-              een merk. Concept-mockups voor andere verticals, in ontwikkeling.
+              Voor kapsalons, autobedrijven en tandartsen die hun vakmanschap
+              op het niveau willen tonen dat het verdient. Concept-mockups
+              voor andere verticals — in ontwikkeling.
             </p>
           </div>
 
@@ -244,20 +244,20 @@ export default function HomePage() {
               {
                 vertical: "Salon",
                 image: "/sites/concepts/salon.jpg",
-                title: "Voor de kapsalon op de hoek",
-                desc: "Geen boutique. Gewoon vier stoelen, gewoon goed werk. Maar een website die je vakwerk laat zien als merk — klanten zien wie je bent, geen templated agency-look.",
+                title: "Voor kapsalons",
+                desc: "Een website die je vakwerk en sfeer toont als merk. Geen templated agency-look — klanten zien wie je écht bent, en waarom ze bij jou willen knippen.",
               },
               {
                 vertical: "Garage",
                 image: "/sites/concepts/garage.jpg",
-                title: "Voor het autobedrijf van de buurt",
-                desc: "Geen exclusieve dealer. Gewoon auto's, tools, jullie. Maar een website die vertrouwen wekt — klanten zien wie er aan hun auto sleutelt, en waarom dat goud waard is.",
+                title: "Voor autobedrijven",
+                desc: "Een website die vakmanschap en vertrouwen uitstraalt. Klanten zien wie er aan hun auto sleutelt — en waarom ze bij jou veilig zitten.",
               },
               {
                 vertical: "Tandarts",
                 image: "/sites/concepts/tandarts.jpg",
-                title: "Voor de tandarts in jouw straat",
-                desc: "Geen lifestyle-kliniek. Gewoon zorg, gewoon vakmanschap. Maar een website die rust uitstraalt — patiënten voelen al voor de eerste afspraak dat ze in goede handen zijn.",
+                title: "Voor tandartspraktijken",
+                desc: "Een website die rust en vertrouwen uitstraalt. Patiënten voelen al voor de eerste afspraak dat ze bij jou in goede handen zijn.",
               },
             ].map((concept) => (
               <div
@@ -355,10 +355,10 @@ export default function HomePage() {
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white">
                 {[
-                  "Essentials €3.500 of Signature €7.500",
+                  "Studio €3.500 of Signature €7.500",
                   "+ vanaf €197/mnd onderhoud (optioneel)",
                   "Live in 1-2 weken",
-                  "AI-video op je homepage (gedeeld of uniek)",
+                  "AI-video op je homepage (template of uniek)",
                   "5 pagina's, scrollable verhaal",
                   "Mobile-first, snel op elke telefoon",
                   "Klaar voor lokaal Google (SEO + maps)",
@@ -374,7 +374,7 @@ export default function HomePage() {
 
           <p className="mt-12 text-center text-sm text-white/55">
             Een traditioneel bureau kost over een jaar zo'n €5.000–€10.000
-            inclusief wijzigingen. Bij Essentials zit je op €5.864 jaar 1
+            inclusief wijzigingen. Bij Studio zit je op €5.864 jaar 1
             (eenmalig + onderhoud), bij Signature €13.464 — maar alles erbij
             inbegrepen, geen factuurtjes per pasta-foto.
           </p>
@@ -513,10 +513,10 @@ export default function HomePage() {
           </div>
 
           <div className="mt-16 grid gap-4 lg:grid-cols-3 lg:gap-6">
-            {/* ESSENTIALS — voor modaal MKB */}
+            {/* STUDIO — efficient cinematic via geverifieerde format */}
             <div className="rounded-3xl border border-white/10 bg-black p-8 sm:p-10">
               <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/45">
-                Essentials
+                Studio
               </p>
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="font-serif text-5xl">€3.500</span>
@@ -526,14 +526,14 @@ export default function HomePage() {
                 + €197/mnd onderhoud (optioneel)
               </p>
               <p className="mt-4 text-sm text-white/70">
-                Cinematic website-format voor wie het écht wil — zonder
-                Hollywood-budget. Slim hergebruik per branche, premium
-                gevoel, modaal toegankelijk.
+                Onze cinematic website-format met efficiënte productie:
+                snel live, premium uitvoering, branche-specifieke
+                template-systeem dat zich heeft bewezen.
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white/70">
                 {[
-                  "Gedeelde cinematic hero-video per branche",
-                  "2 custom Flux Pro hero-shots",
+                  "Cinematic hero-video per branche (proven format)",
+                  "2 custom Flux Pro hero-shots op maat",
                   "5 pagina's: home/kaart/reserveren/verhaal/contact",
                   "Sticky CTAs, WhatsApp-knop, Google Maps",
                   "Mobile-first design",
@@ -548,7 +548,7 @@ export default function HomePage() {
                 ))}
               </ul>
               <a
-                href="mailto:mitchell@nextlevelsites.nl?subject=Essentials Next Level Site"
+                href="mailto:mitchell@nextlevelsites.nl?subject=Studio Next Level Site"
                 className="mt-10 flex w-full items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3.5 text-sm font-medium transition-colors hover:bg-white/10"
               >
                 Vraag offerte aan
@@ -573,7 +573,7 @@ export default function HomePage() {
               </p>
               <p className="mt-4 text-sm text-white/85">
                 Volledig op maat. Eigen video, eigen scènes, eigen verhaal —
-                voor wie de mooiste website van zijn stad wil zijn.
+                voor wie elke detail uniek wil hebben.
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white/85">
                 {[
