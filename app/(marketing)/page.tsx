@@ -14,45 +14,133 @@ import { Reveal, RevealStagger, RevealItem } from "@/components/motion/Reveal";
 export default function HomePage() {
   return (
     <div className="relative bg-black text-white">
-      {/* Cinematic scroll-driven hero — Trattoria Kling dolly + verticals showcase */}
+      {/* Cinematic scroll-driven hero — Kling orbit dolly */}
       <AgencyHeroExperience />
 
       {/* ───────────────────────────────────────────────────────────
-          PROBLEEM
+          VERTICALS SHOWCASE — normaal flowing, niet meer pinned
           ─────────────────────────────────────────────────────────── */}
       <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <Reveal className="mx-auto max-w-3xl">
-          <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-            Wat we vaak horen
-          </p>
-          <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-            <span className="italic">&ldquo;Mijn website levert geen klanten op.&rdquo;</span>
-          </h2>
-        </Reveal>
-        <RevealStagger
-          className="mx-auto mt-10 max-w-3xl space-y-6 text-lg leading-relaxed text-white/75 md:text-xl"
-          stagger={0.12}
-        >
-          <RevealItem>
-            <p>
-              Bekend? De meeste websites zijn online folders geworden. Mensen
-              komen, klikken weg, vergeten je naam. Je betaalt elke maand voor
-              hosting maar het brengt niets op.
+        <div className="mx-auto max-w-6xl">
+          <Reveal className="text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
+              Voor elke vakman
             </p>
-          </RevealItem>
-          <RevealItem>
-            <p>
-              Een goede website is geen visitekaartje. Het is iemand die je
-              voorstelt aan een nieuwe klant — overtuigend, persoonlijk,
-              precies op het moment dat ze twijfelen.
+            <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
+              Hetzelfde cinematic format.
+              <br />
+              <span className="text-white/70">Voor elke branche.</span>
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
+              Restaurants nu live. Kapsalons, autobedrijven en tandartsen
+              volgen — dezelfde scroll-driven ervaring, per branche eigen
+              scènes en sfeer.
             </p>
-          </RevealItem>
-          <RevealItem>
-            <p className="font-serif text-2xl italic text-white md:text-3xl">
-              Dat is wat wij maken.
+          </Reveal>
+
+          <RevealStagger
+            className="mt-16 grid gap-4 md:grid-cols-3 md:gap-6"
+            stagger={0.12}
+          >
+            {[
+              {
+                label: "Kapsalons",
+                image: "/sites/concepts/salon.jpg",
+                line: "Vakwerk als merk",
+              },
+              {
+                label: "Autobedrijven",
+                image: "/sites/concepts/garage.jpg",
+                line: "Vakmanschap dat vertrouwen wekt",
+              },
+              {
+                label: "Tandartspraktijken",
+                image: "/sites/concepts/tandarts.jpg",
+                line: "Rust voor de eerste afspraak",
+              },
+            ].map((v) => (
+              <RevealItem
+                key={v.label}
+                className="group relative overflow-hidden rounded-2xl border border-white/15 bg-black/40 transition-all hover:-translate-y-1 hover:border-white/30"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={v.image}
+                    alt={`Concept voor ${v.label}`}
+                    className="h-full w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+                  <div className="absolute left-4 top-4 rounded-full border border-white/25 bg-black/55 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-white/75 backdrop-blur-md">
+                    Concept
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-6">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/65">
+                      {v.label}
+                    </p>
+                    <p className="mt-2 font-serif text-2xl leading-tight md:text-3xl">
+                      {v.line}
+                    </p>
+                  </div>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </div>
+      </section>
+
+      {/* ───────────────────────────────────────────────────────────
+          PROBLEEM — met cinematic parallax achtergrond
+          ─────────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden border-t border-white/10 px-6 py-32 sm:py-40">
+        {/* Cinematic backdrop — interieur shot van Trattoria, heavily darkened */}
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/sites/italian-restaurant/interior.jpg"
+            alt=""
+            className="h-full w-full scale-110 object-cover opacity-25"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/85 to-black" />
+        </div>
+
+        <div className="relative mx-auto max-w-4xl">
+          <Reveal>
+            <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
+              Wat we vaak horen
             </p>
-          </RevealItem>
-        </RevealStagger>
+            <h2 className="mt-8 font-serif text-5xl font-light leading-[1.05] tracking-tight md:text-7xl lg:text-8xl">
+              <span className="italic">&ldquo;Mijn website levert
+              <br />
+              <span className="text-white/80">geen klanten op.&rdquo;</span></span>
+            </h2>
+          </Reveal>
+
+          <RevealStagger
+            className="mt-16 max-w-2xl space-y-7 text-lg leading-relaxed text-white/80 md:text-xl"
+            stagger={0.15}
+          >
+            <RevealItem>
+              <p>
+                Bekend? De meeste websites zijn online folders geworden.
+                Mensen komen, klikken weg, vergeten je naam. Je betaalt elke
+                maand voor hosting maar het brengt niets op.
+              </p>
+            </RevealItem>
+            <RevealItem>
+              <p>
+                Een goede website is geen visitekaartje. Het is iemand die je
+                voorstelt aan een nieuwe klant — overtuigend, persoonlijk,
+                precies op het moment dat ze twijfelen.
+              </p>
+            </RevealItem>
+            <RevealItem>
+              <p className="font-serif text-3xl italic text-white md:text-4xl">
+                Dat is wat wij maken.
+              </p>
+            </RevealItem>
+          </RevealStagger>
+        </div>
       </section>
 
       {/* ───────────────────────────────────────────────────────────
@@ -170,10 +258,19 @@ export default function HomePage() {
       </section>
 
       {/* ───────────────────────────────────────────────────────────
-          WEDGE — vergelijking
+          WEDGE — vergelijking, met subtiele backdrop
           ─────────────────────────────────────────────────────────── */}
-      <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <div className="mx-auto max-w-5xl">
+      <section className="relative overflow-hidden border-t border-white/10 px-6 py-24 sm:py-32">
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/sites/italian-restaurant/post-2-ambiance.jpg"
+            alt=""
+            className="h-full w-full scale-110 object-cover opacity-15"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/90 to-black" />
+        </div>
+        <div className="relative mx-auto max-w-5xl">
           <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
               Vergelijking
@@ -320,10 +417,19 @@ export default function HomePage() {
       </section>
 
       {/* ───────────────────────────────────────────────────────────
-          WIE — persoonlijk, niet anoniem bureau
+          WIE — persoonlijk, met workspace backdrop
           ─────────────────────────────────────────────────────────── */}
-      <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
-        <Reveal className="mx-auto max-w-3xl text-center">
+      <section className="relative overflow-hidden border-t border-white/10 px-6 py-24 sm:py-32">
+        <div className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/sites/lifestyle/agency-hero-wide-start.jpg"
+            alt=""
+            className="h-full w-full scale-110 object-cover opacity-25"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black via-black/85 to-black" />
+        </div>
+        <Reveal className="relative mx-auto max-w-3xl text-center">
           <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
             Wie zit erachter
           </p>

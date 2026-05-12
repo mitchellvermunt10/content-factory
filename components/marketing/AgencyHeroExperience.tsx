@@ -35,15 +35,13 @@ export function AgencyHeroExperience() {
           className="pointer-events-none sticky top-0 z-0 h-screen w-full"
           aria-hidden="true"
         >
-          {/* Agency hero Kling dolly — speelt 0-45%, fade-out 42-55% naar pure black */}
+          {/* Agency hero Kling dolly — speelt over de hele hero-scroll heen */}
           <ImageSequence
             frames={AGENCY_HERO_FRAMES}
             scrollContainerRef={
               containerRef as React.RefObject<HTMLElement | null>
             }
             fit="cover"
-            progressRange={{ from: 0, to: 0.45 }}
-            fadeOutAfter={{ from: 0.42, to: 0.55 }}
             className="absolute inset-0 h-full w-full"
           />
           {/* Vignette voor tekst-leesbaarheid */}
@@ -101,90 +99,9 @@ export function AgencyHeroExperience() {
             </SceneText>
           </Scene>
 
-          {/* Scene 2 — Verticals showcase: één scene met 3 concepts + bridging copy */}
-          <Scene vhMultiplier={2.2}>
-            <div className="w-full px-6">
-              <div className="mx-auto max-w-6xl">
-                <SceneText
-                  enterStart={0.0}
-                  enterEnd={0.15}
-                  exitStart={0.93}
-                  exitEnd={1.0}
-                  travel={40}
-                  className="text-center"
-                >
-                  <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/55">
-                    Voor elke vakman
-                  </p>
-                  <h2 className="mt-5 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-                    Hetzelfde cinematic format.
-                    <br />
-                    <span className="text-white/70">Voor elke branche.</span>
-                  </h2>
-                  <p className="mx-auto mt-6 max-w-2xl text-base text-white/65 sm:text-lg">
-                    Restaurants nu live. Kapsalons, autobedrijven en
-                    tandartsen volgen — dezelfde scrolldriven ervaring, per
-                    branche eigen scènes en sfeer.
-                  </p>
-                </SceneText>
-
-                <SceneText
-                  enterStart={0.15}
-                  enterEnd={0.35}
-                  exitStart={0.93}
-                  exitEnd={1.0}
-                  travel={32}
-                  className="mt-12"
-                >
-                  <div className="grid gap-3 sm:grid-cols-3 sm:gap-4">
-                    {[
-                      {
-                        label: "Kapsalons",
-                        image: "/sites/concepts/salon.jpg",
-                        line: "Vakwerk als merk",
-                      },
-                      {
-                        label: "Autobedrijven",
-                        image: "/sites/concepts/garage.jpg",
-                        line: "Vakmanschap dat vertrouwen wekt",
-                      },
-                      {
-                        label: "Tandartspraktijken",
-                        image: "/sites/concepts/tandarts.jpg",
-                        line: "Rust voor de eerste afspraak",
-                      },
-                    ].map((v) => (
-                      <div
-                        key={v.label}
-                        className="group relative overflow-hidden rounded-2xl border border-white/15 bg-black/40 backdrop-blur-md"
-                      >
-                        <div className="relative aspect-[4/5] overflow-hidden">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={v.image}
-                            alt={`Concept voor ${v.label}`}
-                            className="h-full w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                          <div className="absolute left-3 top-3 rounded-full border border-white/25 bg-black/55 px-2.5 py-1 font-mono text-[9px] uppercase tracking-[0.3em] text-white/75 backdrop-blur-md">
-                            Concept
-                          </div>
-                          <div className="absolute inset-x-0 bottom-0 p-5">
-                            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
-                              {v.label}
-                            </p>
-                            <p className="mt-2 font-serif text-xl leading-tight md:text-2xl">
-                              {v.line}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </SceneText>
-              </div>
-            </div>
-          </Scene>
+          {/* Geen pinned-scroll scene 2 meer — verticals showcase is nu
+              een normale flowing sectie op page.tsx ná de hero. Zinvoller
+              scroll-real-estate. */}
         </div>
 
         {/* Stats-strip — transitie naar de rest van de pagina */}
