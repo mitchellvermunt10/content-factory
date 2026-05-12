@@ -43,10 +43,10 @@ const FAQ_SCHEMA = {
     },
     {
       "@type": "Question",
-      name: "Waarom kost een Next Level Site €7.500?",
+      name: "Wat kost een Next Level Site precies?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Een premium maatwerk-website met AI-gegenereerde cinematic video, 5 inhoudelijke pagina's, eigen domein, SEO, en mobile-first design. Plus 14 dagen levertijd en persoonlijke begeleiding van Mitchell zelf. Geen templates, geen account-manager-tussenlaag.",
+        text: "Twee tiers: Essentials (€3.500 eenmalig + €197/mnd onderhoud optioneel) voor modaal MKB met slim hergebruik per branche, live in 1 week. Signature (€7.500 eenmalig + €497/mnd aanbevolen) voor wie volledig op maat wil — eigen video, eigen scènes, eigen verhaal. Beide leveren een complete 5-pagina cinematic website.",
       },
     },
     {
@@ -54,7 +54,7 @@ const FAQ_SCHEMA = {
       name: "Wat zijn de jaarlijkse kosten van een website?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Hosting (€50–€200/jaar), domein (€10–€30/jaar), onderhoud variabel (€50/uur bij meeste bureaus). Bij Next Level Sites is dat €497/maand all-in inclusief content-updates, hosting, security en support — geen uurtarieven achteraf.",
+        text: "Hosting (€50–€200/jaar), domein (€10–€30/jaar), onderhoud variabel (€50/uur bij meeste bureaus). Bij Next Level Sites is het vanaf €197/maand (Essentials) of €497/maand (Signature) all-in: content-updates, hosting, security en support inbegrepen — geen uurtarieven achteraf.",
       },
     },
     {
@@ -130,10 +130,17 @@ export default function WatKostEenWebsitePage() {
                   cons: "Generieke 'agency look', maandelijkse facturen voor wijzigingen (€50/u), 4–8 weken levertijd",
                 },
                 {
-                  range: "€7.500 (eenmalig)",
-                  type: "Premium maatwerk-website",
-                  desc: "Onze categorie. Cinematic video, scroll-driven storytelling, eigen domein gekoppeld, 5 pagina's, mobile-first. Voor ondernemers die opvallen als merk.",
-                  cons: "Niet voor zaken die alleen een online adres zoeken — dat is overkill",
+                  range: "€3.500 (Essentials)",
+                  type: "Cinematic maatwerk-format — modaal toegankelijk",
+                  desc: "Onze instaptier. Hetzelfde cinematic format als Signature, maar met slim hergebruik per branche: gedeelde dolly-video + 2 custom hero-shots per klant. Volledige 5-pagina site, live in 1 week.",
+                  cons: "Hero-video is een vertical-template (niet uniek), beperkter aantal custom hero-shots",
+                  highlight: true,
+                },
+                {
+                  range: "€7.500 (Signature)",
+                  type: "Volledig op maat — fully custom",
+                  desc: "Onze premium tier. Eigen Kling cinematic dolly-video op maat, eigen Flux Pro hero-shots, uniek scene-design, persoonlijke begeleiding. Voor wie de mooiste van zijn stad wil zijn.",
+                  cons: "Overkill als je geen unieke video-content wilt — neem dan Essentials",
                   highlight: true,
                 },
                 {
@@ -172,15 +179,19 @@ export default function WatKostEenWebsitePage() {
           </div>
         </section>
 
-        {/* WAT KRIJG JE BIJ ONS VOOR €7.500 */}
+        {/* WAT KRIJG JE BIJ ONS — Signature breakdown */}
         <section className="border-b border-white/10 bg-zinc-950 px-6 py-20 sm:py-28">
           <div className="mx-auto max-w-5xl">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-              Wat zit er bij €7.500?
+              Wat zit er bij Signature (€7.500)?
             </p>
             <h2 className="mt-4 font-serif text-3xl font-light tracking-tight md:text-5xl">
               Tot op de regel transparant
             </h2>
+            <p className="mt-4 max-w-2xl text-base text-white/65">
+              Voor Essentials (€3.500) lopen alle posten ~40% korter — slim
+              hergebruik per branche, ~30 uur ipv 64 uur ontwikkeltijd.
+            </p>
 
             <div className="mt-12 grid gap-3 md:grid-cols-2 md:gap-4">
               {[
@@ -246,9 +257,9 @@ export default function WatKostEenWebsitePage() {
             </div>
 
             <p className="mt-8 text-center text-sm text-white/55">
-              Totaal: ~64 uur ontwikkelwerk + AI-productiekosten. Dat is
-              €117/uur — onder NL-bureau-tarief (€85–€150/u) maar mét de
-              AI-power die normaal alleen agencies van €40k+ leveren.
+              Signature: ~64 uur ontwikkelwerk = €117/uur. Essentials: ~30
+              uur = €117/uur. Onder NL-bureau-tarief (€85–€150/u) maar mét
+              de AI-power die normaal alleen agencies van €40k+ leveren.
             </p>
           </div>
         </section>

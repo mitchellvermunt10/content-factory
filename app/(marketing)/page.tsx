@@ -64,9 +64,9 @@ export default function HomePage() {
 
           <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-6 border-t border-white/10 pt-8 sm:max-w-3xl sm:grid-cols-4">
             {[
-              { label: "Levertijd", value: "2 weken" },
-              { label: "Premium prijs", value: "€7.500" },
-              { label: "Onderhoud", value: "€497 / mnd" },
+              { label: "Vanaf", value: "€3.500" },
+              { label: "Levertijd", value: "1-2 weken" },
+              { label: "Onderhoud", value: "vanaf €197" },
               { label: "Verticals", value: "Horeca, MKB" },
             ].map((stat) => (
               <div key={stat.label}>
@@ -351,14 +351,14 @@ export default function HomePage() {
                 Next Level Site
               </p>
               <p className="mt-3 font-serif text-2xl text-white">
-                Een premium website op maat
+                Vanaf €3.500 — cinematic format
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white">
                 {[
-                  "€7.500 eenmalig — alles inbegrepen",
-                  "+ €497/mnd onderhoud (optioneel)",
-                  "Live binnen 2 weken",
-                  "Eigen AI-video op de homepage",
+                  "Essentials €3.500 of Signature €7.500",
+                  "+ vanaf €197/mnd onderhoud (optioneel)",
+                  "Live in 1-2 weken",
+                  "AI-video op je homepage (gedeeld of uniek)",
                   "5 pagina's, scrollable verhaal",
                   "Mobile-first, snel op elke telefoon",
                   "Klaar voor lokaal Google (SEO + maps)",
@@ -374,8 +374,9 @@ export default function HomePage() {
 
           <p className="mt-12 text-center text-sm text-white/55">
             Een traditioneel bureau kost over een jaar zo'n €5.000–€10.000
-            inclusief wijzigingen. Onze Always-On is €13.464 — maar alles
-            erbij inbegrepen, geen factuurtjes per pasta-foto.
+            inclusief wijzigingen. Bij Essentials zit je op €5.864 jaar 1
+            (eenmalig + onderhoud), bij Signature €13.464 — maar alles erbij
+            inbegrepen, geen factuurtjes per pasta-foto.
           </p>
         </div>
       </section>
@@ -512,26 +513,33 @@ export default function HomePage() {
           </div>
 
           <div className="mt-16 grid gap-4 lg:grid-cols-3 lg:gap-6">
+            {/* ESSENTIALS — voor modaal MKB */}
             <div className="rounded-3xl border border-white/10 bg-black p-8 sm:p-10">
               <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/45">
-                Eenmalig pakket
+                Essentials
               </p>
               <div className="mt-4 flex items-baseline gap-2">
-                <span className="font-serif text-5xl">€7.500</span>
+                <span className="font-serif text-5xl">€3.500</span>
                 <span className="text-sm text-white/55">eenmalig</span>
               </div>
               <p className="mt-2 text-sm text-white/55">
-                Complete cinematische website. Geen abonnement.
+                + €197/mnd onderhoud (optioneel)
+              </p>
+              <p className="mt-4 text-sm text-white/70">
+                Cinematic website-format voor wie het écht wil — zonder
+                Hollywood-budget. Slim hergebruik per branche, premium
+                gevoel, modaal toegankelijk.
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white/70">
                 {[
-                  "AI-gegenereerde hero-video op maat",
-                  "5 pagina's (home, kaart, reserveren, verhaal, contact)",
+                  "Gedeelde cinematic hero-video per branche",
+                  "2 custom Flux Pro hero-shots",
+                  "5 pagina's: home/kaart/reserveren/verhaal/contact",
                   "Sticky CTAs, WhatsApp-knop, Google Maps",
-                  "Mobile-first design met glass-morphism",
-                  "SEO + Schema.org markup",
+                  "Mobile-first design",
+                  "SEO + Schema.org klaar voor lokaal Google",
                   "Eigen domein gekoppeld",
-                  "Live binnen 2 weken",
+                  "Live binnen 1 week",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Check className="mt-0.5 size-4 shrink-0 text-white/55" />
@@ -540,7 +548,7 @@ export default function HomePage() {
                 ))}
               </ul>
               <a
-                href="mailto:mitchell@nextlevelsites.nl?subject=Next Level Site eenmalig"
+                href="mailto:mitchell@nextlevelsites.nl?subject=Essentials Next Level Site"
                 className="mt-10 flex w-full items-center justify-center gap-2 rounded-full border border-white/20 px-5 py-3.5 text-sm font-medium transition-colors hover:bg-white/10"
               >
                 Vraag offerte aan
@@ -548,29 +556,35 @@ export default function HomePage() {
               </a>
             </div>
 
+            {/* SIGNATURE — populair, hoogwaardig */}
             <div className="relative rounded-3xl border-2 border-accent/50 bg-accent/[0.06] p-8 sm:p-10 lg:-mt-4 lg:mb-4">
               <div className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-black">
                 Populair
               </div>
               <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/65">
-                Always-On
+                Signature
               </p>
               <div className="mt-4 flex items-baseline gap-2">
-                <span className="font-serif text-5xl">€497</span>
-                <span className="text-sm text-white/65">/ maand</span>
+                <span className="font-serif text-5xl">€7.500</span>
+                <span className="text-sm text-white/65">eenmalig</span>
               </div>
               <p className="mt-2 text-sm text-white">
-                Alles uit eenmalig + maandelijks onderhoud.
+                + €497/mnd onderhoud (aanbevolen)
+              </p>
+              <p className="mt-4 text-sm text-white/85">
+                Volledig op maat. Eigen video, eigen scènes, eigen verhaal —
+                voor wie de mooiste website van zijn stad wil zijn.
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white/85">
                 {[
-                  "Alles uit het eenmalige pakket",
-                  "Maandelijkse content-updates",
-                  "Nieuwe foto's, menu-wijzigingen",
-                  "Performance + security monitoring",
-                  "Hosting + premium CDN",
-                  "24u-respons op vragen",
-                  "Stop wanneer je wilt — geen lock-in",
+                  "Volledig eigen Kling 3.0 cinematic dolly-video",
+                  "3-5 eigen Flux Pro 1.1 Ultra hero-shots",
+                  "Uniek scene-design + storytelling",
+                  "5 pagina's volledig op maat vormgegeven",
+                  "Premium onderhoud: maandelijkse updates inclusief",
+                  "Hosting + security + performance monitoring",
+                  "24u-respons + persoonlijke begeleiding",
+                  "Live binnen 2 weken",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Check className="mt-0.5 size-4 shrink-0 text-accent" />
@@ -579,24 +593,30 @@ export default function HomePage() {
                 ))}
               </ul>
               <a
-                href="mailto:mitchell@nextlevelsites.nl?subject=Always-On Next Level Site"
+                href="mailto:mitchell@nextlevelsites.nl?subject=Signature Next Level Site"
                 className="mt-10 flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
               >
-                Start onboarding
+                Plan kennismaking
                 <ArrowRight className="size-4" />
               </a>
             </div>
 
+            {/* AI RECEPTIONIST — add-on */}
             <div className="rounded-3xl border border-white/10 bg-black p-8 sm:p-10">
               <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/45">
-                AI Receptionist
+                AI Receptionist · Add-on
               </p>
               <div className="mt-4 flex items-baseline gap-2">
                 <span className="font-serif text-5xl">€299</span>
                 <span className="text-sm text-white/55">/ maand</span>
               </div>
               <p className="mt-2 text-sm text-white/55">
-                Optioneel — 24/7 telefoon + WhatsApp bot.
+                Werkt naast Essentials of Signature
+              </p>
+              <p className="mt-4 text-sm text-white/70">
+                24/7 telefoon + WhatsApp die reserveringen aanneemt en vragen
+                beantwoordt. Voor zaken die buiten openingstijd geen klant
+                meer willen missen.
               </p>
               <ul className="mt-8 space-y-3 text-sm text-white/70">
                 {[
@@ -605,7 +625,7 @@ export default function HomePage() {
                   "Openingstijden + menu beantwoorden",
                   "Allergeen-vragen automatisch",
                   "Schakelt door naar mens bij twijfel",
-                  "Werkt naast Always-On",
+                  "Maandelijks opzegbaar",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
                     <Check className="mt-0.5 size-4 shrink-0 text-white/55" />
