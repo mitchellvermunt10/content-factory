@@ -25,11 +25,11 @@ export default function HomePage() {
         dateLine="Mei 2026 · Utrecht"
         paragraphs={[
           <>
-            Acht jaar geleden bouwde ik een site voor een tandarts in
-            Zuilen. Mooi gemaakt, op tijd opgeleverd, factuur netjes
-            betaald. Een jaar later belde z&apos;n vrouw: of ik de inlog
-            nog had, want ze hadden nooit één afspraak via die site
-            gekregen.
+            Rond 2018 bouwde ik een site voor een kapsalon in Etten-Leur.
+            Vijftienhonderd euro, mooi gemaakt, op tijd opgeleverd. Een paar
+            maanden later belde de eigenaresse: niemand kwam via Google
+            binnen, en wie toevallig op de site landde liep vast in de
+            boekingsmodule.
           </>,
           <>Dat gesprek loopt nog steeds met me mee.</>,
           <>
