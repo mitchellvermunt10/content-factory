@@ -46,13 +46,26 @@ try {
 } catch {
     Write-Host "FOUT:" -ForegroundColor Red
     Write-Host ""
-    if ($_.Exception.Response) {
-        $statusCode = $_.Exception.Response.StatusCode.value__
-        Write-Host "HTTP status: $statusCode"
-    }
+    $statusCode = if ($_.Exception.Response) { $_.Exception.Response.StatusCode.value__ } else { "n.v.t." }
+    Write-Host "HTTP status: $statusCode"
+    Write-Host ""
+
+    # Probeer response body uit te lezen — daar zit de echte fout
+    $serverBody = $null
     if ($_.ErrorDetails -and $_.ErrorDetails.Message) {
-        Write-Host "Server zegt: $($_.ErrorDetails.Message)"
-    } else {
-        Write-Host "Bericht: $($_.Exception.Message)"
+        $serverBody = $_.ErrorDetails.Message
+    } elseif ($_.Exception.Response) {
+        try {
+            $stream = $_.Exception.Response.GetResponseStream()
+            $stream.Position = 0
+            $reader = New-Object System.IO.StreamReader($stream)
+            $serverBody = $reader.ReadToEnd()
+        } catch {
+            $serverBody = "(kon response stream niet lezen)"
+        }
     }
+    Write-Host "Server response body:" -ForegroundColor Yellow
+    Write-Host $serverBody
+    Write-Host ""
+    Write-Host "Exception: $($_.Exception.Message)"
 }
