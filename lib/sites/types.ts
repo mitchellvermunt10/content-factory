@@ -108,6 +108,12 @@ export interface NextLevelSiteData {
     vertical: string;
     /** Schema.org vertical type, bv. "Restaurant", "BeautySalon", "AutoRepair", "Dentist" */
     schemaType?: "Restaurant" | "BeautySalon" | "AutoRepair" | "Dentist" | "LocalBusiness";
+    /**
+     * Optioneel logo-bestand voor SiteNav + footer. PNG met transparante
+     * achtergrond voor beste flexibiliteit. Wanneer niet gezet toont de nav
+     * de business-name als wordmark in serif.
+     */
+    logo?: string;
     city: string;
     address?: StructuredAddress;
     /** Latitude/longitude voor Google's local pack */

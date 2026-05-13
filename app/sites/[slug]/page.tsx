@@ -86,6 +86,7 @@ export default async function NextLevelSitePage({
         businessName={result.data.business.name}
         startTransparent
         variant={result.data.shop ? "shop" : "restaurant"}
+        logo={result.data.business.logo}
       />
       <SiteExperience data={result.data} mode={result.mode} />
     </>
