@@ -225,6 +225,15 @@ export interface NextLevelSiteData {
   subpageHeroes?: Record<string, string>;
 
   /**
+   * Twee atmosfeer-images die NA de Kling-dolly opkomen als Ken Burns
+   * cinematic shots (scroll-progress 0.32-1.0). Eerste = mid-scroll
+   * "food/process" shot, tweede = late-scroll "ambiance" shot. Default
+   * fallback in SiteExperience is naar restaurant-shots — voor andere
+   * verticals (shop, kapsalon, etc.) hier expliciet zetten.
+   */
+  postVideoImages?: [string, string];
+
+  /**
    * SEO landing-pages voor specifieke keyword-clusters (bv. skadis,
    * tesla, sinterklaas-surprise). Gerendered op /sites/<slug>/landing/<topic>.
    * Per landing: eigen hero, intro, content-secties, optionele product-

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import Link from "next/link";
-import { ArrowRight, MapPin, Phone } from "lucide-react";
+import { ArrowRight, MapPin, Phone, MessageCircle, Mail, Clock } from "lucide-react";
 import { SmoothScrollProvider } from "@/components/sites/SmoothScrollProvider";
 import { ImageSequence } from "@/components/sites/ImageSequence";
 import { CinematicCanvas } from "@/components/sites/CinematicCanvas";
@@ -19,30 +19,39 @@ import type { CinematicShot } from "@/components/sites/CinematicCanvas";
 import type { NextLevelSiteData } from "@/lib/sites/types";
 
 /**
- * Shots die NA de Kling-dolly volgen — Ken Burns over een food-hero en
- * een atmosfeer-hero, gemapt op de scroll-progress 0.35-1.0 zodat ze in
- * komen wanneer de video uitfade.
+ * Bouw de twee post-video Ken Burns shots op basis van site-data. Voor
+ * restaurants/salons: food + ambiance defaults. Voor shops/andere
+ * verticals: data.postVideoImages.
  */
-const POST_VIDEO_SHOTS: CinematicShot[] = [
-  {
-    imageUrl: "/sites/italian-restaurant/post-1-food.jpg",
-    startProgress: 0.32,
-    endProgress: 0.72,
-    scale: { from: 1.05, to: 1.35 },
-    offsetY: { from: 0.02, to: -0.04 },
-    warmth: { from: 0.2, to: 0.35 },
-    brightness: { from: 0.95, to: 1.05 },
-    vignette: { from: 0.2, to: 0.05 },
-  },
-  {
-    imageUrl: "/sites/italian-restaurant/post-2-ambiance.jpg",
-    startProgress: 0.68,
-    endProgress: 1.0,
-    scale: { from: 1.15, to: 1.0 },
-    warmth: { from: 0.25, to: 0.3 },
-    brightness: { from: 1.0, to: 0.95 },
-    vignette: { from: 0.1, to: 0.25 },
-  },
+function buildPostVideoShots(
+  postVideoImages: [string, string]
+): CinematicShot[] {
+  return [
+    {
+      imageUrl: postVideoImages[0],
+      startProgress: 0.32,
+      endProgress: 0.72,
+      scale: { from: 1.05, to: 1.35 },
+      offsetY: { from: 0.02, to: -0.04 },
+      warmth: { from: 0.2, to: 0.35 },
+      brightness: { from: 0.95, to: 1.05 },
+      vignette: { from: 0.2, to: 0.05 },
+    },
+    {
+      imageUrl: postVideoImages[1],
+      startProgress: 0.68,
+      endProgress: 1.0,
+      scale: { from: 1.15, to: 1.0 },
+      warmth: { from: 0.25, to: 0.3 },
+      brightness: { from: 1.0, to: 0.95 },
+      vignette: { from: 0.1, to: 0.25 },
+    },
+  ];
+}
+
+const DEFAULT_POST_VIDEO_IMAGES: [string, string] = [
+  "/sites/italian-restaurant/post-1-food.jpg",
+  "/sites/italian-restaurant/post-2-ambiance.jpg",
 ];
 
 /**
@@ -63,6 +72,15 @@ export function SiteExperience({
   mode?: SiteRenderMode;
 }) {
   const containerRef = useRef<HTMLElement>(null);
+  const isShop = Boolean(data.shop?.products?.length);
+  const postVideoShots = buildPostVideoShots(
+    data.postVideoImages ?? DEFAULT_POST_VIDEO_IMAGES
+  );
+  const whatsappHref = data.business.whatsapp
+    ? `https://wa.me/${data.business.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(
+        data.business.whatsappMessage ?? "Hoi! Ik heb een vraag.",
+      )}`
+    : null;
   const cinematicShots =
     mode === "cinematic"
       ? buildRestaurantShots({
@@ -87,7 +105,7 @@ export function SiteExperience({
             // food/atmosphere Ken Burns erachter (komt op vanaf 32%).
             <>
               <CinematicCanvas
-                shots={POST_VIDEO_SHOTS}
+                shots={postVideoShots}
                 scrollContainerRef={containerRef}
                 fadeOverlap={0.08}
                 className="absolute inset-0 h-full w-full"
@@ -170,7 +188,16 @@ export function SiteExperience({
                   (data.scenes[1]?.content?.headline as string) ??
                   "Een plek die je voelt zodra je binnenkomt."}
               </h2>
-              {data.business.reservationUrl ? (
+              {isShop ? (
+                // Shop-variant: button leidt naar /collectie
+                <Link
+                  href={`/sites/${data.slug}/collectie`}
+                  className="mt-10 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
+                >
+                  {data.sceneLabels?.arrival?.ctaLabel ?? "Bekijk de collectie"}
+                  <ArrowRight className="size-4" />
+                </Link>
+              ) : data.business.reservationUrl ? (
                 <Link
                   href={data.business.reservationUrl}
                   className="mt-10 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
@@ -283,40 +310,61 @@ export function SiteExperience({
                   travel={24}
                   className="mt-12 grid grid-cols-3 gap-2 md:gap-3"
                 >
-                  {(data.photos ?? []).slice(0, 6).map((p, i) => (
-                    <div
-                      key={i}
-                      className="aspect-square overflow-hidden rounded-lg bg-white/5"
-                    >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={p.url}
-                        alt={p.alt ?? ""}
-                        className="h-full w-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                  ))}
+                  {(() => {
+                    // Photos: gebruik data.photos als bestaat (restaurant),
+                    // anders fallback naar 6 Kling-frame-fragmenten voor shops
+                    // zodat de ambiance-grid niet leeg blijft.
+                    const photos =
+                      data.photos && data.photos.length >= 3
+                        ? data.photos.slice(0, 6)
+                        : [40, 80, 120, 160, 220, 280].map((n) => ({
+                            url: `/sites/${data.slug}/intro/frames/frame_${String(n).padStart(4, "0")}.jpg`,
+                            alt: `Werkplaats moment ${n}`,
+                          }));
+                    return photos.map((p, i) => (
+                      <div
+                        key={i}
+                        className="aspect-square overflow-hidden rounded-lg bg-white/5"
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={p.url}
+                          alt={p.alt ?? ""}
+                          className="h-full w-full object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                      </div>
+                    ));
+                  })()}
                 </SceneStagger>
 
-                {/* Subtiele 'over ons' uitnodiging — verschijnt nadat de
-                    foto's zijn opgekomen, leidt naar /verhaal */}
-                <SceneText
-                  enterStart={0.45}
-                  enterEnd={0.6}
-                  exitStart={0.95}
-                  exitEnd={1.0}
-                  travel={16}
-                  className="mt-12 text-center"
-                >
-                  <Link
-                    href={`/sites/${data.slug}/verhaal`}
-                    className="inline-flex items-center gap-2 border-b border-white/20 pb-1.5 font-mono text-xs uppercase tracking-[0.3em] text-white/55 transition-colors hover:border-white hover:text-white"
+                {/* Subtiele uitnodiging onderaan — leidt naar /verhaal voor
+                    restaurants of /proces voor shops. Skip helemaal als beide
+                    ontbreken. */}
+                {(data.story || isShop) ? (
+                  <SceneText
+                    enterStart={0.45}
+                    enterEnd={0.6}
+                    exitStart={0.95}
+                    exitEnd={1.0}
+                    travel={16}
+                    className="mt-12 text-center"
                   >
-                    Lees het verhaal achter deze plek
-                    <ArrowRight className="size-3.5" />
-                  </Link>
-                </SceneText>
+                    <Link
+                      href={
+                        isShop
+                          ? `/sites/${data.slug}/proces`
+                          : `/sites/${data.slug}/verhaal`
+                      }
+                      className="inline-flex items-center gap-2 border-b border-white/20 pb-1.5 font-mono text-xs uppercase tracking-[0.3em] text-white/55 transition-colors hover:border-white hover:text-white"
+                    >
+                      {isShop
+                        ? "Bekijk hoe een opdracht werkt"
+                        : "Lees het verhaal achter deze plek"}
+                      <ArrowRight className="size-3.5" />
+                    </Link>
+                  </SceneText>
+                ) : null}
               </div>
             </div>
           </Scene>
@@ -335,26 +383,56 @@ export function SiteExperience({
                 {data.sceneLabels?.contact?.eyebrow ?? "Tot snel"}
               </p>
               <h2 className="mt-4 font-serif text-5xl font-light md:text-7xl">
-                {data.sceneLabels?.contact?.headline ?? "Kom langs"}
+                {data.sceneLabels?.contact?.headline ??
+                  (isShop ? "Stuur ons een bericht" : "Kom langs")}
               </h2>
-              <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-white/70">
-                {data.business.address ? (
+              {isShop ? (
+                // Shop-variant: WhatsApp + email + responstijd
+                <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-white/70">
+                  {data.email ? (
+                    <a
+                      href={`mailto:${data.email}`}
+                      className="inline-flex items-center gap-2 hover:text-white"
+                    >
+                      <Mail className="size-4" />
+                      {data.email}
+                    </a>
+                  ) : null}
                   <span className="inline-flex items-center gap-2">
-                    <MapPin className="size-4" />
-                    {data.business.address.formatted}
+                    <Clock className="size-4" />
+                    Reactie binnen een werkdag
                   </span>
-                ) : null}
-                {data.business.phone ? (
-                  <a
-                    href={`tel:${data.business.phone.replace(/\s/g, "")}`}
-                    className="inline-flex items-center gap-2 hover:text-white"
-                  >
-                    <Phone className="size-4" />
-                    {data.business.phone}
-                  </a>
-                ) : null}
-              </div>
-              {data.business.reservationUrl ? (
+                </div>
+              ) : (
+                <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-white/70">
+                  {data.business.address ? (
+                    <span className="inline-flex items-center gap-2">
+                      <MapPin className="size-4" />
+                      {data.business.address.formatted}
+                    </span>
+                  ) : null}
+                  {data.business.phone ? (
+                    <a
+                      href={`tel:${data.business.phone.replace(/\s/g, "")}`}
+                      className="inline-flex items-center gap-2 hover:text-white"
+                    >
+                      <Phone className="size-4" />
+                      {data.business.phone}
+                    </a>
+                  ) : null}
+                </div>
+              )}
+              {isShop && whatsappHref ? (
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-10 inline-flex items-center gap-2 rounded-full bg-[#25d366] px-7 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
+                >
+                  <MessageCircle className="size-4" />
+                  {data.sceneLabels?.contact?.ctaLabel ?? "App ons"}
+                </a>
+              ) : data.business.reservationUrl ? (
                 <Link
                   href={data.business.reservationUrl}
                   className="mt-10 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02]"

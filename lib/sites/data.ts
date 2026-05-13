@@ -669,6 +669,10 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       maatwerk: "/sites/jj-3d/intro/frames/frame_0120.jpg",
       faq: "/sites/jj-3d/intro/frames/frame_0250.jpg",
     },
+    postVideoImages: [
+      "/sites/jj-3d/post-1-spools.jpg",
+      "/sites/jj-3d/post-2-detail.jpg",
+    ],
     landingPages: [
       {
         topic: "skadis-accessoires",
