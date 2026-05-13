@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { generateFluxImage, isFluxEnabled } from "@/lib/flux/images";
+import {
+  generateFluxImage,
+  generateFluxKontext,
+  isFluxEnabled,
+} from "@/lib/flux/images";
 
 export const runtime = "nodejs";
 export const maxDuration = 120;
@@ -23,6 +27,12 @@ const Body = z.object({
     .enum(["21:9", "16:9", "4:3", "3:2", "1:1", "2:3", "3:4", "9:16"])
     .default("3:4"),
   overwrite: z.boolean().default(false),
+  /**
+   * Optioneel: publieke HTTPS URL naar een referentie-beeld. Triggert
+   * Flux Kontext i2i in plaats van Flux 1.1 Ultra t2i. Gebruik voor
+   * hardware-fidelity (bv. specifieke 3D printer-modellen).
+   */
+  referenceImageUrl: z.string().url().optional(),
 });
 
 /**
@@ -63,11 +73,17 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  const flux = await generateFluxImage({
-    prompt: body.prompt,
-    aspectRatio: body.aspectRatio,
-    rawMode: true,
-  });
+  const flux = body.referenceImageUrl
+    ? await generateFluxKontext({
+        prompt: body.prompt,
+        imageUrl: body.referenceImageUrl,
+        aspectRatio: body.aspectRatio,
+      })
+    : await generateFluxImage({
+        prompt: body.prompt,
+        aspectRatio: body.aspectRatio,
+        rawMode: true,
+      });
   const dl = await fetch(flux.imageUrl);
   if (!dl.ok) {
     return NextResponse.json(
@@ -83,5 +99,8 @@ export async function POST(req: NextRequest) {
     path: `/sites/${body.folder}/${body.filename}`,
     width: flux.width,
     height: flux.height,
+    /** Tijdelijke fal-URL (~24u geldig) — bruikbaar als Kling start-frame
+     * zonder eerst naar Vercel te pushen. */
+    falUrl: flux.imageUrl,
   });
 }
