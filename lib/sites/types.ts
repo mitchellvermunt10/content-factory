@@ -209,6 +209,40 @@ export interface NextLevelSiteData {
    */
   subpageHeroes?: Record<string, string>;
 
+  /**
+   * SEO landing-pages voor specifieke keyword-clusters (bv. skadis,
+   * tesla, sinterklaas-surprise). Gerendered op /sites/<slug>/landing/<topic>.
+   * Per landing: eigen hero, intro, content-secties, optionele product-
+   * verwijzingen, en Schema.org metadata.
+   */
+  landingPages?: {
+    /** URL-segment, bv. "skadis-accessoires" */
+    topic: string;
+    /** Primary SEO-keyword voor meta */
+    keyword: string;
+    /** Hero-titel */
+    title: string;
+    /** Hero-eyebrow (kleine bovenstaande tekst) */
+    eyebrow?: string;
+    /** Hero-subtitle, ook gebruikt als meta-description */
+    subtitle: string;
+    /** Optioneel: hero-image pad */
+    heroImage?: string;
+    /** Intro-paragraaf onder hero */
+    intro: string;
+    /** Content-secties op de page */
+    sections?: {
+      headline: string;
+      body: string;
+    }[];
+    /** Referenties naar shop.products IDs die op deze landing horen */
+    productIds?: string[];
+    /** CTA-knop tekst onderaan */
+    ctaLabel?: string;
+    /** CTA-knop bestemming (default /maatwerk) */
+    ctaHref?: string;
+  }[];
+
   brand?: {
     accentColor?: string;
     fontDisplay?: string;

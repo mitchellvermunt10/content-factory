@@ -577,6 +577,152 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       maatwerk: "/sites/jj-3d/intro/frames/frame_0120.jpg",
       faq: "/sites/jj-3d/intro/frames/frame_0250.jpg",
     },
+    landingPages: [
+      {
+        topic: "skadis-accessoires",
+        keyword: "ikea skadis 3d print",
+        eyebrow: "Ikea Skadis · op bestelling",
+        title: "Skadis-accessoires geprint in jouw kleur",
+        subtitle:
+          "Haakjes, bakjes en houders die passen op Ikea's Skadis-pegboard. Geprint op de Bambu Lab P2S, in de kleur die jouw werkplek vraagt.",
+        heroImage: "/sites/jj-3d/intro/frames/frame_0080.jpg",
+        intro:
+          "Skadis is Ikea's pegboard-systeem dat sinds 2017 in honderdduizenden NL-werkplekken hangt. De standaard-haakjes werken, maar elk specifiek voorwerp vraagt om een andere houder. Wij printen ze voor je.",
+        sections: [
+          {
+            headline: "Wat past op een Skadis",
+            body: "Het Skadis-systeem heeft een vast raster van 4cm. Elk accessoire dat wij printen klikt rechtstreeks vast in dit raster zonder schroeven. Houders voor schroevendraaiers, kabels, telefoons, opladers, tape-dispensers, kruidenpotten, koptelefoons of wat jij ook maar boven je bureau wil.",
+          },
+          {
+            headline: "Materiaal en kleur",
+            body: "Standaard in PLA voor binnen, in 30+ kleuren. Witte Skadis houdt wit minimalistisch, zwarte houdt zwart strak. Of kies een accentkleur voor één specifiek item om visueel te scheiden.",
+          },
+          {
+            headline: "Op maat",
+            body: "Heb je een item dat geen standaard-houder heeft? Stuur ons de maten of een foto en wij ontwerpen 'm voor je. Binnen een werkdag een prijsopgave.",
+          },
+        ],
+        productIds: [],
+        ctaLabel: "Vraag een Skadis-houder op maat",
+        ctaHref: "/maatwerk",
+      },
+      {
+        topic: "dyson-accu-adapter",
+        keyword: "dyson adapter 3d print",
+        eyebrow: "Dyson-accu cross-brand · op bestelling",
+        title: "Dyson op Makita, Ryobi of Parkside-accu",
+        subtitle:
+          "Geprinte adapter zodat je Dyson V6/V7/V8/V10/V11/V15 op je bestaande accu-pack draait. Bespaart een nieuwe Dyson-accu van €80+.",
+        heroImage: "/sites/jj-3d/intro/frames/frame_0120.jpg",
+        intro:
+          "Dyson's originele V-serie accu's gaan na 2-3 jaar achteruit en kosten €80-€120 om te vervangen. Als jij al een Makita, Ryobi of Parkside accu-systeem hebt liggen, kun je die via een geprinte adapter direct op je Dyson aansluiten. Eén investering, alle apparaten op één accu-platform.",
+        sections: [
+          {
+            headline: "Welke Dyson-modellen",
+            body: "V6, V7, V8, V10, V11, V15 — alle handhelds met de standaard Dyson-accu-aansluiting. Stuur het exacte model bij je bestelling zodat we de juiste adapter printen.",
+          },
+          {
+            headline: "Welke accu-platformen",
+            body: "Makita 18V LXT, Ryobi 18V One+, Parkside X20V Team. De adapter zit aan één kant op de Dyson-aansluiting, aan de andere kant op de accu-rail van jouw gereedschapsmerk.",
+          },
+          {
+            headline: "Materiaal",
+            body: "PETG vanwege de mechanische belasting en lichte warmte-ontwikkeling tijdens gebruik. Niet in PLA — die wordt te zacht. Standaard zwart, op verzoek in jouw kleur.",
+          },
+          {
+            headline: "Disclaimer",
+            body: "Wij maken een fysieke adapter; geen elektronische beveiliging of voltage-conversie. Werkt alleen voor accu's met dezelfde voltage (18V naar 18V). Gebruik op eigen risico bij gewijzigde voltages.",
+          },
+        ],
+        productIds: [],
+        ctaLabel: "Vraag jouw Dyson-adapter aan",
+        ctaHref: "/maatwerk",
+      },
+      {
+        topic: "tesla-accessoires",
+        keyword: "tesla 3d print",
+        eyebrow: "Tesla Model 3 · Model Y · op bestelling",
+        title: "Tesla-accessoires geprint in Nederland",
+        subtitle:
+          "Sleutelhangers, vent-clips, dashboard-houders en cup-holder-organizers voor je Model 3 of Model Y. Geprint in NL, binnen 1-3 werkdagen verzonden.",
+        heroImage: "/sites/jj-3d/intro/frames/frame_0200.jpg",
+        intro:
+          "Tesla's interieur is sober opgezet. Geen ouderwetse vakjes voor je muntgeld, geen vent-clip voor je telefoon. De Tesla-community vult dat in met 3D-prints. Wij maken ze hier in NL, geen 4 weken wachten op AliExpress.",
+        sections: [
+          {
+            headline: "Wat er nu in de collectie zit",
+            body: "Sleutelhanger met Tesla-T (€9), Auto Munten-organizer voor in de cup-holder (€11). Beide in jouw kleur uit de Bambu Lab AMS Combo. Meer modellen op aanvraag.",
+          },
+          {
+            headline: "Model 3 specifieke items",
+            body: "Vent-clip phone holder, sunglasses-houder voor de zonneklep, dashboard-organizer voor laadkabel en kleingeld. Stuur je Model 3 facelift-jaar mee voor de correcte pasvorm.",
+          },
+          {
+            headline: "Model Y specifieke items",
+            body: "Achterbank tablet-mount voor kinderen, kofferbak-divider, frunk-organizer. Voor de Model Y zijn andere maten dan Model 3 — geef je modeljaar mee.",
+          },
+        ],
+        productIds: ["652236", "2158555"],
+        ctaLabel: "Bekijk de Tesla-collectie",
+        ctaHref: "/collectie",
+      },
+      {
+        topic: "sinterklaas-surprise-op-maat",
+        keyword: "3d print sinterklaas surprise",
+        eyebrow: "Q4 · op naam · pre-order vanaf augustus",
+        title: "Sinterklaas-surprise op naam, 3D-geprint",
+        subtitle:
+          "Een surprise die de ontvanger nooit eerder heeft gezien — geprint in jouw kleur, met zijn of haar naam erin. Pre-order vanaf augustus, geleverd voor 5 december.",
+        heroImage: "/sites/jj-3d/intro/frames/frame_0250.jpg",
+        intro:
+          "Surprise maken is leuk; surprise maken met een 3D-printer is leuker. We hebben templates voor naam-puzzels, naam-houders, hobby-themed objecten (motor, voetbal, gitaar, etc.) — allemaal personaliseerbaar met de naam van de ontvanger en in zijn favoriete kleur.",
+        sections: [
+          {
+            headline: "Hoe het werkt",
+            body: "Pre-order tussen 1 augustus en 15 november. Wij maken in oktober/november een eerste batch, in december-rush extra capacity. Alles geleverd vóór 4 december zodat jij rustig kunt verpakken.",
+          },
+          {
+            headline: "Wat er mogelijk is",
+            body: "Naam-puzzel met letter-per-kleur (AMS multi-color). Hobby-houder gepersonaliseerd (voetbal-schoenhouder voor de voetballer, gitaar-stand voor de muzikant). Of een one-of-a-kind ontwerp dat je zelf doorgeeft — wij printen.",
+          },
+          {
+            headline: "Levertijd-garantie",
+            body: "Bestel je vóór 15 november, leveren we vóór 1 december. Bestel je later: WhatsApp eerst even of we het redden. Het wordt elk jaar drukker.",
+          },
+        ],
+        productIds: [],
+        ctaLabel: "Pre-order je surprise",
+        ctaHref: "/maatwerk",
+      },
+      {
+        topic: "gridfinity-set-nederland",
+        keyword: "gridfinity nederland",
+        eyebrow: "Gridfinity · gestandaardiseerd opbergsysteem",
+        title: "Gridfinity-set, geprint in Nederland",
+        subtitle:
+          "Het modulaire opbergsysteem dat de hele maker-community gebruikt. Geprint in NL met 1-3 werkdagen verzending — geen Aliexpress, geen 4 weken wachten.",
+        heroImage: "/sites/jj-3d/intro/frames/frame_0150.jpg",
+        intro:
+          "Gridfinity is het modulaire opbergsysteem dat door maker Zack Freedman is ontworpen en sinds 2022 viraal ging. Elke bin is een veelvoud van 42×42mm, klikt vast op een base-plate, en past in elke kast, lade of werkbank. Bouw zo groot of klein als je wil — uitbreiden kan altijd later.",
+        sections: [
+          {
+            headline: "Starter-set",
+            body: "Onze starter is een 4×6 base-plate (168×252mm, past in IKEA Skadis-laden en standaard kasten) plus 6 bins in verschillende hoogtes: 2x klein voor schroefjes/onderdelen, 2x middel voor tools, 2x groot voor combi-items. Vanaf €45.",
+          },
+          {
+            headline: "Uitbreiding op maat",
+            body: "Heb je later een specifieke maat nodig? Wij printen elke standaard-Gridfinity-grootte (1×1 t/m 6×6, alle hoogtes) plus magnetische bin-bases voor extra grip. Bestel los per stuk vanaf €3,50.",
+          },
+          {
+            headline: "Materiaal",
+            body: "PLA voor binnen-gebruik. PETG op aanvraag voor garage of werkplaats waar warmte een rol speelt. Standaardkleur grijs (matched het maker-aesthetic), op verzoek alle 30+ kleuren uit onze AMS-spool-collectie.",
+          },
+        ],
+        productIds: [],
+        ctaLabel: "Stel je Gridfinity-set samen",
+        ctaHref: "/maatwerk",
+      },
+    ],
   },
 };
 
