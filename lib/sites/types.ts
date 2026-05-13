@@ -63,6 +63,40 @@ export interface NextLevelSiteData {
   /** Menu / dienst-items (korte versie voor home-page scene 3) */
   items?: { name: string; description?: string; price?: string }[];
 
+  /**
+   * Voor shop-sites (zoals JJ-3D): producten-catalogus die mensen
+   * kunnen kopen via ingebouwde Mollie-checkout.
+   */
+  shop?: {
+    /** Mollie betaal-modus 'live' of 'test' (test gebruikt sandbox-keys) */
+    mode?: "test" | "live";
+    /** Verzendkosten in EUR */
+    shippingEur?: number;
+    /** Verwachte levertijd-tekst, bv. '3-7 werkdagen' */
+    deliveryNote?: string;
+    products?: ShopProduct[];
+  };
+}
+
+export interface ShopProduct {
+  /** Stable ID (vaak MakerWorld model-ID) — gebruikt in URL en orders */
+  id: string;
+  /** Korte product-titel voor catalog */
+  title: string;
+  /** Optioneel: langere description */
+  description?: string;
+  /** Verkoopprijs in EUR */
+  priceEur: number;
+  /** Local public path naar primary product-image */
+  image: string;
+  /** Optioneel: print-tijd in minuten, voor info-tag */
+  printTimeMinutes?: number;
+  /** Optionele tags voor filter, bv. ['hebbedingetje', 'desk', 'wijn'] */
+  tags?: string[];
+  /** Optionele bron-URL (bv. MakerWorld) — niet getoond op site, alleen voor admin */
+  sourceUrl?: string;
+}
+
   // ────────────────────────────────────────────────────────────
   // Subpage content — uitgebreid per-pagina materiaal
   // ────────────────────────────────────────────────────────────
