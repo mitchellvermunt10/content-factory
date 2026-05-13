@@ -72,9 +72,15 @@ function parsePrintTime(html: string): number | undefined {
 }
 
 /**
- * Scrape een MakerWorld model-URL en geef product-data terug.
- * NIET cross-origin — runs server-side. Voegt User-Agent toe om
- * niet als bot geblokkeerd te worden.
+ * Scrape een MakerWorld model-URL via een headless browser (Playwright).
+ * MakerWorld zit achter Cloudflare's "Just a moment..." JS-challenge —
+ * een simpele fetch krijgt alleen de challenge-pagina, geen product-data.
+ * Met Playwright laden we de pagina volledig (incl JS) en wachten tot
+ * Cloudflare ons doorlaat, daarna extracten we de meta-tags.
+ *
+ * LOKAAL ALLEEN: vereist `npx playwright install chromium` (chromium-
+ * binary ~150MB). Niet bedoeld voor productie — wordt gebruikt door
+ * Mitchell tijdens product-import van klant-URLs.
  */
 export async function scrapeMakerWorld(url: string): Promise<MakerWorldProduct> {
   const parsed = parseMakerWorldUrl(url);
@@ -82,50 +88,78 @@ export async function scrapeMakerWorld(url: string): Promise<MakerWorldProduct> 
     throw new Error("Geen geldige MakerWorld URL — verwacht /models/<id>-<slug>");
   }
 
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (compatible; NextLevelSitesBot/1.0; +https://nextlevelsites.nl)",
-      Accept: "text/html,application/xhtml+xml",
-    },
-  });
-  if (!res.ok) {
-    throw new Error(`MakerWorld gaf HTTP ${res.status} terug`);
-  }
-  const html = await res.text();
-
-  // Open Graph tags zijn meestal aanwezig
-  const ogTitle = html.match(
-    /<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i
-  )?.[1];
-  const ogImage = html.match(
-    /<meta\s+property=["']og:image["']\s+content=["']([^"']+)["']/i
-  )?.[1];
-  const ogDesc = html.match(
-    /<meta\s+property=["']og:description["']\s+content=["']([^"']+)["']/i
-  )?.[1];
-
-  if (!ogTitle || !ogImage) {
+  // Dynamische import zodat build niet faalt als playwright niet geïnstalleerd is
+  let chromium: typeof import("playwright").chromium;
+  try {
+    const pw = await import("playwright");
+    chromium = pw.chromium;
+  } catch {
     throw new Error(
-      "Kon geen og:title of og:image vinden — page-structuur is gewijzigd?"
+      "Playwright niet beschikbaar — run: npm install --save-optional playwright && npx playwright install chromium"
     );
   }
 
-  // Designer-extractie: MakerWorld heeft "by @username" patroon in HTML
-  const designerMatch = html.match(
-    /["'](?:designer|creator|author)["']\s*[:=]\s*["']([^"']+)["']/i
-  );
+  const browser = await chromium.launch({ headless: true });
 
-  return {
-    modelId: parsed.modelId,
-    slug: parsed.slug,
-    title: decodeEntities(ogTitle.trim()),
-    description: ogDesc ? decodeEntities(ogDesc.trim()) : "",
-    primaryImageUrl: ogImage,
-    designer: designerMatch ? designerMatch[1] : undefined,
-    printTimeMinutes: parsePrintTime(html),
-    sourceUrl: url,
-  };
+  try {
+    const context = await browser.newContext({
+      userAgent:
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+      viewport: { width: 1280, height: 800 },
+      locale: "nl-NL",
+    });
+    const page = await context.newPage();
+
+    await page.goto(url, { waitUntil: "domcontentloaded", timeout: 30000 });
+
+    // Wacht tot Cloudflare-challenge weg is. Page-title is "Just a moment..."
+    // tot de challenge slaagt — daarna verandert hij naar de echte titel.
+    try {
+      await page.waitForFunction(
+        () => !document.title.includes("Just a moment"),
+        { timeout: 20000 }
+      );
+    } catch {
+      // Misschien is er geen challenge, of het duurde te lang — proberen we
+      // toch de extractie. Als og-tags er zijn is alles OK.
+    }
+
+    // Zorg dat de meta-tags er zijn — wacht max 5s op og:title aanwezigheid
+    try {
+      await page.waitForSelector('meta[property="og:title"]', { timeout: 5000 });
+    } catch {
+      // Doorgaan — extractie zal falen met duidelijke boodschap
+    }
+
+    const data = await page.evaluate(() => {
+      const get = (sel: string) =>
+        (document.querySelector(sel) as HTMLMetaElement | null)?.content ?? "";
+      return {
+        title: get('meta[property="og:title"]'),
+        image: get('meta[property="og:image"]'),
+        description: get('meta[property="og:description"]'),
+        bodyText: document.body?.innerText?.slice(0, 5000) ?? "",
+      };
+    });
+
+    if (!data.title || !data.image) {
+      throw new Error(
+        "Kon geen og:title of og:image vinden na laden — Cloudflare-challenge niet doorgekomen?"
+      );
+    }
+
+    return {
+      modelId: parsed.modelId,
+      slug: parsed.slug,
+      title: decodeEntities(data.title.trim()),
+      description: data.description ? decodeEntities(data.description.trim()) : "",
+      primaryImageUrl: data.image,
+      printTimeMinutes: parsePrintTime(data.bodyText),
+      sourceUrl: url,
+    };
+  } finally {
+    await browser.close();
+  }
 }
 
 /**
