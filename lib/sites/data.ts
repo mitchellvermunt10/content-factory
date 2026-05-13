@@ -374,14 +374,14 @@ const DEMO_SITES: Record<string, DemoSpec> = {
     shop: {
       mode: "test", // Voor launch op 'live' zetten
       shippingEur: 4.95,
-      deliveryNote: "Geprint op bestelling. 3 tot 7 werkdagen levertijd.",
+      deliveryNote: "Geprint op bestelling. 1 tot 3 werkdagen tot verzending.",
       products: [
         {
           id: "2391957",
           title: "Puffer Jacket Pen Holder",
           description:
             "De puffer-jas in 3D. Past 3 tot 5 pennen, of een handvol potloden. Kies de kleur, wij printen 'm.",
-          priceEur: 12.5,
+          priceEur: 15.0,
           image: "/sites/jj-3d/products/2391957/hero.jpg",
           printTimeMinutes: 120,
           tags: ["bureau", "hebbedingetje"],
@@ -393,7 +393,7 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           title: "Beanie Desk Organiser",
           description:
             "De bekende beanie, maar dan als bakje. Past potloden, paperclips, of de losse post-its van vorige week.",
-          priceEur: 14.0,
+          priceEur: 15.0,
           image: "/sites/jj-3d/products/2387676/hero.jpg",
           printTimeMinutes: 360,
           tags: ["bureau", "hebbedingetje", "organiseren"],
@@ -405,12 +405,72 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           title: "Voronoi Wine Holder",
           description:
             "Wijn-fles-houder met Voronoi-patroon. Ziet eruit als sculptuur, doet het werk van een schap.",
-          priceEur: 18.0,
+          priceEur: 22.0,
           image: "/sites/jj-3d/products/1641939/hero.jpg",
           printTimeMinutes: 420,
           tags: ["wijn", "decoratief"],
           sourceUrl:
             "https://makerworld.com/nl/models/1641939-vinograce-voronoi-wine-holder",
+        },
+        {
+          id: "654785",
+          title: "Planetary Gears Fidget Spinner",
+          description:
+            "Print-in-place planetary gears. Vijf tandwielen, één pinion, draait soepel zonder assemblage. Multi-color uit de AMS voor maximale focus-knipperigheid.",
+          priceEur: 16.0,
+          image: "/sites/jj-3d/products/654785/hero.jpg",
+          printTimeMinutes: 480,
+          tags: ["fidget", "kids", "ams-multicolor"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/654785-planetary-gears-finger-fidget-spinners",
+        },
+        {
+          id: "652236",
+          title: "Tesla Keychain",
+          description:
+            "Sleutelhanger met Tesla-T uitgesneden. Rood-op-zwart of in je eigen kleur. Past op alle sleutelringen.",
+          priceEur: 9.0,
+          image: "/sites/jj-3d/products/652236/hero.jpg",
+          printTimeMinutes: 22,
+          tags: ["auto", "sleutelhanger", "ams-multicolor"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/652236-tesla-keychain",
+        },
+        {
+          id: "2158555",
+          title: "Auto Munten-organizer",
+          description:
+            "Past in de bekerhouder van je auto. Gestapelde vakken voor parkeermunten, statiegeld of kleingeld. Vraag ernaar — we kunnen 'm op maat schalen.",
+          priceEur: 11.0,
+          image: "/sites/jj-3d/products/2158555/hero.jpg",
+          printTimeMinutes: 420,
+          tags: ["auto", "organiseren"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/2158555-cup-holder-coins-organizer-cad",
+        },
+        {
+          id: "824309",
+          title: "Wendbare Mood Octopus",
+          description:
+            "Stemmingsoctopus die je binnenstebuiten draait. Vrolijk aan de ene kant, chagrijnig aan de andere. AMS dual-color in twee kleuren naar keuze.",
+          priceEur: 15.0,
+          image: "/sites/jj-3d/products/824309/hero.jpg",
+          printTimeMinutes: 150,
+          tags: ["kids", "fidget", "ams-multicolor"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/824309-truely-reversible-mood-octopus-turns-inside-out",
+        },
+        {
+          id: "1606276",
+          title: "Parkeerkaart-houder voor je dashboard",
+          description:
+            "Houdt je parkeerkaart of blauwe schijf op zijn plek tegen de voorruit. Hechtende strip op de achterkant. Geprint in de kleur van je interieur.",
+          priceEur: 9.0,
+          image: "/sites/jj-3d/products/1606276/hero.jpg",
+          printTimeMinutes: 30,
+          tags: ["auto", "praktisch"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/1606276-easypark-windshield-parking-ticket-holder",
         },
       ],
     },
