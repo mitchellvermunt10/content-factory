@@ -9,6 +9,10 @@
 param(
     [Parameter(Position = 0)]
     [string]$Url,
+    [Parameter(Position = 1)]
+    [ValidateSet("salon", "restaurant", "dentist", "gym", "tattoo", "barber", "hotel", "coffeeshop", "autobedrijf")]
+    [string]$Vertical = "salon",
+    [string]$BusinessName,
     [int]$Port = 3008
 )
 
@@ -16,13 +20,19 @@ if (-not $Url) {
     $Url = Read-Host "Welke URL wil je scrapen? (bv. https://www.mooigeknipt.nl)"
 }
 
-$body = @{ url = $Url } | ConvertTo-Json
+$bodyHash = @{
+    websiteUrl = $Url
+    vertical = $Vertical
+}
+if ($BusinessName) { $bodyHash.businessName = $BusinessName }
+$body = $bodyHash | ConvertTo-Json
 $uri = "http://localhost:$Port/api/research/scrape-website"
 
 Write-Host ""
 Write-Host "Site-scraper" -ForegroundColor Cyan
 Write-Host "============"
 Write-Host "URL:      $Url"
+Write-Host "Vertical: $Vertical"
 Write-Host "Endpoint: $uri"
 Write-Host ""
 Write-Host "Bezig met scrapen (kan 10-30 sec duren)..." -ForegroundColor Yellow
