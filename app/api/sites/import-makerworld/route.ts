@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   scrapeMakerWorld,
   downloadProductImage,
+  downloadGalleryImages,
 } from "@/lib/sites/makerworld";
 
 export const runtime = "nodejs";
@@ -45,12 +46,14 @@ export async function POST(req: NextRequest) {
   try {
     const product = await scrapeMakerWorld(body.url);
     const localImagePath = await downloadProductImage(product, body.shopFolder);
+    const localGalleryPaths = await downloadGalleryImages(product, body.shopFolder);
 
     return NextResponse.json({
       ok: true,
       product: {
         ...product,
         localImagePath,
+        localGalleryPaths,
         importedAt: new Date().toISOString(),
       },
       // Klaar-om-te-plakken data.ts entry:
@@ -60,6 +63,7 @@ export async function POST(req: NextRequest) {
         description: product.description,
         priceEur: body.price,
         image: localImagePath,
+        gallery: localGalleryPaths,
         printTimeMinutes: product.printTimeMinutes,
         sourceUrl: product.sourceUrl,
       },
