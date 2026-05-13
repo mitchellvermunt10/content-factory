@@ -27,6 +27,29 @@ export interface StructuredAddress {
   formatted: string; // "Voorstraat 84, 3512 AS Utrecht"
 }
 
+/**
+ * Eén product in een shop (bv. JJ-3D's 3D-print-catalog). Wordt
+ * geïmporteerd uit MakerWorld URLs of handmatig toegevoegd.
+ */
+export interface ShopProduct {
+  /** Stable ID (vaak MakerWorld model-ID) — gebruikt in URL en orders */
+  id: string;
+  /** Korte product-titel voor catalog */
+  title: string;
+  /** Optioneel: langere description */
+  description?: string;
+  /** Verkoopprijs in EUR */
+  priceEur: number;
+  /** Local public path naar primary product-image */
+  image: string;
+  /** Optioneel: print-tijd in minuten, voor info-tag */
+  printTimeMinutes?: number;
+  /** Optionele tags voor filter, bv. ['hebbedingetje', 'desk', 'wijn'] */
+  tags?: string[];
+  /** Optionele bron-URL (bv. MakerWorld) — niet getoond op site */
+  sourceUrl?: string;
+}
+
 export interface NextLevelSiteData {
   slug: string;
   /** Markeer als demo zodat sitemap/robots 'm uitsluiten en noindex aan staat */
@@ -76,26 +99,6 @@ export interface NextLevelSiteData {
     deliveryNote?: string;
     products?: ShopProduct[];
   };
-}
-
-export interface ShopProduct {
-  /** Stable ID (vaak MakerWorld model-ID) — gebruikt in URL en orders */
-  id: string;
-  /** Korte product-titel voor catalog */
-  title: string;
-  /** Optioneel: langere description */
-  description?: string;
-  /** Verkoopprijs in EUR */
-  priceEur: number;
-  /** Local public path naar primary product-image */
-  image: string;
-  /** Optioneel: print-tijd in minuten, voor info-tag */
-  printTimeMinutes?: number;
-  /** Optionele tags voor filter, bv. ['hebbedingetje', 'desk', 'wijn'] */
-  tags?: string[];
-  /** Optionele bron-URL (bv. MakerWorld) — niet getoond op site, alleen voor admin */
-  sourceUrl?: string;
-}
 
   // ────────────────────────────────────────────────────────────
   // Subpage content — uitgebreid per-pagina materiaal
