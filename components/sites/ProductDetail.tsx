@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Clock, ShoppingBag, Truck, Loader2 } from "lucide-react";
+import { ArrowLeft, Clock, ShoppingBag, Truck, Loader2, Palette } from "lucide-react";
 import { toast } from "sonner";
 import type { NextLevelSiteData, ShopProduct } from "@/lib/sites/types";
+
+type Variant = "single" | "ams";
 
 interface Props {
   data: NextLevelSiteData;
@@ -14,10 +16,16 @@ interface Props {
 /**
  * Cinematic product-detail pagina voor shop-sites.
  * Layout: full-bleed image links (desktop) + content rechts.
+ * Tier-selector wanneer product een priceAmsEur heeft: single-color vs
+ * AMS multi-color (Bambu Lab P2S AMS Combo).
  * "Bestel nu" trigger naar /api/sites/<slug>/checkout — Mollie-flow.
  */
 export function ProductDetail({ data, product }: Props) {
   const [ordering, setOrdering] = useState(false);
+  const hasAmsTier = typeof product.priceAmsEur === "number";
+  const [variant, setVariant] = useState<Variant>("single");
+  const activePrice =
+    variant === "ams" && hasAmsTier ? product.priceAmsEur! : product.priceEur;
 
   async function handleOrder() {
     setOrdering(true);
@@ -25,7 +33,7 @@ export function ProductDetail({ data, product }: Props) {
       const res = await fetch(`/api/sites/${data.slug}/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id }),
+        body: JSON.stringify({ productId: product.id, variant }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -99,14 +107,58 @@ export function ProductDetail({ data, product }: Props) {
               </p>
             ) : null}
 
+            {/* Tier-selector (alleen als priceAmsEur bestaat) */}
+            {hasAmsTier ? (
+              <div className="mt-10">
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
+                  Uitvoering
+                </p>
+                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => setVariant("single")}
+                    className={`flex flex-col items-start gap-1 rounded-2xl border px-5 py-4 text-left transition-colors ${
+                      variant === "single"
+                        ? "border-white bg-white/10"
+                        : "border-white/15 hover:border-white/30"
+                    }`}
+                  >
+                    <span className="font-serif text-lg">Eén kleur</span>
+                    <span className="font-mono text-xs text-white/55">
+                      Kies uit 30+ kleuren · €
+                      {product.priceEur.toFixed(2).replace(".", ",")}
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVariant("ams")}
+                    className={`flex flex-col items-start gap-1 rounded-2xl border px-5 py-4 text-left transition-colors ${
+                      variant === "ams"
+                        ? "border-white bg-white/10"
+                        : "border-white/15 hover:border-white/30"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2 font-serif text-lg">
+                      <Palette className="size-4" />
+                      AMS multi-color
+                    </span>
+                    <span className="font-mono text-xs text-white/55">
+                      {product.amsDescription ?? "Meerdere kleuren in één print"}{" "}
+                      · €{product.priceAmsEur!.toFixed(2).replace(".", ",")}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
             {/* Spec row */}
             <div className="mt-10 grid grid-cols-2 gap-4 border-y border-white/10 py-6 sm:grid-cols-3">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
                   Prijs
                 </p>
-                <p className="mt-2 font-serif text-3xl">
-                  €{product.priceEur.toFixed(2).replace(".", ",")}
+                <p className="mt-2 font-serif text-3xl tabular-nums">
+                  €{activePrice.toFixed(2).replace(".", ",")}
                 </p>
               </div>
               {product.printTimeMinutes ? (
@@ -147,7 +199,7 @@ export function ProductDetail({ data, product }: Props) {
               ) : (
                 <>
                   <ShoppingBag className="size-4" />
-                  Bestel nu · €{product.priceEur.toFixed(2).replace(".", ",")}
+                  Bestel nu · €{activePrice.toFixed(2).replace(".", ",")}
                 </>
               )}
             </button>

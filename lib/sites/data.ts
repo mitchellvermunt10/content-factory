@@ -382,6 +382,8 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           description:
             "De puffer-jas in 3D. Past 3 tot 5 pennen, of een handvol potloden. Kies de kleur, wij printen 'm.",
           priceEur: 15.0,
+          priceAmsEur: 19.0,
+          amsDescription: "Twee kleuren: jas + zichtbare binnenvoering",
           image: "/sites/jj-3d/products/2391957/hero.jpg",
           printTimeMinutes: 120,
           tags: ["bureau", "hebbedingetje"],
@@ -394,6 +396,8 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           description:
             "De bekende beanie, maar dan als bakje. Past potloden, paperclips, of de losse post-its van vorige week.",
           priceEur: 15.0,
+          priceAmsEur: 17.0,
+          amsDescription: "Beanie en pompon in twee verschillende kleuren",
           image: "/sites/jj-3d/products/2387676/hero.jpg",
           printTimeMinutes: 360,
           tags: ["bureau", "hebbedingetje", "organiseren"],
@@ -406,6 +410,8 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           description:
             "Wijn-fles-houder met Voronoi-patroon. Ziet eruit als sculptuur, doet het werk van een schap.",
           priceEur: 22.0,
+          priceAmsEur: 27.0,
+          amsDescription: "Gradient-print: van wit naar diepe kleur",
           image: "/sites/jj-3d/products/1641939/hero.jpg",
           printTimeMinutes: 420,
           tags: ["wijn", "decoratief"],
@@ -416,8 +422,10 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           id: "654785",
           title: "Planetary Gears Fidget Spinner",
           description:
-            "Print-in-place planetary gears. Vijf tandwielen, één pinion, draait soepel zonder assemblage. Multi-color uit de AMS voor maximale focus-knipperigheid.",
+            "Print-in-place planetary gears. Vijf tandwielen, één pinion, draait soepel zonder assemblage.",
           priceEur: 16.0,
+          priceAmsEur: 19.0,
+          amsDescription: "Vijf tandwielen in vijf verschillende kleuren",
           image: "/sites/jj-3d/products/654785/hero.jpg",
           printTimeMinutes: 480,
           tags: ["fidget", "kids", "ams-multicolor"],
@@ -428,8 +436,10 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           id: "652236",
           title: "Tesla Keychain",
           description:
-            "Sleutelhanger met Tesla-T uitgesneden. Rood-op-zwart of in je eigen kleur. Past op alle sleutelringen.",
+            "Sleutelhanger met Tesla-T uitgesneden. Past op alle sleutelringen.",
           priceEur: 9.0,
+          priceAmsEur: 12.0,
+          amsDescription: "Twee kleuren: logo-rood op zwarte body",
           image: "/sites/jj-3d/products/652236/hero.jpg",
           printTimeMinutes: 22,
           tags: ["auto", "sleutelhanger", "ams-multicolor"],
@@ -452,8 +462,10 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           id: "824309",
           title: "Wendbare Mood Octopus",
           description:
-            "Stemmingsoctopus die je binnenstebuiten draait. Vrolijk aan de ene kant, chagrijnig aan de andere. AMS dual-color in twee kleuren naar keuze.",
+            "Stemmingsoctopus die je binnenstebuiten draait. Vrolijk aan de ene kant, chagrijnig aan de andere. Dual-color is essentieel: zonder twee verschillende kleuren ziet de wending er flets uit.",
           priceEur: 15.0,
+          priceAmsEur: 18.0,
+          amsDescription: "Twee duidelijke contrast-kleuren voor scherpe wending",
           image: "/sites/jj-3d/products/824309/hero.jpg",
           printTimeMinutes: 150,
           tags: ["kids", "fidget", "ams-multicolor"],

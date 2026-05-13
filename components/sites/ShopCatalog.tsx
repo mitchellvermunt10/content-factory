@@ -105,6 +105,9 @@ export function ShopCatalog({
 
                   <div className="mt-4 flex items-baseline justify-between border-t border-white/10 pt-4">
                     <span className="font-serif text-2xl text-white">
+                      {product.priceAmsEur != null ? (
+                        <span className="text-base text-white/55">vanaf </span>
+                      ) : null}
                       €{product.priceEur.toFixed(2).replace(".", ",")}
                     </span>
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-1.5 text-xs font-medium text-black transition-transform group-hover:scale-[1.04]">

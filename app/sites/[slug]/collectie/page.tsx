@@ -81,6 +81,9 @@ export default async function CollectiePage({
                   ) : null}
                   <div className="mt-4 flex items-baseline justify-between border-t border-white/10 pt-4">
                     <span className="font-serif text-2xl text-white">
+                      {p.priceAmsEur != null ? (
+                        <span className="text-base text-white/55">vanaf </span>
+                      ) : null}
                       €{p.priceEur.toFixed(2).replace(".", ",")}
                     </span>
                     <span className="rounded-full bg-white px-4 py-1.5 text-xs font-medium text-black">
