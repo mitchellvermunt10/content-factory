@@ -32,13 +32,28 @@ export function ProductDetail({ data, product }: Props) {
   const [activeImage, setActiveImage] = useState(product.image);
   const hasGallery = (product.gallery?.length ?? 0) > 0;
 
+  // Kleur-picker (single-color tier). Default = eerste kleur in shop palette
+  // ("Jade White") — friction-loos kunnen klanten direct bestellen.
+  const availableColors = data.shop?.colors ?? [];
+  const [selectedColorId, setSelectedColorId] = useState<string | null>(
+    availableColors[0]?.id ?? null
+  );
+  const selectedColor = availableColors.find((c) => c.id === selectedColorId);
+  // AMS-tier: kleurkeuze niet relevant op single-niveau — copy verwijst dan
+  // naar maatwerk-overleg via WhatsApp na bestelling.
+  const showColorPicker = variant === "single" && availableColors.length > 0;
+
   async function handleOrder() {
     setOrdering(true);
     try {
       const res = await fetch(`/api/sites/${data.slug}/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id, variant }),
+        body: JSON.stringify({
+          productId: product.id,
+          variant,
+          colorId: variant === "single" ? selectedColorId : null,
+        }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -199,6 +214,65 @@ export function ProductDetail({ data, product }: Props) {
               </div>
             ) : null}
 
+            {/* Kleur-picker (alleen single-color tier) */}
+            {showColorPicker ? (
+              <div className="mt-10">
+                <div className="flex items-baseline justify-between">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
+                    Kleur
+                  </p>
+                  {selectedColor ? (
+                    <p className="font-serif text-sm text-white/75">
+                      {selectedColor.name}
+                    </p>
+                  ) : null}
+                </div>
+                <div className="mt-3 grid grid-cols-8 gap-2 sm:grid-cols-10">
+                  {availableColors.map((color) => {
+                    const isSelected = color.id === selectedColorId;
+                    const isLight = isLightColor(color.hex);
+                    return (
+                      <button
+                        key={color.id}
+                        type="button"
+                        onClick={() => setSelectedColorId(color.id)}
+                        title={color.name}
+                        aria-label={`Kies kleur ${color.name}`}
+                        aria-pressed={isSelected}
+                        className={`relative aspect-square rounded-full transition-transform hover:scale-110 ${
+                          isSelected
+                            ? "ring-2 ring-white ring-offset-2 ring-offset-black scale-110"
+                            : "ring-1 ring-white/15"
+                        }`}
+                        style={{
+                          backgroundColor: `#${color.hex}`,
+                          // Light colors krijgen subtiele inner shadow voor zichtbaarheid op black bg
+                          boxShadow: isLight
+                            ? "inset 0 0 0 1px rgba(0,0,0,0.15)"
+                            : undefined,
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+                <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">
+                  {availableColors.length}+ Bambu Lab kleuren beschikbaar
+                </p>
+              </div>
+            ) : null}
+
+            {variant === "ams" && hasAmsTier ? (
+              <div className="mt-10 rounded-2xl border border-white/15 bg-white/5 p-4">
+                <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
+                  Kleur-combo
+                </p>
+                <p className="mt-2 text-sm text-white/75">
+                  {product.amsDescription ??
+                    "Meerdere kleuren in één print — we stemmen de combo met je af via WhatsApp na je bestelling."}
+                </p>
+              </div>
+            ) : null}
+
             {/* Spec row */}
             <div className="mt-10 grid grid-cols-2 gap-4 border-y border-white/10 py-6 sm:grid-cols-3">
               <div>
@@ -272,4 +346,16 @@ function formatPrintTime(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return m === 0 ? `${h} uur` : `${h}u${m}m`;
+}
+
+/**
+ * Bepaalt of een hex-kleur "licht" is (luminance > 0.7). Lichte kleuren
+ * krijgen een subtiele inner shadow voor zichtbaarheid op zwarte achtergrond.
+ */
+function isLightColor(hex: string): boolean {
+  const r = parseInt(hex.slice(0, 2), 16) / 255;
+  const g = parseInt(hex.slice(2, 4), 16) / 255;
+  const b = parseInt(hex.slice(4, 6), 16) / 255;
+  const luminance = 0.299 * r + 0.587 * g + 0.114 * b;
+  return luminance > 0.7;
 }

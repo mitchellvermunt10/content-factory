@@ -28,6 +28,19 @@ export interface StructuredAddress {
 }
 
 /**
+ * Filament-kleur in shop palette. Hex is zonder #, bv. "FF6A13" voor Pumpkin
+ * Orange. Bambu Lab PLA Basic palette als referentie.
+ */
+export interface ShopColor {
+  /** Stable ID, bv. "pumpkin-orange" — gebruikt als selectie-key */
+  id: string;
+  /** Display-naam, bv. "Pumpkin Orange" */
+  name: string;
+  /** Hex zonder #, bv. "FF6A13" */
+  hex: string;
+}
+
+/**
  * Eén product in een shop (bv. JJ-3D's 3D-print-catalog). Wordt
  * geïmporteerd uit MakerWorld URLs of handmatig toegevoegd.
  */
@@ -113,6 +126,12 @@ export interface NextLevelSiteData {
     /** Verwachte levertijd-tekst, bv. '3-7 werkdagen' */
     deliveryNote?: string;
     products?: ShopProduct[];
+    /**
+     * Beschikbare filament-kleuren shop-breed. Wordt door ProductDetail
+     * gebruikt als kleur-swatch picker. Per product kan via ShopProduct.
+     * availableColorIds gefilterd worden, anders zijn alle kleuren beschikbaar.
+     */
+    colors?: ShopColor[];
   };
 
   // ────────────────────────────────────────────────────────────
