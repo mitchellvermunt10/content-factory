@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Clock, ShoppingBag } from "lucide-react";
-import { Scene, SceneText, SceneStagger } from "@/components/sites/Scene";
 import type { ShopProduct } from "@/lib/sites/types";
 
 interface Props {
@@ -20,9 +19,14 @@ interface Props {
 
 /**
  * Cinematic product-catalog voor JJ-3D-stijl shop-sites.
- * Vervangt scene-3 (menu) wanneer shop.products aanwezig is.
- * Layout: 3-koloms grid (1-koloms mobiel), per product card met image,
- * naam, print-tijd, prijs en 'Bestel'-knop die linkt naar product-detail.
+ *
+ * BELANGRIJK: deze sectie staat NIET in een Scene/sticky-pin wrapper.
+ * Reden: het product-grid is bij 6+ producten groter dan een viewport
+ * (zeker op mobile met 1-koloms layout). In een sticky-pin scene zou
+ * de gebruiker niet door alle producten kunnen scrollen.
+ *
+ * Daarom: gewone scroll-section met CSS-gebaseerde fade-in zodat het
+ * nog cinematic aanvoelt zonder de scrollbaarheid kapot te maken.
  */
 export function ShopCatalog({
   slug,
@@ -35,24 +39,18 @@ export function ShopCatalog({
   if (products.length === 0) return null;
 
   return (
-    <Scene vhMultiplier={3}>
+    <section className="relative w-full bg-black py-24 sm:py-32">
       <div className="w-full px-6">
         <div className="mx-auto max-w-6xl">
-          <SceneText
-            enterStart={0.0}
-            enterEnd={0.1}
-            exitStart={0.95}
-            exitEnd={1.0}
-            travel={40}
-          >
-            <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
+          <div className="text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/50">
               {eyebrow}
             </p>
-            <h2 className="mt-4 text-center font-serif text-4xl font-light md:text-5xl">
+            <h2 className="mt-4 font-serif text-4xl font-light md:text-5xl">
               {headline}
             </h2>
             {deliveryNote ? (
-              <p className="mx-auto mt-4 max-w-xl text-center text-sm text-white/60">
+              <p className="mx-auto mt-4 max-w-xl text-sm text-white/60">
                 {deliveryNote}
                 {shippingEur != null ? (
                   <>
@@ -61,17 +59,9 @@ export function ShopCatalog({
                 ) : null}
               </p>
             ) : null}
-          </SceneText>
+          </div>
 
-          <SceneStagger
-            windowStart={0.1}
-            windowEnd={0.45}
-            perItemDuration={0.18}
-            exitStart={0.95}
-            exitEnd={1.0}
-            travel={32}
-            className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          >
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
               <Link
                 key={product.id}
@@ -84,6 +74,7 @@ export function ShopCatalog({
                     src={product.image}
                     alt={product.title}
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    loading="lazy"
                   />
                   {product.printTimeMinutes ? (
                     <div className="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-black/70 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/85 backdrop-blur-md">
@@ -118,10 +109,10 @@ export function ShopCatalog({
                 </div>
               </Link>
             ))}
-          </SceneStagger>
+          </div>
         </div>
       </div>
-    </Scene>
+    </section>
   );
 }
 
