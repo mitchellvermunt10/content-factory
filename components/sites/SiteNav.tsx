@@ -5,21 +5,35 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
+export type NavVariant = "restaurant" | "shop";
+
 interface Props {
   slug: string;
   businessName: string;
   /** Op de home-page start de nav transparant en wordt solid na scroll.
    *  Op subpages is hij direct solid. */
   startTransparent?: boolean;
+  /** Bepaalt welke nav-items getoond worden. Default: restaurant. */
+  variant?: NavVariant;
 }
 
-const NAV_LINKS = [
-  { href: "", label: "Home" },
-  { href: "/menu", label: "Kaart" },
-  { href: "/reserveren", label: "Reserveren" },
-  { href: "/verhaal", label: "Verhaal" },
-  { href: "/contact", label: "Contact" },
-];
+const NAV_LINKS_BY_VARIANT: Record<NavVariant, { href: string; label: string }[]> = {
+  restaurant: [
+    { href: "", label: "Home" },
+    { href: "/menu", label: "Kaart" },
+    { href: "/reserveren", label: "Reserveren" },
+    { href: "/verhaal", label: "Verhaal" },
+    { href: "/contact", label: "Contact" },
+  ],
+  shop: [
+    { href: "", label: "Home" },
+    { href: "/collectie", label: "Collectie" },
+    { href: "/proces", label: "Werkwijze" },
+    { href: "/maatwerk", label: "Maatwerk" },
+    { href: "/faq", label: "FAQ" },
+    { href: "/contact", label: "Contact" },
+  ],
+};
 
 /**
  * Sticky top navigation voor de Next Level Site.
@@ -28,10 +42,16 @@ const NAV_LINKS = [
  * - Op subpages: direct solid met backdrop-blur.
  * - Mobiel: hamburger → fullscreen drawer.
  */
-export function SiteNav({ slug, businessName, startTransparent = false }: Props) {
+export function SiteNav({
+  slug,
+  businessName,
+  startTransparent = false,
+  variant = "restaurant",
+}: Props) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const navLinks = NAV_LINKS_BY_VARIANT[variant];
 
   useEffect(() => {
     if (!startTransparent) {
@@ -68,7 +88,7 @@ export function SiteNav({ slug, businessName, startTransparent = false }: Props)
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
-            {NAV_LINKS.map((link) => {
+            {navLinks.map((link) => {
               const href = `${basePath}${link.href}`;
               const active = isActive(link.href);
               return (
@@ -117,7 +137,7 @@ export function SiteNav({ slug, businessName, startTransparent = false }: Props)
             </button>
           </div>
           <nav className="mt-8 flex flex-col gap-2 px-6">
-            {NAV_LINKS.map((link) => {
+            {navLinks.map((link) => {
               const href = `${basePath}${link.href}`;
               const active = isActive(link.href);
               return (

@@ -31,7 +31,14 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return listSlugs().map((slug) => ({ slug }));
+  const slugs: { slug: string }[] = [];
+  for (const slug of listSlugs()) {
+    const result = await loadSiteData(slug);
+    // Reserveren-pagina is alleen voor sites met reservationUrl (restaurants/salons),
+    // niet voor online shops.
+    if (result?.data.business.reservationUrl) slugs.push({ slug });
+  }
+  return slugs;
 }
 
 const DAY_ORDER: { key: keyof NonNullable<typeof DEFAULT_HOURS>; label: string }[] = [
@@ -62,7 +69,7 @@ export default async function ReserverenPage({
 }) {
   const { slug } = await params;
   const result = await loadSiteData(slug);
-  if (!result) notFound();
+  if (!result?.data.business.reservationUrl) notFound();
   const { data } = result;
 
   const homeUrl = `${BASE_URL}/sites/${slug}`;

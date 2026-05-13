@@ -440,6 +440,83 @@ const DEMO_SITES: Record<string, DemoSpec> = {
         ctaLabel: "App ons",
       },
     },
+    process: {
+      headline: "Van bestand naar bureau",
+      intro:
+        "Elke print loopt langs deze vier stappen. Geen wachtrij van 3 weken, geen verrassingen achteraf.",
+      steps: [
+        {
+          title: "1. Stuur je idee",
+          body: "Een MakerWorld-link, een STL-bestand of een korte beschrijving. We kijken of het op de Bambu Lab P2S past en welk materiaal past bij wat je ermee gaat doen.",
+          icon: "upload",
+        },
+        {
+          title: "2. Slicen + materiaal kiezen",
+          body: "We zetten de print om naar instructies voor de printer en kiezen samen de kleur en het materiaal. PLA voor display-prints, PETG voor functioneel, ABS voor warmte-bestendig.",
+          icon: "settings-2",
+        },
+        {
+          title: "3. Printen",
+          body: "De P2S print laag voor laag. Een klein hebbedingetje is in 2 uur klaar, een complexe sculptuur kan een hele dag duren. We houden je op de hoogte.",
+          icon: "boxes",
+        },
+        {
+          title: "4. Bij jou op de mat",
+          body: "Verzonden via PostNL met track & trace. 3-7 werkdagen levertijd vanaf moment van bestellen. Verpakt met zorg zodat 'ie heel aankomt.",
+          icon: "truck",
+        },
+      ],
+    },
+    faq: [
+      {
+        question: "Hoe lang duurt een print?",
+        answer:
+          "Een klein hebbedingetje (zoals een penhouder) is in 2 uur klaar. Een complexer object zoals de Voronoi wijnhouder duurt 6-8 uur. Bij maatwerk geven we vooraf altijd een schatting.",
+      },
+      {
+        question: "Welke materialen gebruiken jullie?",
+        answer:
+          "Standaard PLA — de meest gangbare keuze, mooie afwerking, niet warmte-bestendig. Op aanvraag PETG (sterker, beetje flexibel), ABS (warmte-bestendig) of TPU (rubber-achtig). De Bambu Lab AMS Combo schakelt automatisch tussen 4 spools voor multi-color prints.",
+      },
+      {
+        question: "Kunnen jullie ook iets printen dat ik zelf ontworpen heb?",
+        answer:
+          "Ja. Stuur ons je STL of STEP-bestand via /maatwerk en we geven je binnen een dag een prijsopgave + levertijd. Geen ontwerp? Beschrijf je idee en we kijken of we iets passends kunnen vinden op MakerWorld of Thingiverse.",
+      },
+      {
+        question: "Wat als ik een specifieke kleur wil?",
+        answer:
+          "We hebben standaard zwart, wit, en een handvol kleuren op voorraad. Voor iets specifieks (bv. een merkkleur) bestellen we een spool bij — dat duurt 2-3 dagen extra.",
+      },
+      {
+        question: "Wat zijn de verzendkosten?",
+        answer:
+          "€4,95 voor heel Nederland. We verzenden 5 dagen per week via PostNL. Voor België geldt een toeslag van €5,- afhankelijk van het gewicht.",
+      },
+      {
+        question: "Wat gebeurt er als de print kapot aankomt?",
+        answer:
+          "Maak een foto en stuur 'm naar ons via WhatsApp. We printen 'm dan opnieuw en sturen 'm gratis op. Komt zelden voor — we pakken alles in met luchtkussen.",
+      },
+      {
+        question: "Doen jullie ook spoed-opdrachten?",
+        answer:
+          "Soms wel. Print-tijd zit vast aan de fysica, maar als we ruimte hebben in de queue kunnen we soms binnen 48 uur leveren. Een spoed-toeslag van €15 geldt dan.",
+      },
+    ],
+    customRequest: {
+      // email: "info@jj3d.nl",  // TODO: invullen zodra klant email heeft
+      headline: "Iets specifieks in gedachten?",
+      intro:
+        "Stuur je idee, een MakerWorld-link of je eigen STL-bestand. Binnen een werkdag krijg je een prijsopgave en levertijd.",
+    },
+    subpageHeroes: {
+      contact: "/sites/jj-3d/intro/frames/frame_0150.jpg",
+      proces: "/sites/jj-3d/intro/frames/frame_0080.jpg",
+      collectie: "/sites/jj-3d/intro/frames/frame_0200.jpg",
+      maatwerk: "/sites/jj-3d/intro/frames/frame_0120.jpg",
+      faq: "/sites/jj-3d/intro/frames/frame_0250.jpg",
+    },
   },
 };
 

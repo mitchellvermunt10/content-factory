@@ -29,7 +29,13 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return listSlugs().map((slug) => ({ slug }));
+  const slugs: { slug: string }[] = [];
+  for (const slug of listSlugs()) {
+    const result = await loadSiteData(slug);
+    // Alleen renderen voor sites met daadwerkelijke menukaart-content
+    if (result?.data.menuCategories?.length) slugs.push({ slug });
+  }
+  return slugs;
 }
 
 export default async function MenuPage({
@@ -39,9 +45,9 @@ export default async function MenuPage({
 }) {
   const { slug } = await params;
   const result = await loadSiteData(slug);
-  if (!result) notFound();
+  if (!result?.data.menuCategories?.length) notFound();
   const { data } = result;
-  const categories = data.menuCategories ?? [];
+  const categories = data.menuCategories!;
 
   const url = `${BASE_URL}/sites/${slug}/menu`;
   const homeUrl = `${BASE_URL}/sites/${slug}`;

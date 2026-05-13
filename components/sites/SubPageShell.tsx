@@ -45,6 +45,7 @@ export function SubPageShell({
           slug={data.slug}
           businessName={data.business.name}
           startTransparent={false}
+          variant={data.shop ? "shop" : "restaurant"}
         />
 
         {/* Sub-hero — cinematic met achtergrond-image en zachte zoom */}
