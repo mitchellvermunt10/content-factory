@@ -375,6 +375,41 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       mode: "test", // Voor launch op 'live' zetten
       shippingEur: 4.95,
       deliveryNote: "Geprint op bestelling. 1 tot 3 werkdagen tot verzending.",
+      materials: [
+        {
+          id: "pla",
+          name: "PLA",
+          tagline: "Display & decoratie",
+          description:
+            "Standaard materiaal — mooie afwerking, breed kleurenpalet, niet hittebestendig. Geschikt voor bureau-decoraties, kado's, prototypes.",
+          priceModifierEur: 0,
+          isDefault: true,
+        },
+        {
+          id: "petg",
+          name: "PETG",
+          tagline: "Functioneel & sterk",
+          description:
+            "Sterker dan PLA, beetje flexibel, beter bestand tegen hitte (tot 70°C). Geschikt voor onderdelen die belast worden, plantenpotten, drinkbekers.",
+          priceModifierEur: 2,
+        },
+        {
+          id: "abs",
+          name: "ABS",
+          tagline: "Hittebestendig",
+          description:
+            "Auto-interieur grade — bestand tegen direct zonlicht en hoge temperaturen tot 95°C. Geschikt voor dashboard-accessoires, beschermkappen, gereedschap.",
+          priceModifierEur: 3,
+        },
+        {
+          id: "tpu",
+          name: "TPU",
+          tagline: "Rubber-flexibel",
+          description:
+            "Flexibel en stootabsorberend, voelt aan als rubber. Geschikt voor hoesjes, dempers, antislip-pads, grippy onderdelen.",
+          priceModifierEur: 4,
+        },
+      ],
       colors: [
         // Bambu Lab PLA Basic palette — 30 kleuren als referentie.
         // Hex zonder #-prefix.
