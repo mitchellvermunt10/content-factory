@@ -12,6 +12,12 @@ const Body = z.object({
    * met oudere clients zonder tier-selector.
    */
   variant: z.enum(["single", "ams"]).default("single"),
+  /**
+   * Gekozen filament-kleur-id uit shop.colors. Alleen relevant bij
+   * variant="single". Null/ontbrekend = klant heeft niets gekozen of het
+   * is een AMS-bestelling waar kleur-combo via WhatsApp wordt afgestemd.
+   */
+  colorId: z.string().nullable().optional(),
   customerEmail: z.string().email().optional(),
   customerName: z.string().max(120).optional(),
 });
@@ -60,6 +66,19 @@ export async function POST(
   }
   const effectivePrice = isAms ? product.priceAmsEur! : product.priceEur;
 
+  // Valideer kleurkeuze (single-tier) tegen shop.colors palette
+  let chosenColor: { id: string; name: string; hex: string } | null = null;
+  if (!isAms && body.colorId) {
+    const c = result.data.shop?.colors?.find((x) => x.id === body.colorId);
+    if (!c) {
+      return NextResponse.json(
+        { error: "Ongeldige kleurkeuze" },
+        { status: 400 }
+      );
+    }
+    chosenColor = c;
+  }
+
   // TODO: Mollie payment-session aanmaken via lib/billing/mollie.ts
   // Voor nu: 503 zodat frontend de fallback-toast toont
   return NextResponse.json(
@@ -70,6 +89,7 @@ export async function POST(
         id: product.id,
         title: product.title,
         variant: body.variant,
+        color: chosenColor,
         priceEur: effectivePrice,
       },
     },
