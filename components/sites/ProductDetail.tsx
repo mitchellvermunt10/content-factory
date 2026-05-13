@@ -24,7 +24,7 @@ export function ProductDetail({ data, product }: Props) {
   const [ordering, setOrdering] = useState(false);
   const hasAmsTier = typeof product.priceAmsEur === "number";
   const [variant, setVariant] = useState<Variant>("single");
-  const activePrice =
+  const basePrice =
     variant === "ams" && hasAmsTier ? product.priceAmsEur! : product.priceEur;
 
   // Image-gallery: hero is hoofd, gallery zijn MakerWorld-shots
@@ -43,6 +43,19 @@ export function ProductDetail({ data, product }: Props) {
   // naar maatwerk-overleg via WhatsApp na bestelling.
   const showColorPicker = variant === "single" && availableColors.length > 0;
 
+  // Materiaal-picker. Default = isDefault flag of eerste in lijst (PLA).
+  const availableMaterials = data.shop?.materials ?? [];
+  const defaultMaterial =
+    availableMaterials.find((m) => m.isDefault) ?? availableMaterials[0];
+  const [selectedMaterialId, setSelectedMaterialId] = useState<string | null>(
+    defaultMaterial?.id ?? null
+  );
+  const selectedMaterial = availableMaterials.find(
+    (m) => m.id === selectedMaterialId
+  );
+  const materialPriceModifier = selectedMaterial?.priceModifierEur ?? 0;
+  const activePrice = basePrice + materialPriceModifier;
+
   async function handleOrder() {
     setOrdering(true);
     try {
@@ -53,6 +66,7 @@ export function ProductDetail({ data, product }: Props) {
           productId: product.id,
           variant,
           colorId: variant === "single" ? selectedColorId : null,
+          materialId: selectedMaterialId,
         }),
       });
       const json = await res.json();
@@ -270,6 +284,49 @@ export function ProductDetail({ data, product }: Props) {
                   {product.amsDescription ??
                     "Meerdere kleuren in één print — we stemmen de combo met je af via WhatsApp na je bestelling."}
                 </p>
+              </div>
+            ) : null}
+
+            {/* Materiaal-picker (altijd zichtbaar als shop.materials bestaat) */}
+            {availableMaterials.length > 0 ? (
+              <div className="mt-10">
+                <div className="flex items-baseline justify-between">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
+                    Materiaal
+                  </p>
+                  {selectedMaterial && materialPriceModifier > 0 ? (
+                    <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55">
+                      +€{materialPriceModifier.toFixed(2).replace(".", ",")}
+                    </p>
+                  ) : null}
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  {availableMaterials.map((mat) => {
+                    const isSelected = mat.id === selectedMaterialId;
+                    return (
+                      <button
+                        key={mat.id}
+                        type="button"
+                        onClick={() => setSelectedMaterialId(mat.id)}
+                        className={`flex flex-col items-start gap-1 rounded-xl border px-4 py-3 text-left transition-colors ${
+                          isSelected
+                            ? "border-white bg-white/10"
+                            : "border-white/15 hover:border-white/30"
+                        }`}
+                      >
+                        <span className="font-serif text-base">{mat.name}</span>
+                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/55">
+                          {mat.tagline}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                {selectedMaterial ? (
+                  <p className="mt-3 text-xs leading-relaxed text-white/55">
+                    {selectedMaterial.description}
+                  </p>
+                ) : null}
               </div>
             ) : null}
 

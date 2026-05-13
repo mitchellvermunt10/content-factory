@@ -41,6 +41,26 @@ export interface ShopColor {
 }
 
 /**
+ * Filament-materiaal in shop palette. Naast kleur kiest de klant ook het
+ * materiaal — bv. PLA voor display, PETG voor functioneel, ABS voor
+ * warmte-bestendig. Sommige materialen kosten meer filament/print-tijd.
+ */
+export interface ShopMaterial {
+  /** Stable ID, bv. "pla" of "petg" — gebruikt als selectie-key */
+  id: string;
+  /** Korte naam, bv. "PLA" */
+  name: string;
+  /** Eén-zin uitleg over gebruik, bv. "Display & decoratie" */
+  tagline: string;
+  /** Volledige beschrijving voor klant-info */
+  description: string;
+  /** Prijs-toeslag bovenop product priceEur in EUR. PLA = 0 (standaard). */
+  priceModifierEur: number;
+  /** Default-materiaal van de shop — markeren met true */
+  isDefault?: boolean;
+}
+
+/**
  * Eén product in een shop (bv. JJ-3D's 3D-print-catalog). Wordt
  * geïmporteerd uit MakerWorld URLs of handmatig toegevoegd.
  */
@@ -132,6 +152,11 @@ export interface NextLevelSiteData {
      * availableColorIds gefilterd worden, anders zijn alle kleuren beschikbaar.
      */
     colors?: ShopColor[];
+    /**
+     * Beschikbare filament-materialen shop-breed. Per product een tab-row
+     * picker met prijs-impact (PLA basis, PETG/ABS/TPU toeslag).
+     */
+    materials?: ShopMaterial[];
   };
 
   // ────────────────────────────────────────────────────────────

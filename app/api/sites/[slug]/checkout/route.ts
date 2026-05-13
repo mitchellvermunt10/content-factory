@@ -18,6 +18,11 @@ const Body = z.object({
    * is een AMS-bestelling waar kleur-combo via WhatsApp wordt afgestemd.
    */
   colorId: z.string().nullable().optional(),
+  /**
+   * Gekozen filament-materiaal-id uit shop.materials (PLA/PETG/ABS/TPU).
+   * Toeslag uit material.priceModifierEur wordt opgeteld bij effective price.
+   */
+  materialId: z.string().nullable().optional(),
   customerEmail: z.string().email().optional(),
   customerName: z.string().max(120).optional(),
 });
@@ -79,6 +84,31 @@ export async function POST(
     chosenColor = c;
   }
 
+  // Valideer materiaal-keuze + bereken toeslag
+  let materialPriceModifier = 0;
+  let chosenMaterial:
+    | { id: string; name: string; priceModifierEur: number }
+    | null = null;
+  if (body.materialId) {
+    const m = result.data.shop?.materials?.find(
+      (x) => x.id === body.materialId
+    );
+    if (!m) {
+      return NextResponse.json(
+        { error: "Ongeldige materiaal-keuze" },
+        { status: 400 }
+      );
+    }
+    materialPriceModifier = m.priceModifierEur;
+    chosenMaterial = {
+      id: m.id,
+      name: m.name,
+      priceModifierEur: m.priceModifierEur,
+    };
+  }
+
+  const totalPrice = effectivePrice + materialPriceModifier;
+
   // TODO: Mollie payment-session aanmaken via lib/billing/mollie.ts
   // Voor nu: 503 zodat frontend de fallback-toast toont
   return NextResponse.json(
@@ -90,7 +120,9 @@ export async function POST(
         title: product.title,
         variant: body.variant,
         color: chosenColor,
-        priceEur: effectivePrice,
+        material: chosenMaterial,
+        basePriceEur: effectivePrice,
+        priceEur: totalPrice,
       },
     },
     { status: 503 }
