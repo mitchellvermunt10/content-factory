@@ -361,7 +361,7 @@ const DEMO_SITES: Record<string, DemoSpec> = {
     business: {
       name: "JJ-3D",
       tagline:
-        "[PLACEHOLDER tagline — vervangen na intake. Eén zin over wat ze maken voor wie.]",
+        "Hobby-prints van een hoog niveau — hebbedingen voor je bureau, je glas, je dag.",
       vertical: "3D-printservice",
       schemaType: "LocalBusiness",
       city: "[STAD]",
@@ -369,6 +369,49 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       whatsapp: "[+31...]",
       whatsappMessage: "Hoi! Ik heb een vraag over een 3D-print-opdracht.",
       // Geen reservationUrl — wel een 'offerte aanvragen'-formulier later
+    },
+    shop: {
+      mode: "test", // Voor launch op 'live' zetten
+      shippingEur: 4.95,
+      deliveryNote: "Geprint op bestelling — 3-7 werkdagen levertijd.",
+      products: [
+        {
+          id: "2391957",
+          title: "The North Face Down Jacket — Pen Holder",
+          description:
+            "Geïnspireerd op de iconische puffer-jas. Houdt 3-5 pennen netjes op je bureau.",
+          priceEur: 12.5,
+          image: "/sites/jj-3d/products/2391957/primary.png",
+          printTimeMinutes: 120,
+          tags: ["bureau", "hebbedingetje"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/2391957-the-north-face-down-jacket-pen-holder",
+        },
+        {
+          id: "2387676",
+          title: "North Face Beanie — Desk Organiser",
+          description:
+            "Beanie-vorm voor je bureau-prullaria. Past potloden, paperclips, post-its.",
+          priceEur: 14.0,
+          image: "/sites/jj-3d/products/2387676/primary.jpg",
+          printTimeMinutes: 360,
+          tags: ["bureau", "hebbedingetje", "organiseren"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/2387676-north-face-beanie-desk-organiser",
+        },
+        {
+          id: "1641939",
+          title: "VinoGrace Voronoi Wine Holder",
+          description:
+            "Sculpturele wijnflessen-houder. Voronoi-patroon, ziet eruit als kunst, draagt je fles.",
+          priceEur: 18.0,
+          image: "/sites/jj-3d/products/1641939/primary.png",
+          printTimeMinutes: 420,
+          tags: ["wijn", "decoratief"],
+          sourceUrl:
+            "https://makerworld.com/nl/models/1641939-vinograce-voronoi-wine-holder",
+        },
+      ],
     },
     scenes: [
       { id: "intro", kind: "intro", frameRange: { from: 0, to: 14 }, content: {} },

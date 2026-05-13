@@ -13,6 +13,7 @@ import { ReviewsSection } from "@/components/sites/ReviewsSection";
 import { SocialProofInline } from "@/components/sites/SocialProofStrip";
 import { CookieBanner } from "@/components/sites/CookieBanner";
 import { SiteFooter } from "@/components/sites/SiteFooter";
+import { ShopCatalog } from "@/components/sites/ShopCatalog";
 import { buildRestaurantShots } from "@/lib/sites/shotPresets";
 import type { CinematicShot } from "@/components/sites/CinematicCanvas";
 import type { NextLevelSiteData } from "@/lib/sites/types";
@@ -181,7 +182,19 @@ export function SiteExperience({
             </SceneText>
           </Scene>
 
-          {/* Scene 3 — Menu / diensten */}
+          {/* Scene 3 — Menu / diensten / SHOP CATALOG (afh. van data) */}
+          {data.shop?.products && data.shop.products.length > 0 ? (
+            <ShopCatalog
+              slug={data.slug}
+              products={data.shop.products}
+              shippingEur={data.shop.shippingEur}
+              deliveryNote={data.shop.deliveryNote}
+              eyebrow={data.sceneLabels?.menu?.eyebrow ?? "Onze prints"}
+              headline={
+                data.sceneLabels?.menu?.headline ?? "Wat we voor je maken"
+              }
+            />
+          ) : (
           <Scene vhMultiplier={2.6}>
             <div className="w-full px-6">
               <div className="mx-auto max-w-4xl">
@@ -235,6 +248,7 @@ export function SiteExperience({
               </div>
             </div>
           </Scene>
+          )}
 
           {/* Reviews — sociaal bewijs tussen menu en sfeer */}
           {data.socialProof?.testimonials && data.socialProof.testimonials.length > 0 ? (

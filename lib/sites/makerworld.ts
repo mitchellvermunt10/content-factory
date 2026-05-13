@@ -148,10 +148,16 @@ export async function scrapeMakerWorld(url: string): Promise<MakerWorldProduct> 
       );
     }
 
+    // Strip MakerWorld's standaard og:title suffix
+    const cleanTitle = decodeEntities(data.title.trim()).replace(
+      /\s*[-–|·]\s*(?:Free\s+)?3D\s+Print\s+Model\s*[-–|·]\s*MakerWorld\s*$/i,
+      ""
+    ).trim();
+
     return {
       modelId: parsed.modelId,
       slug: parsed.slug,
-      title: decodeEntities(data.title.trim()),
+      title: cleanTitle,
       description: data.description ? decodeEntities(data.description.trim()) : "",
       primaryImageUrl: data.image,
       printTimeMinutes: parsePrintTime(data.bodyText),
