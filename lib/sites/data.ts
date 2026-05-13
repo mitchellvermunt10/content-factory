@@ -358,10 +358,11 @@ const DEMO_SITES: Record<string, DemoSpec> = {
   "jj-3d": {
     slug: "jj-3d",
     isDemo: true, // TODO: op false zetten bij launch
+    frameFolder: "jj-3d",
     business: {
       name: "JJ-3D",
       tagline:
-        "Hobby-prints van een hoog niveau — hebbedingen voor je bureau, je glas, je dag.",
+        "Hebbedingen die je nergens anders vindt. Geprint op bestelling, in een week op je bureau.",
       vertical: "3D-printservice",
       schemaType: "LocalBusiness",
       city: "[STAD]",
@@ -421,19 +422,22 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       { id: "contact", kind: "contact", frameRange: { from: 55, to: 59 }, content: {} },
     ],
     sceneLabels: {
-      intro: { eyebrow: "[STAD] · 3D-printservice" },
+      intro: { eyebrow: "Geprint in Nederland · op bestelling" },
       arrival: {
         eyebrow: "De werkplaats",
         headline:
-          "[PLACEHOLDER — bv. 'Van bestand naar tastbaar product. Binnen 48 uur op je bureau.']",
-        ctaLabel: "Vraag een offerte",
+          "Een Bambu Lab P2S die nooit echt stilstaat. Elke print één voor één gemaakt, in de kleur die jij kiest.",
+        ctaLabel: "Bekijk de collectie",
       },
-      menu: { eyebrow: "Onze diensten", headline: "Wat we voor je printen" },
-      ambiance: { eyebrow: "Het werk", headline: "Recente projecten" },
+      menu: {
+        eyebrow: "De collectie",
+        headline: "Hebbedingen voor je bureau, je glas, je dag",
+      },
+      ambiance: { eyebrow: "Aan het werk", headline: "Laag voor laag" },
       contact: {
-        eyebrow: "Aan de slag",
+        eyebrow: "Vraag of opdracht?",
         headline: "Stuur ons je idee",
-        ctaLabel: "Vraag offerte aan",
+        ctaLabel: "App ons",
       },
     },
   },
