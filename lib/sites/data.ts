@@ -241,6 +241,22 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       sunday: "16:00 – 22:00",
       note: "Keuken sluit 30 minuten voor sluitingstijd. Last minute reserveren via WhatsApp.",
     },
+    sceneLabels: {
+      intro: { eyebrow: "Utrecht · Italiaans restaurant" },
+      arrival: {
+        eyebrow: "Welkom binnen",
+        headline:
+          "Een trattoria die je voelt zodra je binnenkomt. Houtvuur, stemmen, glaswerk.",
+        ctaLabel: "Reserveer een tafel",
+      },
+      menu: { eyebrow: "De kaart", headline: "Wat we serveren" },
+      ambiance: { eyebrow: "Sfeer", headline: "Zoals het écht voelt" },
+      contact: {
+        eyebrow: "Tot snel",
+        headline: "Kom langs",
+        ctaLabel: "Reserveer nu",
+      },
+    },
     email: "ciao@trattoriasole.nl",
     parkingInfo:
       "Gratis straat-parkeren na 18:00 in de wijk. Betaald: P-Springweg op 4 min loopafstand.",
@@ -287,6 +303,95 @@ const DEMO_SITES: Record<string, DemoSpec> = {
           date: "december 2025",
         },
       ],
+    },
+  },
+
+  // ──────────────────────────────────────────────────────────────
+  // KAPSALON MOOIGEKNIPT — eerste echte klant, intake-fase
+  // Placeholder-content. Vervangen zodra klant assets levert.
+  // isDemo=true tot launch, dan op false en geo-pages aanzetten.
+  // ──────────────────────────────────────────────────────────────
+  "kapsalon-mooigeknipt": {
+    slug: "kapsalon-mooigeknipt",
+    isDemo: true, // TODO: op false zetten bij launch
+    business: {
+      name: "Kapsalon MooiGeknipt",
+      tagline:
+        "[PLACEHOLDER tagline — vervangen na intake. Eén zin over wat de salon onderscheidt.]",
+      vertical: "Kapsalon",
+      schemaType: "BeautySalon",
+      city: "[STAD]",
+      phone: "[TELEFOON]",
+      whatsapp: "[+31...]",
+      whatsappMessage: "Hoi! Ik wil graag een afspraak bij MooiGeknipt.",
+      reservationUrl: "[TREATWELL OF EIGEN BOEKING-URL]",
+    },
+    scenes: [
+      { id: "intro", kind: "intro", frameRange: { from: 0, to: 14 }, content: {} },
+      { id: "arrival", kind: "arrival", frameRange: { from: 15, to: 29 }, content: {} },
+      { id: "menu", kind: "menu", frameRange: { from: 30, to: 44 }, content: {} },
+      { id: "ambiance", kind: "ambiance", frameRange: { from: 45, to: 54 }, content: {} },
+      { id: "contact", kind: "contact", frameRange: { from: 55, to: 59 }, content: {} },
+    ],
+    sceneLabels: {
+      intro: { eyebrow: "[STAD] · Kapsalon" },
+      arrival: {
+        eyebrow: "Welkom in onze stoel",
+        headline:
+          "[PLACEHOLDER — bv. 'Een uurtje voor jezelf, in handen die weten wat ze doen.']",
+        ctaLabel: "Boek een afspraak",
+      },
+      menu: { eyebrow: "Onze diensten", headline: "Wat we doen" },
+      ambiance: { eyebrow: "Het werk", headline: "Recente knipbeurten" },
+      contact: {
+        eyebrow: "Kom langs",
+        headline: "Plan je afspraak",
+        ctaLabel: "Boek nu",
+      },
+    },
+  },
+
+  // ──────────────────────────────────────────────────────────────
+  // JJ-3D — tweede echte klant, intake-fase
+  // 3D-printing business. Nog geen domein. Placeholder-content.
+  // ──────────────────────────────────────────────────────────────
+  "jj-3d": {
+    slug: "jj-3d",
+    isDemo: true, // TODO: op false zetten bij launch
+    business: {
+      name: "JJ-3D",
+      tagline:
+        "[PLACEHOLDER tagline — vervangen na intake. Eén zin over wat ze maken voor wie.]",
+      vertical: "3D-printservice",
+      schemaType: "LocalBusiness",
+      city: "[STAD]",
+      phone: "[TELEFOON]",
+      whatsapp: "[+31...]",
+      whatsappMessage: "Hoi! Ik heb een vraag over een 3D-print-opdracht.",
+      // Geen reservationUrl — wel een 'offerte aanvragen'-formulier later
+    },
+    scenes: [
+      { id: "intro", kind: "intro", frameRange: { from: 0, to: 14 }, content: {} },
+      { id: "arrival", kind: "arrival", frameRange: { from: 15, to: 29 }, content: {} },
+      { id: "menu", kind: "menu", frameRange: { from: 30, to: 44 }, content: {} },
+      { id: "ambiance", kind: "ambiance", frameRange: { from: 45, to: 54 }, content: {} },
+      { id: "contact", kind: "contact", frameRange: { from: 55, to: 59 }, content: {} },
+    ],
+    sceneLabels: {
+      intro: { eyebrow: "[STAD] · 3D-printservice" },
+      arrival: {
+        eyebrow: "De werkplaats",
+        headline:
+          "[PLACEHOLDER — bv. 'Van bestand naar tastbaar product. Binnen 48 uur op je bureau.']",
+        ctaLabel: "Vraag een offerte",
+      },
+      menu: { eyebrow: "Onze diensten", headline: "Wat we voor je printen" },
+      ambiance: { eyebrow: "Het werk", headline: "Recente projecten" },
+      contact: {
+        eyebrow: "Aan de slag",
+        headline: "Stuur ons je idee",
+        ctaLabel: "Vraag offerte aan",
+      },
     },
   },
 };

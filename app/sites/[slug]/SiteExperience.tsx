@@ -134,7 +134,8 @@ export function SiteExperience({
               className="px-6 text-center"
             >
               <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/60">
-                {data.business.city} · {data.business.vertical}
+                {data.sceneLabels?.intro?.eyebrow ??
+                  `${data.business.city} · ${data.business.vertical}`}
               </p>
               <h1 className="mt-6 font-serif text-6xl font-light leading-[0.95] tracking-tight md:text-8xl">
                 {data.business.name}
@@ -161,10 +162,11 @@ export function SiteExperience({
               className="px-6 text-center"
             >
               <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/50">
-                Welkom binnen
+                {data.sceneLabels?.arrival?.eyebrow ?? "Welkom binnen"}
               </p>
               <h2 className="mt-6 max-w-3xl font-serif text-4xl font-light leading-tight md:text-6xl">
-                {(data.scenes[1]?.content?.headline as string) ??
+                {data.sceneLabels?.arrival?.headline ??
+                  (data.scenes[1]?.content?.headline as string) ??
                   "Een plek die je voelt zodra je binnenkomt."}
               </h2>
               {data.business.reservationUrl ? (
@@ -172,7 +174,7 @@ export function SiteExperience({
                   href={data.business.reservationUrl}
                   className="mt-10 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
                 >
-                  Reserveer een tafel
+                  {data.sceneLabels?.arrival?.ctaLabel ?? "Reserveer een tafel"}
                   <ArrowRight className="size-4" />
                 </Link>
               ) : null}
@@ -191,10 +193,10 @@ export function SiteExperience({
                   travel={40}
                 >
                   <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
-                    De kaart
+                    {data.sceneLabels?.menu?.eyebrow ?? "De kaart"}
                   </p>
                   <h2 className="mt-4 text-center font-serif text-4xl font-light md:text-5xl">
-                    Wat we serveren
+                    {data.sceneLabels?.menu?.headline ?? "Wat we serveren"}
                   </h2>
                 </SceneText>
 
@@ -251,10 +253,10 @@ export function SiteExperience({
                   travel={40}
                 >
                   <p className="text-center font-mono text-xs uppercase tracking-[0.4em] text-white/50">
-                    Sfeer
+                    {data.sceneLabels?.ambiance?.eyebrow ?? "Sfeer"}
                   </p>
                   <h2 className="mt-4 text-center font-serif text-4xl font-light md:text-5xl">
-                    Zoals het écht voelt
+                    {data.sceneLabels?.ambiance?.headline ?? "Zoals het écht voelt"}
                   </h2>
                 </SceneText>
 
@@ -316,10 +318,10 @@ export function SiteExperience({
               className="w-full px-6 text-center"
             >
               <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/50">
-                Tot snel
+                {data.sceneLabels?.contact?.eyebrow ?? "Tot snel"}
               </p>
               <h2 className="mt-4 font-serif text-5xl font-light md:text-7xl">
-                Kom langs
+                {data.sceneLabels?.contact?.headline ?? "Kom langs"}
               </h2>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-white/70">
                 {data.business.address ? (
@@ -343,7 +345,7 @@ export function SiteExperience({
                   href={data.business.reservationUrl}
                   className="mt-10 inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-sm font-medium text-black transition-transform hover:scale-[1.02]"
                 >
-                  Reserveer nu
+                  {data.sceneLabels?.contact?.ctaLabel ?? "Reserveer nu"}
                   <ArrowRight className="size-4" />
                 </Link>
               ) : null}

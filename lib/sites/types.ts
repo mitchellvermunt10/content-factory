@@ -135,4 +135,33 @@ export interface NextLevelSiteData {
     accentColor?: string;
     fontDisplay?: string;
   };
+
+  /**
+   * Scene-specifieke labels per vertical. Restaurant gebruikt 'De kaart',
+   * kapsalon 'Onze diensten', 3D-printing 'Wat we maken'. Met fallback
+   * naar restaurant-defaults zodat oudere slugs niet breken.
+   */
+  sceneLabels?: {
+    intro?: {
+      eyebrow?: string; // bv. "Utrecht · Italiaans restaurant"
+    };
+    arrival?: {
+      eyebrow?: string; // bv. "Welkom binnen"
+      headline?: string; // grote tekst onder eyebrow
+      ctaLabel?: string; // bv. "Reserveer een tafel" of "Boek een afspraak"
+    };
+    menu?: {
+      eyebrow?: string; // bv. "De kaart" of "Onze diensten"
+      headline?: string; // bv. "Wat we serveren" of "Wat we doen"
+    };
+    ambiance?: {
+      eyebrow?: string; // bv. "Sfeer" of "Het werk"
+      headline?: string; // bv. "Zoals het écht voelt" of "Recente projecten"
+    };
+    contact?: {
+      eyebrow?: string; // bv. "Tot snel" of "Vraag een offerte"
+      headline?: string; // bv. "Kom langs" of "Stuur ons je idee"
+      ctaLabel?: string; // bv. "Reserveer nu" of "Vraag offerte aan"
+    };
+  };
 }
