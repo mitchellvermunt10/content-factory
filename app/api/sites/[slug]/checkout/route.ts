@@ -6,6 +6,12 @@ export const runtime = "nodejs";
 
 const Body = z.object({
   productId: z.string().min(1),
+  /**
+   * Prijs-tier keuze. "single" = enkele kleur (priceEur), "ams" = multi-color
+   * Bambu AMS premium (priceAmsEur). Default "single" voor backward compat
+   * met oudere clients zonder tier-selector.
+   */
+  variant: z.enum(["single", "ams"]).default("single"),
   customerEmail: z.string().email().optional(),
   customerName: z.string().max(120).optional(),
 });
@@ -44,6 +50,16 @@ export async function POST(
     );
   }
 
+  // Bepaal effectieve prijs op basis van variant
+  const isAms = body.variant === "ams";
+  if (isAms && product.priceAmsEur == null) {
+    return NextResponse.json(
+      { error: "Dit product heeft geen AMS-tier beschikbaar" },
+      { status: 400 }
+    );
+  }
+  const effectivePrice = isAms ? product.priceAmsEur! : product.priceEur;
+
   // TODO: Mollie payment-session aanmaken via lib/billing/mollie.ts
   // Voor nu: 503 zodat frontend de fallback-toast toont
   return NextResponse.json(
@@ -53,7 +69,8 @@ export async function POST(
       product: {
         id: product.id,
         title: product.title,
-        priceEur: product.priceEur,
+        variant: body.variant,
+        priceEur: effectivePrice,
       },
     },
     { status: 503 }

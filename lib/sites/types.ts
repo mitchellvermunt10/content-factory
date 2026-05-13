@@ -38,8 +38,16 @@ export interface ShopProduct {
   title: string;
   /** Optioneel: langere description */
   description?: string;
-  /** Verkoopprijs in EUR */
+  /** Verkoopprijs in EUR — single-color tier (basis) */
   priceEur: number;
+  /**
+   * Optionele AMS-premium-tier prijs voor multi-color print (4-color via Bambu
+   * Lab AMS Combo). Wanneer aanwezig toont ProductDetail een tier-selector
+   * en ShopCatalog "vanaf €X". Bij ontbreken: alleen single-color verkocht.
+   */
+  priceAmsEur?: number;
+  /** Optionele uitleg wat AMS-tier toevoegt, bv. "Gradient print" of "Letter per kleur". */
+  amsDescription?: string;
   /** Local public path naar primary product-image */
   image: string;
   /** Optioneel: print-tijd in minuten, voor info-tag */
