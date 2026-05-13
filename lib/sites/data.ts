@@ -362,7 +362,7 @@ const DEMO_SITES: Record<string, DemoSpec> = {
     business: {
       name: "JJ-3D",
       tagline:
-        "Hebbedingen die je nergens anders vindt. Geprint op bestelling, in een week op je bureau.",
+        "Print op bestelling. In jouw kleur, op je bureau binnen een week.",
       vertical: "3D-printservice",
       schemaType: "LocalBusiness",
       city: "[STAD]",
@@ -374,15 +374,15 @@ const DEMO_SITES: Record<string, DemoSpec> = {
     shop: {
       mode: "test", // Voor launch op 'live' zetten
       shippingEur: 4.95,
-      deliveryNote: "Geprint op bestelling — 3-7 werkdagen levertijd.",
+      deliveryNote: "Geprint op bestelling. 3 tot 7 werkdagen levertijd.",
       products: [
         {
           id: "2391957",
-          title: "The North Face Down Jacket — Pen Holder",
+          title: "Puffer Jacket Pen Holder",
           description:
-            "Geïnspireerd op de iconische puffer-jas. Houdt 3-5 pennen netjes op je bureau.",
+            "De puffer-jas in 3D. Past 3 tot 5 pennen, of een handvol potloden. Kies de kleur, wij printen 'm.",
           priceEur: 12.5,
-          image: "/sites/jj-3d/products/2391957/primary.png",
+          image: "/sites/jj-3d/products/2391957/hero.jpg",
           printTimeMinutes: 120,
           tags: ["bureau", "hebbedingetje"],
           sourceUrl:
@@ -390,11 +390,11 @@ const DEMO_SITES: Record<string, DemoSpec> = {
         },
         {
           id: "2387676",
-          title: "North Face Beanie — Desk Organiser",
+          title: "Beanie Desk Organiser",
           description:
-            "Beanie-vorm voor je bureau-prullaria. Past potloden, paperclips, post-its.",
+            "De bekende beanie, maar dan als bakje. Past potloden, paperclips, of de losse post-its van vorige week.",
           priceEur: 14.0,
-          image: "/sites/jj-3d/products/2387676/primary.jpg",
+          image: "/sites/jj-3d/products/2387676/hero.jpg",
           printTimeMinutes: 360,
           tags: ["bureau", "hebbedingetje", "organiseren"],
           sourceUrl:
@@ -402,11 +402,11 @@ const DEMO_SITES: Record<string, DemoSpec> = {
         },
         {
           id: "1641939",
-          title: "VinoGrace Voronoi Wine Holder",
+          title: "Voronoi Wine Holder",
           description:
-            "Sculpturele wijnflessen-houder. Voronoi-patroon, ziet eruit als kunst, draagt je fles.",
+            "Wijn-fles-houder met Voronoi-patroon. Ziet eruit als sculptuur, doet het werk van een schap.",
           priceEur: 18.0,
-          image: "/sites/jj-3d/products/1641939/primary.png",
+          image: "/sites/jj-3d/products/1641939/hero.jpg",
           printTimeMinutes: 420,
           tags: ["wijn", "decoratief"],
           sourceUrl:
@@ -422,20 +422,20 @@ const DEMO_SITES: Record<string, DemoSpec> = {
       { id: "contact", kind: "contact", frameRange: { from: 55, to: 59 }, content: {} },
     ],
     sceneLabels: {
-      intro: { eyebrow: "Geprint in Nederland · op bestelling" },
+      intro: { eyebrow: "Nederland · op bestelling geprint" },
       arrival: {
         eyebrow: "De werkplaats",
         headline:
-          "Een Bambu Lab P2S die nooit echt stilstaat. Elke print één voor één gemaakt, in de kleur die jij kiest.",
+          "Een Bambu Lab P2S die zelden stilstaat. Vier kleuren tegelijk, elke print één voor één gemaakt.",
         ctaLabel: "Bekijk de collectie",
       },
       menu: {
         eyebrow: "De collectie",
-        headline: "Hebbedingen voor je bureau, je glas, je dag",
+        headline: "Klein, sculpturaal, of allebei",
       },
-      ambiance: { eyebrow: "Aan het werk", headline: "Laag voor laag" },
+      ambiance: { eyebrow: "Aan het werk", headline: "Laag voor laag opgebouwd" },
       contact: {
-        eyebrow: "Vraag of opdracht?",
+        eyebrow: "Iets specifieks?",
         headline: "Stuur ons je idee",
         ctaLabel: "App ons",
       },
