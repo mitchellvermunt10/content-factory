@@ -168,6 +168,47 @@ export interface NextLevelSiteData {
     }[];
   };
 
+  /**
+   * /proces — uitleg over hoe een opdracht / dienst werkt. Voor shops:
+   * 4-stappen flow (bestand → slicen → printen → versturen). Voor andere
+   * verticals: stappen-overzicht van een service.
+   */
+  process?: {
+    headline?: string; // bv. "Van bestand naar bureau"
+    intro?: string; // 1-2 zinnen onder de headline
+    steps: {
+      title: string; // bv. "1. Stuur je bestand"
+      body: string; // beschrijving van de stap
+      icon?: string; // optionele icon-naam (lucide), bv. "upload"
+    }[];
+  };
+
+  /** /faq — Q&A's, gebruikt voor FAQPage Schema.org JSON-LD */
+  faq?: {
+    question: string;
+    answer: string;
+  }[];
+
+  /**
+   * /maatwerk — custom request flow. Voor JJ-3D: STL upload of korte
+   * omschrijving + budget. Submission gaat via /api/sites/<slug>/custom-request
+   * naar customRequest.email (Resend) — stub tot we klant-email hebben.
+   */
+  customRequest?: {
+    /** Klant-email waar maatwerk-aanvragen naartoe gaan */
+    email?: string;
+    /** Tagline boven het formulier, bv. "Stuur ons je idee" */
+    headline?: string;
+    intro?: string;
+  };
+
+  /**
+   * Hero-image per subpage path. Default fallback per template,
+   * maar kan per pagina geoverride worden. Key = pagina-path zonder
+   * leading slash, bv. "contact", "proces".
+   */
+  subpageHeroes?: Record<string, string>;
+
   brand?: {
     accentColor?: string;
     fontDisplay?: string;

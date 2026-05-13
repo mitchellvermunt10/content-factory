@@ -29,7 +29,13 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-  return listSlugs().map((slug) => ({ slug }));
+  const slugs: { slug: string }[] = [];
+  for (const slug of listSlugs()) {
+    const result = await loadSiteData(slug);
+    // Verhaal-pagina is alleen voor sites met story-content
+    if (result?.data.story) slugs.push({ slug });
+  }
+  return slugs;
 }
 
 export default async function VerhaalPage({
@@ -39,7 +45,7 @@ export default async function VerhaalPage({
 }) {
   const { slug } = await params;
   const result = await loadSiteData(slug);
-  if (!result) notFound();
+  if (!result?.data.story) notFound();
   const { data } = result;
   const story = data.story;
   const homeUrl = `${BASE_URL}/sites/${slug}`;

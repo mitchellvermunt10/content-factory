@@ -69,6 +69,7 @@ export default async function ProductPage({
         slug={result.data.slug}
         businessName={result.data.business.name}
         startTransparent={false}
+        variant={result.data.shop ? "shop" : "restaurant"}
       />
       <main className="relative min-h-screen bg-black text-white">
         <ProductDetail data={result.data} product={product} />
