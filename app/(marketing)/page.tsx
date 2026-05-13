@@ -33,6 +33,15 @@ export default function HomePage() {
           </>,
           <>Dat gesprek loopt nog steeds met me mee.</>,
           <>
+            Het was niet één keer. In acht jaar bouwde ik tientallen
+            MKB-sites en steeds dezelfde uitkomst: technisch correct,
+            commercieel onzichtbaar. Een mooi formulier waar geen aanvraag
+            binnen kwam. Een Google-positie die er op papier was maar in
+            de praktijk niemand opleverde. Een hosting-rekening die elk
+            jaar werd betaald omdat het tijd voor opzeggen er nooit van
+            kwam.
+          </>,
+          <>
             De meeste websites in het MKB doen wat ze technisch moeten doen,
             en verder niets. Ze laden. Ze hebben een formulier. Ze staan
             in Google. En ze verkopen geen ene moer, omdat niemand ze ooit
@@ -137,56 +146,51 @@ export default function HomePage() {
         <div className="mx-auto max-w-6xl">
           <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-              Eerste lancering
+              Wat we maakten voor Trattoria
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-              Het bewijs dat het werkt.
+              Een concept-build die ons format toont.
             </h2>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-white/70">
-              Trattoria Sole, een Italiaans restaurant in Utrecht. Onze eerste
-              publieke lancering — en het format waar elke volgende klant op
-              voortbouwt.
+              Trattoria Sole bestaat niet als restaurant. Het is onze
+              eerste publieke build, gebouwd om te laten zien wat het format
+              kan. Geen verzonnen klantcijfers, geen fake testimonials. Wel
+              echte craft.
             </p>
           </Reveal>
 
-          {/* KPI-tiles — concrete deliverables, geen fake performance-getallen */}
+          {/* Craft-tiles — wat we ECHT hebben gemaakt, niet wat het opleverde */}
           <RevealStagger className="mt-14 grid gap-3 sm:grid-cols-3 sm:gap-4" stagger={0.1}>
             {[
               {
-                label: "Levertijd",
-                value: "14",
-                unit: "dagen",
-                sub: "van briefing naar live",
+                label: "Eigen film",
+                title: "5 sec cinematische dolly",
+                body: "Kling 3.0 image-to-video. Camera draait rond een workspace en eindigt op het laptop-scherm. Wide-to-close pull-in, 241 frames @ 24fps premium quality.",
               },
               {
-                label: "Architectuur",
-                value: "5",
-                unit: "pagina's",
-                sub: "cinematic, scrollable, eigen domein",
+                label: "Hero-fotos",
+                title: "3 Flux Pro renders op maat",
+                body: "Per scene een unieke shot via Flux Pro 1.1 Ultra. Anamorphic 35mm look, Roger Deakins-stijl warm tungsten. Geen Unsplash, geen stockmateriaal.",
               },
               {
-                label: "Contact",
-                value: "1op1",
-                unit: "",
-                sub: "geen account-manager-tussenlaag",
+                label: "Tech stack",
+                title: "Klaar voor lokaal Google",
+                body: "Schema.org Restaurant + Menu JSON-LD. Lenis smooth-scroll, scroll-driven frame-scrubbing. Mobile-first, Core Web Vitals groen. Hosted op Vercel Edge.",
               },
-            ].map((kpi) => (
+            ].map((tile) => (
               <RevealItem
-                key={kpi.label}
+                key={tile.label}
                 className="rounded-2xl border border-white/10 bg-black/40 p-6 transition-colors hover:border-white/25 sm:p-8"
               >
                 <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
-                  {kpi.label}
+                  {tile.label}
                 </p>
-                <p className="mt-3 flex items-baseline gap-2">
-                  <span className="font-serif text-5xl text-white sm:text-6xl">
-                    {kpi.value}
-                  </span>
-                  {kpi.unit ? (
-                    <span className="text-sm text-white/55">{kpi.unit}</span>
-                  ) : null}
+                <p className="mt-4 font-serif text-xl text-white sm:text-2xl">
+                  {tile.title}
                 </p>
-                <p className="mt-3 text-sm text-white/55">{kpi.sub}</p>
+                <p className="mt-3 text-sm leading-relaxed text-white/65">
+                  {tile.body}
+                </p>
               </RevealItem>
             ))}
           </RevealStagger>
@@ -333,75 +337,75 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-5xl">
           <Reveal className="text-center">
             <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
-              Vergelijking
+              De rekensom
             </p>
             <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-6xl">
-              Wat krijg je per euro?
+              Verdient een Next Level Site
+              <br />
+              <span className="text-white/70">zichzelf terug?</span>
             </h2>
           </Reveal>
 
-          <RevealStagger className="mt-16 grid gap-4 md:grid-cols-2 md:gap-6" stagger={0.15}>
-            <RevealItem className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-10">
-              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/40">
-                Traditioneel webbureau
+          <Reveal className="mt-16 rounded-3xl border border-white/10 bg-black/55 p-10 backdrop-blur-md sm:p-14">
+            <div className="space-y-8 text-lg leading-[1.7] text-white/85 md:text-xl">
+              <p>
+                Stel je restaurant doet €120 omzet per couvert, 30 couverts
+                per dag, zes dagen per week. Dat is ongeveer{" "}
+                <span className="font-serif italic text-white">€170.000 omzet per jaar</span>.
               </p>
-              <p className="mt-3 font-serif text-2xl text-white/65">
-                Een template-website
+              <p>
+                Hoeveel nieuwe gasten moet een website opleveren om zichzelf
+                terug te verdienen?
               </p>
-              <ul className="mt-8 space-y-3 text-sm text-white/55">
-                {[
-                  "€1.500 – €3.000 startbedrag",
-                  "+ €50/uur voor elke wijziging",
-                  "4–8 weken levertijd",
-                  "Generieke Wix/Squarespace template",
-                  "Geen video, geen storytelling",
-                  "Mobile: aangepast als bijzaak",
-                  "SEO: hoop dat het werkt",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="mt-1.5 size-1 shrink-0 rounded-full bg-white/30" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </RevealItem>
-
-            <RevealItem className="relative rounded-3xl border border-accent/40 bg-accent/[0.05] p-8 sm:p-10">
-              <div className="absolute -top-3 left-8 rounded-full bg-white px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-black">
-                Wat wij maken
+              <div className="grid gap-4 border-y border-white/15 py-8 sm:grid-cols-3 sm:gap-6">
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/45">
+                    Traditioneel bureau
+                  </p>
+                  <p className="mt-2 font-serif text-3xl text-white sm:text-4xl">
+                    €2.000
+                  </p>
+                  <p className="mt-2 text-sm text-white/60">
+                    17 extra couverts in heel jaar 1
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/55">
+                    Studio
+                  </p>
+                  <p className="mt-2 font-serif text-3xl text-white sm:text-4xl">
+                    €3.500
+                  </p>
+                  <p className="mt-2 text-sm text-white/60">
+                    30 extra couverts in heel jaar 1
+                  </p>
+                </div>
+                <div>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-accent/85">
+                    Signature
+                  </p>
+                  <p className="mt-2 font-serif text-3xl text-white sm:text-4xl">
+                    €7.500
+                  </p>
+                  <p className="mt-2 text-sm text-white/60">
+                    63 extra couverts in heel jaar 1
+                  </p>
+                </div>
               </div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-white/65">
-                Next Level Site
+              <p>
+                Dat is alles.{" "}
+                <span className="text-white">63 nieuwe gasten over 12 maanden</span>{" "}
+                = de Signature terugverdiend. Eén extra reservering per week.
+                Daarboven is winst.
               </p>
-              <p className="mt-3 font-serif text-2xl text-white">
-                Vanaf €3.500 — cinematic format
+              <p className="text-white/55">
+                Wat een site daadwerkelijk oplevert hangt af van veel: hoeveel
+                bezoekers via Google binnenkomen, of ze door je sfeer
+                reserveren, of je locatie sterk is. Niemand kan dat van
+                tevoren beloven. Wij ook niet. Maar de break-even is geen
+                magic number: hij is rekenbaar.
               </p>
-              <ul className="mt-8 space-y-3 text-sm text-white">
-                {[
-                  "Studio €3.500 of Signature €7.500",
-                  "+ vanaf €197/mnd onderhoud (optioneel)",
-                  "Live in 1-2 weken",
-                  "AI-video op je homepage (template of uniek)",
-                  "5 pagina's, scrollable verhaal",
-                  "Mobile-first, snel op elke telefoon",
-                  "Klaar voor lokaal Google (SEO + maps)",
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <Check className="mt-0.5 size-4 shrink-0 text-accent" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </RevealItem>
-          </RevealStagger>
-
-          <Reveal>
-            <p className="mt-12 text-center text-sm text-white/55">
-              Een traditioneel bureau kost over een jaar zo'n €5.000–€10.000
-              inclusief wijzigingen. Bij Studio zit je op €5.864 jaar 1
-              (eenmalig + onderhoud), bij Signature €13.464 — maar alles erbij
-              inbegrepen, geen factuurtjes per pasta-foto.
-            </p>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -748,31 +752,31 @@ export default function HomePage() {
             {[
               {
                 q: "Wat als ik al een website heb?",
-                a: "We bouwen helemaal nieuw, je behoudt je eigen domein. Bestaande Google-rankings nemen we mee via 301-redirects waar nodig. Je oude site blijft beschikbaar tot we live gaan met de nieuwe.",
+                a: "We bouwen helemaal nieuw, je behoudt je eigen domein. Bestaande Google-rankings migreren we via 301-redirects per URL, dus je top-pagina's blijven vindbaar. Je oude site blijft draaien tot we live gaan met de nieuwe: geen downtime, geen periode zonder online aanwezigheid. Content die je wilt meenemen (foto's, menu-data, openingstijden, klant-reviews) exporteren we in week 1 van de build en zetten we in de nieuwe structuur.",
               },
               {
                 q: "Hoe lang duurt het echt?",
-                a: "Van intake-call tot live: 2 weken. Eerste week voor research + concept, tweede week voor cinematic productie + launch. Bij complexe wensen kan het uitlopen — dat zeggen we vooraf.",
+                a: "Van intake-call tot live: 14 dagen. Week 1: kennismakingsgesprek (dag 1), research + concept-voorstel (dag 2-4), één revisieronde op concept (dag 5). Week 2: Kling-video genereren met jouw briefing (dag 8), Flux hero-frames (dag 9), site-implementatie (dag 10-12), Schema.org markup en launch op jouw domein (dag 13-14). Bij complexe wensen kan het uitlopen naar 21 dagen: dat zeggen we vooraf, geen verrassingen.",
               },
               {
                 q: "Wat is er bij de €497 per maand inbegrepen?",
-                a: "Maandelijkse updates van je menu, foto's, content. Hosting, security-monitoring, performance-checks, en respons binnen 24 uur op alle vragen. Geen uurtarief, geen onverwachte facturen.",
+                a: "Ongeveer 4 uur per maand vaste capaciteit: één content-update (nieuwe foto's, menu-wijzigingen, seizoens-aanpassingen), security + performance monitoring, hosting op Vercel Edge + CDN, en respons binnen 24 uur op alle vragen. Wat NIET in zit: nieuwe pagina's bouwen, branding-wijzigingen, integraties met externe systemen. Die rekenen we apart à €85/uur, altijd met offerte vooraf zodat er geen verrassingen op de factuur staan. Maandelijks opzegbaar.",
               },
               {
                 q: "Wat als ik geen onderhoudscontract wil?",
-                a: "Prima — neem het eenmalige pakket van €7.500. Je krijgt de complete site, wij geven 'm netjes over en jij regelt je eigen hosting of vraagt ons later alsnog. Geen verplichting.",
+                a: "Prima. Neem het eenmalige pakket en je krijgt de complete site, code via GitHub of overdracht naar jouw hosting. Hosting bij Vercel kost ongeveer €20 per maand, security-updates kun je zelf of via je IT'er regelen. Veel ondernemers doen het zo. Je kunt later altijd alsnog onderhoud aanvragen — €197 of €497 per maand, of per losse opdracht.",
               },
               {
                 q: "Voor welke types ondernemingen werkt dit?",
-                a: "Momenteel restaurants (live demo bij Trattoria Sole). Op de roadmap voor Q3 2026: kapsalons, garages, tandartsen. Het format werkt voor elke lokale onderneming met een fysieke locatie en sterke visuele identiteit.",
+                a: "Momenteel restaurants (concept-build bij Trattoria Sole). Op de roadmap: kapsalons, autobedrijven, tandartspraktijken — concept-mockups zijn klaar. Het format werkt voor elke lokale onderneming met een fysieke locatie, een persoonlijk verhaal en een visuele identiteit. Eerlijk: voor advocaten, accountants of B2B-consultants is dit minder geschikt. Daar telt vakkennis-content meer dan cinematic sfeer.",
               },
               {
                 q: "Kan ik mijn eigen domein gebruiken?",
-                a: "Ja. We koppelen jouw bestaande domein (bv. trattoriasole.nl) aan onze infrastructuur. Bezoekers merken geen verschil — alles draait onder jouw domein, niet 'next-level-sites.nl/trattoria'.",
+                a: "Ja. We koppelen jouw bestaande domein (bv. trattoriasole.nl) via DNS aan onze Vercel-infrastructuur — een CNAME-record bij je domain-registrar volstaat. Bezoekers merken geen verschil: alles draait onder jouw domein, niet 'next-level-sites.nl/trattoria'. Je behoudt eigendom van het domein. Wil je later naar een andere host verhuizen, dan neem je gewoon je DNS mee. Geen vendor lock-in, geen contractuele binding aan onze infrastructuur.",
               },
               {
                 q: "Wat als ik niet tevreden ben?",
-                a: "Tot het launch-moment heb je twee gratis revisie-rondes na het concept-voorstel. Na launch: 14 dagen gratis bug-fixes. Als de website niet brengt wat we beloofden, krijg je je geld terug — geen kleine lettertjes.",
+                a: "Tot het launch-moment heb je twee gratis revisierondes na het concept-voorstel. Na launch: 14 dagen gratis bug-fixes voor alles dat technisch niet werkt zoals afgesproken (laadtijd, mobiel, browser-issues). Als de site fundamenteel niet brengt wat in het concept stond, krijg je je geld terug minus de strategie-fase (€1.500 voor research + concept). Geen kleine lettertjes, alles staat zwart-op-wit in de offerte vooraf.",
               },
             ].map((faq, i) => (
               <RevealItem key={i}>
