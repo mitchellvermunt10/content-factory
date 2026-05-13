@@ -27,6 +27,11 @@ export function ProductDetail({ data, product }: Props) {
   const activePrice =
     variant === "ams" && hasAmsTier ? product.priceAmsEur! : product.priceEur;
 
+  // Image-gallery: hero is hoofd, gallery zijn MakerWorld-shots
+  const allImages = [product.image, ...(product.gallery ?? [])];
+  const [activeImage, setActiveImage] = useState(product.image);
+  const hasGallery = (product.gallery?.length ?? 0) > 0;
+
   async function handleOrder() {
     setOrdering(true);
     try {
@@ -70,16 +75,59 @@ export function ProductDetail({ data, product }: Props) {
 
       <div className="mx-auto mt-8 max-w-6xl px-6 sm:mt-12">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          {/* Product image */}
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black">
-            <div className="relative aspect-square">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={product.image}
-                alt={product.title}
-                className="h-full w-full object-cover"
-              />
+          {/* Product image + gallery */}
+          <div className="flex flex-col gap-4">
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black">
+              <div className="relative aspect-square">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={activeImage}
+                  alt={product.title}
+                  className="h-full w-full object-cover transition-opacity duration-300"
+                  key={activeImage}
+                />
+              </div>
             </div>
+
+            {hasGallery ? (
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {allImages.map((img, idx) => {
+                  const isActive = img === activeImage;
+                  const isHero = idx === 0;
+                  return (
+                    <button
+                      key={img}
+                      type="button"
+                      onClick={() => setActiveImage(img)}
+                      className={`relative shrink-0 overflow-hidden rounded-xl border transition-all ${
+                        isActive
+                          ? "border-white scale-100"
+                          : "border-white/10 opacity-70 hover:border-white/40 hover:opacity-100"
+                      }`}
+                      aria-label={
+                        isHero
+                          ? "Cinematic hero-shot"
+                          : `Foto ${idx} van MakerWorld`
+                      }
+                    >
+                      <div className="relative size-20 sm:size-24">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={img}
+                          alt=""
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      {isHero ? (
+                        <span className="absolute bottom-1 left-1 rounded-full bg-black/75 px-2 py-0.5 font-mono text-[8px] uppercase tracking-[0.1em] text-white/85 backdrop-blur-sm">
+                          Sfeer
+                        </span>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : null}
           </div>
 
           {/* Product info */}

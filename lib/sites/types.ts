@@ -48,8 +48,15 @@ export interface ShopProduct {
   priceAmsEur?: number;
   /** Optionele uitleg wat AMS-tier toevoegt, bv. "Gradient print" of "Letter per kleur". */
   amsDescription?: string;
-  /** Local public path naar primary product-image */
+  /** Local public path naar hoofd-foto (cinematic hero shot voor catalog) */
   image: string;
+  /**
+   * Optionele extra foto's voor de product-detail gallery. Typisch
+   * MakerWorld product-shots (echte renders/foto's van het 3D-print, vs
+   * de cinematic hero). Eerste = hoofdfoto, rest = klikbare thumbnails.
+   * Wanneer leeg/ontbrekend toont ProductDetail alleen `image`.
+   */
+  gallery?: string[];
   /** Optioneel: print-tijd in minuten, voor info-tag */
   printTimeMinutes?: number;
   /** Optionele tags voor filter, bv. ['hebbedingetje', 'desk', 'wijn'] */
