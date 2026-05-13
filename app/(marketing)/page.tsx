@@ -9,9 +9,8 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { AgencyHeroExperience } from "@/components/marketing/AgencyHeroExperience";
-import { HorizontalVerticals } from "@/components/marketing/HorizontalVerticals";
-import { Manifesto } from "@/components/marketing/Manifesto";
-import { UspMarquee } from "@/components/marketing/UspMarquee";
+import { Letter } from "@/components/marketing/Letter";
+import { Disqualifier } from "@/components/marketing/Disqualifier";
 import { Reveal, RevealStagger, RevealItem } from "@/components/motion/Reveal";
 
 export default function HomePage() {
@@ -20,8 +19,38 @@ export default function HomePage() {
       {/* Cinematic scroll-driven hero — Kling orbit dolly */}
       <AgencyHeroExperience />
 
-      {/* Horizontal-scroll cinematic verticals — Awwwards-stijl pinned */}
-      <HorizontalVerticals />
+      {/* PERSOONLIJKE BRIEF — editorial moment, light-creme break */}
+      <Letter
+        eyebrow="Brief van de maker"
+        dateLine="Mei 2026 · Utrecht"
+        paragraphs={[
+          <>
+            Acht jaar geleden bouwde ik een site voor een tandarts in
+            Zuilen. Mooi gemaakt, op tijd opgeleverd, factuur netjes
+            betaald. Een jaar later belde z&apos;n vrouw: of ik de inlog
+            nog had, want ze hadden nooit één afspraak via die site
+            gekregen.
+          </>,
+          <>Dat gesprek loopt nog steeds met me mee.</>,
+          <>
+            De meeste websites in het MKB doen wat ze technisch moeten doen,
+            en verder niets. Ze laden. Ze hebben een formulier. Ze staan
+            in Google. En ze verkopen geen ene moer, omdat niemand ze ooit
+            afmaakt: niet de bouwer, niet de ondernemer, niet de bezoeker.
+          </>,
+          <>
+            Bij Next Level Sites doen we één site per maand. Niet uit
+            principe. Gewoon omdat je een avond bij iemand aan tafel moet
+            zitten voordat je weet hoe diens zaak echt voelt, en dat soort
+            tijd kost geld dat de meeste bureaus niet willen rekenen.
+          </>,
+          <>
+            Als je dit leest en je website ligt al twee jaar te wachten op
+            iets dat hem redt: bel me. 06 81 29 93 21.
+          </>,
+        ]}
+        signature="Mitchell · Utrecht"
+      />
 
       {/* ───────────────────────────────────────────────────────────
           PROBLEEM — met cinematic parallax achtergrond
@@ -77,8 +106,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Sticky-pinned manifesto — cinematic statement-moment */}
-      <Manifesto />
+      {/* DISQUALIFIER — eerlijke voor wie wel / voor wie niet */}
+      <Disqualifier
+        heading="Voor wie dit werkt. En voor wie niet."
+        subheading="We zijn niet voor iedereen. Dat is een feature, geen bug. Premium services horen duidelijk te zijn over wie ze wel en niet bedienen."
+        positive={{
+          label: "Werkt voor jou als",
+          items: [
+            "Je zélf het gezicht van je zaak bent. Kok, kapper, autosleuteler, tandarts. Mensen komen voor jou, niet voor je logo.",
+            "Het zat bent om er online uit te zien zoals de zaak drie deuren verderop.",
+            "Begrijpt dat een goede website rond de €4.500 kost en daarna niet stilstaat.",
+            "Liever twee maanden wacht op iets dat klopt, dan volgende week live met iets dat het niet doet.",
+          ],
+        }}
+        negative={{
+          label: "Werkt niet voor jou als",
+          items: [
+            "Je een snelle brochure-site zoekt. Wix doet dat prima, geen schaamte.",
+            "Je volgende week open moet en gisteren had moeten bellen.",
+            "Je geen budget hebt om je site een jaar later nog te onderhouden.",
+            "Je denkt dat een website draait om zoveel mogelijk 'Utrecht restaurant' in een H2 proppen.",
+          ],
+        }}
+      />
 
       {/* ───────────────────────────────────────────────────────────
           EERSTE LANCERING — single demo geframed als selectiviteit
@@ -194,8 +244,78 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* USP-marquee — eindeloze motion-break tussen content-blokken */}
-      <UspMarquee />
+      {/* ───────────────────────────────────────────────────────────
+          VERTICALS GRID — tight, één viewport, geen horizontal-scroll trickery
+          ─────────────────────────────────────────────────────────── */}
+      <section className="relative border-t border-white/10 px-6 py-24 sm:py-32">
+        <div className="mx-auto max-w-6xl">
+          <Reveal className="text-center">
+            <p className="font-mono text-xs uppercase tracking-[0.4em] text-white/45">
+              Voor welke vakman
+            </p>
+            <h2 className="mt-6 font-serif text-4xl font-light leading-tight tracking-tight md:text-5xl">
+              Hetzelfde format. Drie verticals.
+            </h2>
+          </Reveal>
+
+          <RevealStagger
+            className="mt-14 grid gap-4 md:grid-cols-3 md:gap-6"
+            stagger={0.1}
+          >
+            {[
+              {
+                label: "Kapsalons",
+                image: "/sites/concepts/salon.jpg",
+                tagline: "Het verschil tussen ‘een knipbeurt’ en ‘naar Marieke’.",
+                body: "Je werk is persoonlijk. Je site ook. Geen stockfoto’s van lachende modellen. Gewoon hoe het bij jou ruikt, klinkt en eruitziet.",
+              },
+              {
+                label: "Autobedrijven",
+                image: "/sites/concepts/garage.jpg",
+                tagline: "Voor wie z’n auto liever niet aan een vreemde geeft.",
+                body: "De meeste garage-sites zien eruit alsof ze door de leverancier zijn gemaakt. Bij jou loopt iemand binnen die dezelfde maandagochtend nog z’n sleutels achterlaat.",
+              },
+              {
+                label: "Tandartspraktijken",
+                image: "/sites/concepts/tandarts.jpg",
+                tagline: "De helft van het werk is gedaan voordat ze gaan zitten.",
+                body: "Mensen kiezen een tandarts op gevoel, niet op review-scores. Een site die rustig is, helder is, en niet schreeuwt: doet meer dan elk ‘boek nu’-blok.",
+              },
+            ].map((v) => (
+              <RevealItem
+                key={v.label}
+                className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 transition-all hover:-translate-y-1 hover:border-white/25"
+              >
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={v.image}
+                    alt={`Concept voor ${v.label}`}
+                    className="h-full w-full scale-105 object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+                  <div className="absolute left-4 top-4 rounded-full border border-white/25 bg-black/55 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.3em] text-white/75 backdrop-blur-md">
+                    Concept
+                  </div>
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/65">
+                      {v.label}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-black p-6 sm:p-7">
+                  <p className="font-serif text-lg italic leading-snug text-white sm:text-xl">
+                    {v.tagline}
+                  </p>
+                  <p className="mt-4 text-sm leading-relaxed text-white/60">
+                    {v.body}
+                  </p>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </div>
+      </section>
 
       {/* ───────────────────────────────────────────────────────────
           WEDGE — vergelijking, met subtiele backdrop
