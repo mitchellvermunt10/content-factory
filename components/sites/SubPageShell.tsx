@@ -46,6 +46,7 @@ export function SubPageShell({
           businessName={data.business.name}
           startTransparent={false}
           variant={data.shop ? "shop" : "restaurant"}
+          logo={data.business.logo}
         />
 
         {/* Sub-hero — cinematic met achtergrond-image en zachte zoom */}

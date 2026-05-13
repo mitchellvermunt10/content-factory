@@ -15,6 +15,8 @@ interface Props {
   startTransparent?: boolean;
   /** Bepaalt welke nav-items getoond worden. Default: restaurant. */
   variant?: NavVariant;
+  /** Optioneel logo-bestand. Vervangt de business-name wordmark. */
+  logo?: string;
 }
 
 const NAV_LINKS_BY_VARIANT: Record<NavVariant, { href: string; label: string }[]> = {
@@ -47,6 +49,7 @@ export function SiteNav({
   businessName,
   startTransparent = false,
   variant = "restaurant",
+  logo,
 }: Props) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
@@ -80,11 +83,19 @@ export function SiteNav({
         }`}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
-          <Link
-            href={basePath}
-            className="font-serif text-lg tracking-tight text-white"
-          >
-            {businessName}
+          <Link href={basePath} className="flex items-center text-white">
+            {logo ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img
+                src={logo}
+                alt={businessName}
+                className="h-8 w-auto sm:h-9"
+              />
+            ) : (
+              <span className="font-serif text-lg tracking-tight">
+                {businessName}
+              </span>
+            )}
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
@@ -124,9 +135,14 @@ export function SiteNav({
             <Link
               href={basePath}
               onClick={() => setOpen(false)}
-              className="font-serif text-lg text-white"
+              className="flex items-center text-white"
             >
-              {businessName}
+              {logo ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img src={logo} alt={businessName} className="h-8 w-auto" />
+              ) : (
+                <span className="font-serif text-lg">{businessName}</span>
+              )}
             </Link>
             <button
               onClick={() => setOpen(false)}
